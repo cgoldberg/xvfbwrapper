@@ -29,7 +29,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
     Example use with Selenium WebDriver and Firefox:
 ****************************************************
 
-::
+Firefox will launch inside virtual display, where test is run::
     
     from xvfbwrapper import Xvfb
 
@@ -55,9 +55,9 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
     if __name__ == '__main__':
         unittest.main(verbosity=2)
 
-***********************************************
-    pip install latest dev branch from git repo
-***********************************************
+************************************************
+    pip install latest dev branch from git repo:
+************************************************
 
 ::
 
