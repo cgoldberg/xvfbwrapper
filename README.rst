@@ -25,12 +25,15 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
 
     vdisplay.stop()
 
-****************************************************
-    Example use with Selenium WebDriver and Firefox:
-****************************************************
+*****************************************************
+    Example: Headless Selenium WebDriver and Firefox:
+*****************************************************
 
-Firefox will launch inside virtual display, where test is run::
-    
+  * Firefox will launch inside virtual display (headless)
+  * browser is not shown while test is run
+
+::
+
     from xvfbwrapper import Xvfb
 
     import unittest
