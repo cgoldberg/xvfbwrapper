@@ -8,7 +8,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
     Requires:
 *************
 
-  * Xvfb (`sudo apt-get install xvfb` or similar)
+  * Xvfb ('sudo apt-get install xvfb' or similar)
 
 ************
     Example:
@@ -18,7 +18,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
     
     from xvfbwrapper import Xvfb
 
-    vdisplay = Xvfb(width=1280, height=720)
+    vdisplay = Xvfb()
     vdisplay.start()
     
     # launch stuff inside virtual display here
