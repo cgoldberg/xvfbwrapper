@@ -15,6 +15,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
 ************
 
 ::
+    
     from xvfbwrapper import Xvfb
 
     vdisplay = Xvfb(width=1280, height=720)
@@ -29,6 +30,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
 ****************************************************
 
 ::
+    
     from xvfbwrapper import Xvfb
 
     import unittest
