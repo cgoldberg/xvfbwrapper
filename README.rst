@@ -7,8 +7,6 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
 Home: http://pypi.python.org/pypi/xvfbwrapper
 Dev: https://github.com/cgoldberg/xvfbwrapper
 
-* `Selenium Project Home <http://selenium.googlecode.com>`_
-
 ----
 
 *********************************
