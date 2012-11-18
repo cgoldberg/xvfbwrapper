@@ -24,7 +24,7 @@ setup(
         url = 'http://cgoldberg.github.com/xvfbwrapper/',
         download_url = 'http://pypi.python.org/pypi/xvfbwrapper',
         keywords = 'xvfb virtual display headless x11'.split(),
-        license - 'MIT',
+        license = 'MIT',
         classifiers = [
             'Operating System :: Unix',
             'Operating System :: POSIX :: Linux',
