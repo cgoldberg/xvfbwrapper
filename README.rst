@@ -82,7 +82,7 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
     if __name__ == '__main__':
         unittest.main(verbosity=2)
 
-This code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a Headless display.
+This code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.
 
 * install selenium bindings: `pip install selenium`
 * Firefox will launch inside virtual display (headless)
