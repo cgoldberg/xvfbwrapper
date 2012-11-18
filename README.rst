@@ -28,8 +28,8 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
     System Requirements
 ***********************
 
-  * Xvfb ('sudo apt-get install xvfb' or similar)
-  * Python 2
+* Xvfb ('sudo apt-get install xvfb' or similar)
+* Python 2
 
 ************************
     Example: Basic Usage
@@ -49,9 +49,10 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
 ****************************************************
     Example: Headless Selenium WebDriver and Firefox
 ****************************************************
-  * install selenium bindings: `pip install selenium`
-  * Firefox will launch inside virtual display (headless)
-  * browser is not shown while test is run
+
+* install selenium bindings: `pip install selenium`
+* Firefox will launch inside virtual display (headless)
+* browser is not shown while test is run
 
 ::
 
