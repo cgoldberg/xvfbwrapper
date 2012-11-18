@@ -4,7 +4,8 @@
 
 Python wrapper for running display inside X virtual framebuffer (Xvfb)
 
-* Home: http://pypi.python.org/pypi/xvfbwrapper
+* Home: http://cgoldberg.github.com/xvfbwrapper
+* PyPI: http://pypi.python.org/pypi/xvfbwrapper
 * Dev: https://github.com/cgoldberg/xvfbwrapper
 
 ----
@@ -28,7 +29,7 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
     System Requirements
 ***********************
 
-* Xvfb ('sudo apt-get install xvfb' or similar)
+* Xvfb (`sudo apt-get install xvfb`, or similar)
 * Python 2
 
 ************************
