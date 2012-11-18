@@ -88,5 +88,3 @@ This code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a 
 * install selenium bindings: `pip install selenium`
 * Firefox will launch inside virtual display (headless)
 * browser is not shown while tests are run
-
-****
