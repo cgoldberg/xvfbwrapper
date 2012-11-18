@@ -15,6 +15,7 @@ Install xvfbwrapper from PyPI
 *****************************
 
     ::
+        
         pip install xvfbwrapper
 
 **************************************
@@ -35,6 +36,7 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
 ************************
 
     ::
+        
         from xvfbwrapper import Xvfb
         
         vdisplay = Xvfb()
