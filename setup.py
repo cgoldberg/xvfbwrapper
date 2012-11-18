@@ -19,12 +19,12 @@ setup(
         packages = ['xvfbwrapper'],
         author = 'Corey Goldberg',
         author_email = 'corey@goldb.org',
-        maintainer = 'Corey Goldberg',
-        maintainer_email = 'corey@goldb.org',
         description = 'wrapper for running a display inside X virtual framebuffer (Xvfb)',
         long_description = LONG_DESCRIPTION,
-        url = 'https://github.com/cgoldberg/xvfbwrapper',
+        url = 'http://cgoldberg.github.com/xvfbwrapper/',
         download_url = 'http://pypi.python.org/pypi/xvfbwrapper',
+        keywords = 'xvfb virtual display headless x11'.split(),
+        license - 'MIT'
         classifiers = [
             'Operating System :: Unix',
             'Operating System :: POSIX :: Linux',
