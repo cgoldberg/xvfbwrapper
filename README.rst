@@ -14,9 +14,9 @@ Python wrapper for running a display inside X virtual framebuffer (Xvfb)
 Install xvfbwrapper from PyPI
 *****************************
 
-    ::
-        
-        pip install xvfbwrapper
+::
+    
+    pip install xvfbwrapper
 
 **************************************
     About Xvfb (X Virtual Framebuffer)
@@ -35,52 +35,52 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
     Example: Basic Usage
 ************************
 
-    ::
-        
-        from xvfbwrapper import Xvfb
-        
-        vdisplay = Xvfb()
-        vdisplay.start()
-        
-        # launch stuff inside virtual display here
+::
+    
+    from xvfbwrapper import Xvfb
+    
+    vdisplay = Xvfb()
+    vdisplay.start()
+    
+    # launch stuff inside virtual display here
 
-        vdisplay.stop()
+    vdisplay.stop()
 
 **********************************************
     Example: Headless Selenium WebDriver Tests
 **********************************************
 
-    ::
+::
+
+    #!/usr/bin/env python
     
-        #!/usr/bin/env python
-        
-        from selenium import webdriver
-        from xvfbwrapper import Xvfb
-        
-        import unittest
+    from selenium import webdriver
+    from xvfbwrapper import Xvfb
+    
+    import unittest
 
 
-        class TestHomepages(unittest.TestCase):
-            def setUp(self):
-                self.vdisplay = Xvfb(width=1280, height=720)
-                self.vdisplay.start()
-                self.browser = webdriver.Firefox()
-        
-            def testUbuntuHomepage(self):
-                self.browser.get('http://www.ubuntu.com')
-                self.assertIn('Ubuntu', self.browser.title)
-        
-            def testGoogleHomepage(self):
-                self.browser.get('http://www.google.com')
-                self.assertIn('Google', self.browser.title)
-        
-            def tearDown(self):
-                self.browser.quit()
-                self.vdisplay.stop()
-        
-        
-        if __name__ == '__main__':
-            unittest.main(verbosity=2)
+    class TestHomepages(unittest.TestCase):
+        def setUp(self):
+            self.vdisplay = Xvfb(width=1280, height=720)
+            self.vdisplay.start()
+            self.browser = webdriver.Firefox()
+    
+        def testUbuntuHomepage(self):
+            self.browser.get('http://www.ubuntu.com')
+            self.assertIn('Ubuntu', self.browser.title)
+    
+        def testGoogleHomepage(self):
+            self.browser.get('http://www.google.com')
+            self.assertIn('Google', self.browser.title)
+    
+        def tearDown(self):
+            self.browser.quit()
+            self.vdisplay.stop()
+    
+    
+    if __name__ == '__main__':
+        unittest.main(verbosity=2)
 
 This code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a Headless display.
 
