@@ -4,15 +4,31 @@
 
 Python wrapper for running display inside X virtual framebuffer (Xvfb)
 
-*************
-    Requires:
-*************
+**************************************
+    About Xvfb (X Virtual Framebuffer)
+**************************************
+
+In the X Window System, Xvfb or X virtual framebuffer is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
+
+************************
+    System Requirements:
+************************
 
   * Xvfb ('sudo apt-get install xvfb' or similar)
+  * Python 2
 
-************
-    Example:
-************
+**********************************
+    Install xvfbwrapper from PyPI:
+**********************************
+
+::
+    
+    pip install xvfbwrapper
+
+
+************************
+    Example: Basic Usage
+************************
 
 ::
     
@@ -28,7 +44,7 @@ Python wrapper for running display inside X virtual framebuffer (Xvfb)
 *****************************************************
     Example: Headless Selenium WebDriver and Firefox:
 *****************************************************
-
+  * install selenium bindings: `pip install selenium`
   * Firefox will launch inside virtual display (headless)
   * browser is not shown while test is run
 
