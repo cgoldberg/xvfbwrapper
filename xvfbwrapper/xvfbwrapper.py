@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 #
-#   wrapper for running display inside X virtual framebuffer (Xvfb)
 #
 #   - inspired by PyVirtualDisplay: http://pypi.python.org/pypi/PyVirtualDisplay
 #   - Corey Goldberg, 2012
+
+
+"""wrapper for running display inside X virtual framebuffer (Xvfb)"""
+
 
 
 import os
@@ -16,7 +19,7 @@ import time
 
 class Xvfb(object):
     
-    def __init__(self, width=1024, height=768, colordepth=24):
+    def __init__(self, width=800, height=680, colordepth=24):
         self.width = width
         self.height = height
         self.colordepth = colordepth
