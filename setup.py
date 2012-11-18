@@ -21,7 +21,7 @@ setup(
         author_email = 'corey@goldb.org',
         maintainer = 'Corey Goldberg',
         maintainer_email = 'corey@goldb.org',
-        description = 'wrapper for running display inside X virtual framebuffer (Xvfb)',
+        description = 'wrapper for running a display inside X virtual framebuffer (Xvfb)',
         long_description = LONG_DESCRIPTION,
         url = 'https://github.com/cgoldberg/xvfbwrapper',
         download_url = 'http://pypi.python.org/pypi/xvfbwrapper',
