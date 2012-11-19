@@ -62,6 +62,7 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
 
 
     class TestHomepages(unittest.TestCase):
+    
         def setUp(self):
             self.vdisplay = Xvfb(width=1280, height=720)
             self.vdisplay.start()

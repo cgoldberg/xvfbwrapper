@@ -7,6 +7,7 @@ import unittest
 
 
 class TestHomepages(unittest.TestCase):
+    
     def setUp(self):
         self.vdisplay = Xvfb(width=1280, height=720)
         self.vdisplay.start()
