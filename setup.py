@@ -9,8 +9,9 @@ from distutils.core import setup
 import xvfbwrapper
 
 
-with open('README.rst') as f:
-    LONG_DESCRIPTION = f.read()
+this_dir = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(this_dir, 'README.rst')) as f:
+    LONG_DESCRIPTION = '\n' + f.read()
 
 
 setup(
@@ -18,7 +19,7 @@ setup(
         version = xvfbwrapper.__version__,
         packages = ['xvfbwrapper'],
         author = 'Corey Goldberg',
-        author_email = 'corey@goldb.org',
+        author_email = 'cgoldberg _at_ gmail.com',
         description = 'wrapper for running a display inside X virtual framebuffer (Xvfb)',
         long_description = LONG_DESCRIPTION,
         url = 'http://cgoldberg.github.com/xvfbwrapper/',
