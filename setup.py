@@ -4,6 +4,7 @@
 """ setup/install script for xvfbwrapper """
 
 
+import os
 from distutils.core import setup
 
 import xvfbwrapper
