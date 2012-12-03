@@ -1,0 +1,4 @@
+prune *
+include README.rst
+include setup.py
+recursive-include xvfbwrapper *.py
