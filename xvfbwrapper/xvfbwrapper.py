@@ -14,6 +14,7 @@ import fnmatch
 import random
 import subprocess
 import time
+import signal
 
 
 class Xvfb(object):
@@ -40,7 +41,8 @@ class Xvfb(object):
         self.xvfb_proc = subprocess.Popen(self.xvfb_cmd,
             stdout=open(os.devnull),
             stderr=open(os.devnull),
-            shell=True
+            shell=True,
+            preexec_fn=os.setsid
         )
         time.sleep(0.1)  # give Xvfb time to start
         self._redirect_display(self.vdisplay_num)
@@ -48,8 +50,7 @@ class Xvfb(object):
     def stop(self):
         self._redirect_display(self.old_display_num)
         if self.xvfb_proc is not None:
-            self.xvfb_proc.kill()
-            self.xvfb_proc.wait()
+            os.killpg(self.xvfb_proc.pid, signal.SIGTERM)
             self.xvfb_proc = None
 
     def search_for_free_display(self):
