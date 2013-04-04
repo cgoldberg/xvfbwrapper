@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from xvfbwrapper import Xvfb
+from .xvfbwrapper import Xvfb
 
 import os
 import unittest
