@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#   * Corey Goldberg, 2012
+#   * Corey Goldberg, 2012, 2013
 #
 #   * inspired by:
 #       PyVirtualDisplay: http://pypi.python.org/pypi/PyVirtualDisplay
@@ -16,41 +16,37 @@ import subprocess
 import time
 
 
-class Xvfb(object):
+class Xvfb:
 
     def __init__(self, width=800, height=680, colordepth=24):
         self.width = width
         self.height = height
         self.colordepth = colordepth
 
-        self.xvfb_proc = None
-        self.old_display_num = \
-            os.environ['DISPLAY'].split(':')[1] \
-                if 'DISPLAY' in os.environ else 0
+        self.proc = None
+        if 'DISPLAY' in os.environ:
+            self.old_display_num = os.environ['DISPLAY'].split(':')[1]
+        else:
+            self.old_display_num = 0
 
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
-        self.xvfb_cmd = 'Xvfb :{0} -screen 0 {1}x{2}x{3} 2>&1 >{4}'.format(
-            self.vdisplay_num,
-            self.width,
-            self.height,
-            self.colordepth,
-            os.devnull
-        )
-        self.xvfb_proc = subprocess.Popen(self.xvfb_cmd,
-            stdout=open(os.devnull),
-            stderr=open(os.devnull),
-            shell=True
-        )
+        self.xvfb_cmd = [
+            'Xvfb', ':%d' % (self.vdisplay_num,), '-screen', '0',
+            '%dx%dx%d' % (self.width, self.height, self.colordepth)
+        ]
+        self.proc = subprocess.Popen(self.xvfb_cmd,
+                                     stdout=open(os.devnull),
+                                     stderr=open(os.devnull))
         time.sleep(0.1)  # give Xvfb time to start
         self._redirect_display(self.vdisplay_num)
 
     def stop(self):
         self._redirect_display(self.old_display_num)
-        if self.xvfb_proc is not None:
-            self.xvfb_proc.kill()
-            self.xvfb_proc.wait()
-            self.xvfb_proc = None
+        if self.proc is not None:
+            self.proc.kill()
+            self.proc.wait()
+            self.proc = None
 
     def search_for_free_display(self):
         ls = [int(x.split('X')[1].split('-')[0]) for x in self._lock_files()]
@@ -73,3 +69,4 @@ class Xvfb(object):
 
     def _redirect_display(self, display_num):
         os.environ['DISPLAY'] = ':%s' % display_num
+
