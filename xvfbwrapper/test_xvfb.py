@@ -21,6 +21,7 @@ class TestXvfb(unittest.TestCase):
         h = 600
         depth = 16
         xvfb = Xvfb(width=w, height=h, colordepth=depth)
+        self.addCleanup(xvfb.stop)
         xvfb.start()
         self.assertEqual(w, xvfb.width)
         self.assertEqual(h, xvfb.height)

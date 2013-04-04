@@ -23,7 +23,7 @@ Install xvfbwrapper from PyPI
 ***********************
 
 * Xvfb (`sudo apt-get install xvfb`, or similar)
-* Python 2
+* Python 2.7 or 3.2+ (tested on py27, py32, py33, pypy)
 
 **************************************
     About Xvfb (X Virtual Framebuffer)
@@ -53,34 +53,30 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
 
 ::
 
-    #!/usr/bin/env python
-    
     from selenium import webdriver
     from xvfbwrapper import Xvfb
-    
+
     import unittest
 
 
-    class TestHomepages(unittest.TestCase):
-    
+    class TestPages(unittest.TestCase):
+
         def setUp(self):
-            self.vdisplay = Xvfb(width=1280, height=720)
-            self.vdisplay.start()
+            self.xvfb = Xvfb(width=1280, height=720)
+            self.addCleanup(self.xvfb.stop)
+            self.xvfb.start()
             self.browser = webdriver.Firefox()
-    
+            self.addCleanup(self.browser.quit)
+
         def testUbuntuHomepage(self):
             self.browser.get('http://www.ubuntu.com')
             self.assertIn('Ubuntu', self.browser.title)
-    
+
         def testGoogleHomepage(self):
             self.browser.get('http://www.google.com')
             self.assertIn('Google', self.browser.title)
-    
-        def tearDown(self):
-            self.browser.quit()
-            self.vdisplay.stop()
-    
-    
+
+
     if __name__ == '__main__':
         unittest.main(verbosity=2)
 
