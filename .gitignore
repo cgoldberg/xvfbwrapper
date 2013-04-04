@@ -1,0 +1,10 @@
+MANIFEST
+*.py[cod]
+_build
+build
+dist
+sdist
+.tox
+*.egg
+*.egg-info
+eggs
