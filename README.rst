@@ -4,7 +4,6 @@
 
 Python wrapper for running a display inside X virtual framebuffer (Xvfb)
 
-* Home: http://cgoldberg.github.io/xvfbwrapper
 * PyPI: http://pypi.python.org/pypi/xvfbwrapper
 * Dev: https://github.com/cgoldberg/xvfbwrapper
 
@@ -12,11 +11,11 @@ Corey Goldberg - 2012, 2013
 
 ****
 
-*****************************
-Install xvfbwrapper from PyPI
-*****************************
+*********
+    Setup
+*********
 
-::
+Install xvfbwrapper from PyPI::
     
     pip install xvfbwrapper
 
@@ -32,7 +31,6 @@ Install xvfbwrapper from PyPI
 **************************************
 
 In the X Window System, Xvfb or X virtual framebuffer is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
-
 
 ************************
     Example: Basic Usage
