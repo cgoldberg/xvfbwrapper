@@ -69,4 +69,3 @@ class Xvfb:
 
     def _redirect_display(self, display_num):
         os.environ['DISPLAY'] = ':%s' % display_num
-

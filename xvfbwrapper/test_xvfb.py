@@ -10,7 +10,7 @@ import pep8
 
 
 class TestXvfb(unittest.TestCase):
-    
+
     def test_start(self):
         xvfb = Xvfb()
         self.addCleanup(xvfb.stop)
