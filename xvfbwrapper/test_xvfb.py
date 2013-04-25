@@ -6,6 +6,8 @@ from .xvfbwrapper import Xvfb
 import os
 import unittest
 
+import pep8
+
 
 class TestXvfb(unittest.TestCase):
     
@@ -38,5 +40,11 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(orig, os.environ['DISPLAY'])
 
 
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+class Pep8ConformanceTestCase(unittest.TestCase):
+    """Test that all code conforms to PEP8."""
+    def test_pep8_conformance(self):
+        # scan entire package recursively starting from root directory
+        root_dirname = os.path.dirname(os.path.realpath(__file__ + '/..'))
+        self.pep8style = pep8.StyleGuide()
+        self.pep8style.input_dir(root_dirname)
+        self.assertEqual(self.pep8style.options.report.total_errors, 0)
