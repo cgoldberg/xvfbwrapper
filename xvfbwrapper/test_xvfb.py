@@ -43,8 +43,8 @@ class TestXvfb(unittest.TestCase):
 class Pep8ConformanceTestCase(unittest.TestCase):
     """Test that all code conforms to PEP8."""
     def test_pep8_conformance(self):
-        # scan entire package recursively starting from root directory
-        root_dirname = os.path.dirname(os.path.realpath(__file__ + '/..'))
+        # scan source files in this directory recursively
+        this_dir = os.path.dirname(os.path.realpath(__file__))
         self.pep8style = pep8.StyleGuide()
-        self.pep8style.input_dir(root_dirname)
+        self.pep8style.input_dir(this_dir)
         self.assertEqual(self.pep8style.options.report.total_errors, 0)
