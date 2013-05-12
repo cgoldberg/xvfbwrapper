@@ -18,10 +18,11 @@ import time
 
 class Xvfb:
 
-    def __init__(self, width=800, height=680, colordepth=24):
+    def __init__(self, width=800, height=680, colordepth=24, nolisten=None):
         self.width = width
         self.height = height
         self.colordepth = colordepth
+        self.nolisten = nolisten
 
         self.proc = None
         if 'DISPLAY' in os.environ:
@@ -35,6 +36,10 @@ class Xvfb:
             'Xvfb', ':%d' % (self.vdisplay_num,), '-screen', '0',
             '%dx%dx%d' % (self.width, self.height, self.colordepth)
         ]
+
+        if self.nolisten:
+            self.xvfb_cmd = self.xvfb_cmd + ['-nolisten', self.nolisten]
+
         self.proc = subprocess.Popen(self.xvfb_cmd,
                                      stdout=open(os.devnull),
                                      stderr=open(os.devnull))
