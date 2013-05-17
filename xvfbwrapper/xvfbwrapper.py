@@ -18,11 +18,17 @@ import time
 
 class Xvfb:
 
-    def __init__(self, width=800, height=680, colordepth=24, nolisten=None):
+    def __init__(self, width=800, height=680, colordepth=24, **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
-        self.nolisten = nolisten
+
+        self.xvfb_cmd = [
+            '-screen', '0', '%dx%dx%d' % (self.width, self.height, self.colordepth)
+        ]
+
+        for key, value in kwargs.items():
+            self.xvfb_cmd = self.xvfb_cmd + ["-%s" % key, value]
 
         self.proc = None
         if 'DISPLAY' in os.environ:
@@ -32,13 +38,7 @@ class Xvfb:
 
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
-        self.xvfb_cmd = [
-            'Xvfb', ':%d' % (self.vdisplay_num,), '-screen', '0',
-            '%dx%dx%d' % (self.width, self.height, self.colordepth)
-        ]
-
-        if self.nolisten:
-            self.xvfb_cmd = self.xvfb_cmd + ['-nolisten', self.nolisten]
+        self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
 
         self.proc = subprocess.Popen(self.xvfb_cmd,
                                      stdout=open(os.devnull),
