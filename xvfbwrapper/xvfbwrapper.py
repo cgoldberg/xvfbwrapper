@@ -24,11 +24,12 @@ class Xvfb:
         self.colordepth = colordepth
 
         self.xvfb_cmd = [
-            '-screen', '0', '%dx%dx%d' % (self.width, self.height, self.colordepth)
+            '-screen', '0', '%dx%dx%d' %
+            (self.width, self.height, self.colordepth)
         ]
 
         for key, value in kwargs.items():
-            self.xvfb_cmd = self.xvfb_cmd + ["-%s" % key, value]
+            self.xvfb_cmd = self.xvfb_cmd + ['-%s' % key, value]
 
         self.proc = None
         if 'DISPLAY' in os.environ:
