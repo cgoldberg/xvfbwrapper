@@ -4,8 +4,8 @@
 
 Python wrapper for running a display inside X virtual framebuffer (Xvfb)
 
-* PyPI: http://pypi.python.org/pypi/xvfbwrapper
 * Dev: https://github.com/cgoldberg/xvfbwrapper
+* PyPI: http://pypi.python.org/pypi/xvfbwrapper
 
 Corey Goldberg - 2012, 2013
 
