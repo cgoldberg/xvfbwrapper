@@ -45,11 +45,12 @@ class Xvfb:
                                      stdout=open(os.devnull),
                                      stderr=open(os.devnull),
                                      )
-        time.sleep(0.1)  # give Xvfb time to start
+        time.sleep(0.2)  # give Xvfb time to start
         ret_code = self.proc.poll()
         if ret_code is None:
             self._redirect_display(self.vdisplay_num)
         else:
+            self._redirect_display(self.old_display_num)
             self.proc = None
             print('Error: Xvfb did not start')
 
