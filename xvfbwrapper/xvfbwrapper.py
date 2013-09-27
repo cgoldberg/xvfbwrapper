@@ -37,6 +37,13 @@ class Xvfb:
         else:
             self.old_display_num = 0
 
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
         self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
