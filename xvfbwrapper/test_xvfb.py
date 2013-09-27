@@ -7,13 +7,6 @@ import os
 import sys
 import unittest
 
-try:
-    from StringIO import StringIO  # Python 2.7 compat
-except ImportError:
-    from io import StringIO
-
-import pep8
-
 
 class TestXvfb(unittest.TestCase):
 
