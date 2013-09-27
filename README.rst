@@ -47,6 +47,19 @@ In the X Window System, Xvfb or X virtual framebuffer is an X11 server that perf
 
     vdisplay.stop()
 
+***************************************
+    Example: Usage as a Context Manager
+***************************************
+
+::
+    
+    from xvfbwrapper import Xvfb
+    
+    with Xvfb() as xvfb:
+        # launch stuff inside virtual display here.
+        # It starts/stops in this code block.
+
+
 **********************************************
     Example: Headless Selenium WebDriver Tests
 **********************************************
