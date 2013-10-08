@@ -7,8 +7,6 @@
 import os
 from distutils.core import setup
 
-import xvfbwrapper
-
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_dir, 'README.rst')) as f:
@@ -17,8 +15,8 @@ with open(os.path.join(this_dir, 'README.rst')) as f:
 
 setup(
     name='xvfbwrapper',
-    version=xvfbwrapper.__version__,
-    packages=['xvfbwrapper'],
+    version='0.2.4',
+    py_modules=['xvfbwrapper'],
     author='Corey Goldberg',
     author_email='cgoldberg _at_ gmail.com',
     description='run headless display inside X virtual framebuffer (Xvfb)',

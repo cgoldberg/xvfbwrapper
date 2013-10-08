@@ -24,13 +24,13 @@ Install xvfbwrapper from PyPI::
 ***********************
 
 * Xvfb (`sudo apt-get install xvfb`, or similar)
-* Python 2.7 or 3.2+ (tested on py27, py32, py33, pypy)
+* Python 2.7 or 3.2+ (tested on py27, py32, py33)
 
 **************************************
     About Xvfb (X Virtual Framebuffer)
 **************************************
 
-In the X Window System, Xvfb or X virtual framebuffer is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
+In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
 
 ************************
     Example: Basic Usage
