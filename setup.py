@@ -15,7 +15,7 @@ with open(os.path.join(this_dir, 'README.rst')) as f:
 
 setup(
     name='xvfbwrapper',
-    version='0.2.4',
+    version='0.2.5',
     py_modules=['xvfbwrapper'],
     author='Corey Goldberg',
     author_email='cgoldberg _at_ gmail.com',
@@ -29,10 +29,14 @@ setup(
         'Operating System :: Unix',
         'Operating System :: POSIX :: Linux',
         'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License'
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 )
