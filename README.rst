@@ -2,12 +2,12 @@
     xvfbwrapper
 ===============
 
-Python wrapper for running a display inside X virtual framebuffer (Xvfb)
+Python wrapper for running a display inside X virtual framebuffer (Xvfb).  This is useful for running acceptance tests (i.e. browser-based tests) on a headless server.
 
 * Dev: https://github.com/cgoldberg/xvfbwrapper
 * PyPI: http://pypi.python.org/pypi/xvfbwrapper
 
-Corey Goldberg - 2012, 2013
+Corey Goldberg - 2012, 2013, 2015
 
 ****
 
@@ -16,7 +16,7 @@ Corey Goldberg - 2012, 2013
 *********
 
 Install xvfbwrapper from PyPI::
-    
+
     pip install xvfbwrapper
 
 ***********************
@@ -24,7 +24,7 @@ Install xvfbwrapper from PyPI::
 ***********************
 
 * Xvfb (`sudo apt-get install xvfb`, or similar)
-* Python 2.7 or 3.2+ (tested on py27, py32, py33)
+* Python 2.7 or 3.2+ (tested on py27, py32, py33, py34, pypy)
 
 **************************************
     About Xvfb (X Virtual Framebuffer)
@@ -37,13 +37,28 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
 ************************
 
 ::
-    
+
     from xvfbwrapper import Xvfb
-    
+
     vdisplay = Xvfb()
     vdisplay.start()
-    
-    # launch stuff inside virtual display here
+
+    # launch stuff inside virtual display here.
+
+    vdisplay.stop()
+
+****************************************************************************
+    Example: Basic Usage, using a specified display geometry and color depth
+****************************************************************************
+
+::
+
+    from xvfbwrapper import Xvfb
+
+    vdisplay = Xvfb(width=1024, height=768, colordepth=16)
+    vdisplay.start()
+
+    # launch stuff inside virtual display here.
 
     vdisplay.stop()
 
@@ -52,9 +67,9 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
 ***************************************
 
 ::
-    
+
     from xvfbwrapper import Xvfb
-    
+
     with Xvfb() as xvfb:
         # launch stuff inside virtual display here.
         # It starts/stops in this code block.
@@ -66,10 +81,10 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
 
 ::
 
+    import unittest
+
     from selenium import webdriver
     from xvfbwrapper import Xvfb
-
-    import unittest
 
 
     class TestPages(unittest.TestCase):
