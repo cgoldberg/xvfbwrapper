@@ -4,18 +4,13 @@
 from xvfbwrapper import Xvfb
 
 import os
-import sys
 import unittest
 
 
 class TestXvfb(unittest.TestCase):
 
     def setUp(self):
-        sys.stdout = sys.__stdout__
-        self.addCleanup(self.restore_stdout)
-
-    def restore_stdout(self):
-        sys.stdout = sys.__stdout__
+        os.environ['DISPLAY'] = ':0'
 
     def test_start(self):
         xvfb = Xvfb()
