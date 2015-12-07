@@ -1,3 +1,4 @@
 prune *
 include README.rst
+include LICENSE
 include *.py
