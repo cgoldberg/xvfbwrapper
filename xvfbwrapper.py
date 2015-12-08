@@ -10,6 +10,7 @@
 
 
 import os
+import sys
 import fnmatch
 import random
 import subprocess
@@ -48,10 +49,15 @@ class Xvfb:
         self.vdisplay_num = self.search_for_free_display()
         self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
 
-        self.proc = subprocess.Popen(self.xvfb_cmd,
-                                     stdout=open(os.devnull),
-                                     stderr=open(os.devnull),
-                                     )
+        try:
+            self.proc = subprocess.Popen(self.xvfb_cmd,
+                                         stdout=open(os.devnull),
+                                         stderr=open(os.devnull),
+                                         )
+        except OSError:
+            print >> sys.stderr, 'Failed to run %s' % ' '.join(self.xvfb_cmd)
+            return 0
+
         time.sleep(0.2)  # give Xvfb time to start
         ret_code = self.proc.poll()
         if ret_code is None:
