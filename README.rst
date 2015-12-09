@@ -2,7 +2,8 @@
     xvfbwrapper
 ===============
 
-https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
+.. image:: https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
+    :target: https://travis-ci.org/cgoldberg/xvfbwrapper
 
 Python wrapper for running a display inside X virtual framebuffer (Xvfb).  This is useful for running acceptance tests (i.e. browser-based tests) on a headless server.
 
