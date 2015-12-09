@@ -2,6 +2,8 @@
     xvfbwrapper
 ===============
 
+https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
+
 Python wrapper for running a display inside X virtual framebuffer (Xvfb).  This is useful for running acceptance tests (i.e. browser-based tests) on a headless server.
 
 * Dev: https://github.com/cgoldberg/xvfbwrapper
@@ -24,7 +26,7 @@ Install xvfbwrapper from PyPI::
 ***********************
 
 * Xvfb (`sudo apt-get install xvfb`, or similar)
-* Python 2.7 or 3.2+ (tested on py27, py32, py33, py34, pypy)
+* Python 2.7 or 3.2+ (tested on py27, py32, py33, py34, 3.5, pypy)
 
 **************************************
     About Xvfb (X Virtual Framebuffer)
@@ -108,7 +110,7 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
     if __name__ == '__main__':
         unittest.main(verbosity=2)
 
-This code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.
+This above code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.  It will:
 
 * install selenium bindings: `pip install selenium`
 * Firefox will launch inside virtual display (headless)
