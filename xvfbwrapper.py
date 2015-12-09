@@ -47,7 +47,10 @@ class Xvfb:
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
         self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
-        self.proc = subprocess.Popen(self.xvfb_cmd)
+        with open(os.devnull, 'w') as fnull:
+            self.proc = subprocess.Popen(self.xvfb_cmd,
+                                         stdout=fnull,
+                                         stderr=fnull)
         time.sleep(0.2)  # give Xvfb time to start
         ret_code = self.proc.poll()
         if ret_code is None:
