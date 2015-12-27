@@ -50,7 +50,8 @@ class Xvfb:
         with open(os.devnull, 'w') as fnull:
             self.proc = subprocess.Popen(self.xvfb_cmd,
                                          stdout=fnull,
-                                         stderr=fnull)
+                                         stderr=fnull,
+                                         close_fds=True)
         time.sleep(0.2)  # give Xvfb time to start
         ret_code = self.proc.poll()
         if ret_code is None:
