@@ -15,7 +15,7 @@ with open(os.path.join(this_dir, 'README.rst')) as f:
 
 setup(
     name='xvfbwrapper',
-    version='0.2.6',
+    version='0.2.7',
     py_modules=['xvfbwrapper'],
     author='Corey Goldberg',
     author_email='cgoldberg _at_ gmail.com',
