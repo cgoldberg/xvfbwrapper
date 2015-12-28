@@ -1,43 +1,68 @@
-===============
-    xvfbwrapper
-===============
+===========
+xvfbwrapper
+===========
+
+
+**Python wrapper for running a display inside X virtual framebuffer (Xvfb).**
 
 .. image:: https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
     :target: https://travis-ci.org/cgoldberg/xvfbwrapper
 
-Python wrapper for running a display inside X virtual framebuffer (Xvfb).  This is useful for running acceptance tests (i.e. browser-based tests) on a headless server.
+----
 
-* Dev: https://github.com/cgoldberg/xvfbwrapper
-* PyPI: http://pypi.python.org/pypi/xvfbwrapper
+-----
+Info:
+-----
 
-Corey Goldberg - 2012, 2013, 2015
+- Dev Home (GitHub): https://github.com/cgoldberg/xvfbwrapper
+- Releases (PyPI): https://pypi.python.org/pypi/xvfbwrapper
+- Author: `Corey Goldberg <https://github.com/cgoldberg/xvfbwrapper>`_ - 2012, 2013, 2015
+- License: MIT
 
-****
+----
 
-*********
-    Setup
-*********
+--------------
+    About Xvfb
+--------------
 
-Install xvfbwrapper from PyPI::
+You may want to run a program that uses a graphical display, requiring X11 and a physical display attached.  However, With Xvfb you can run headless inside a virtual dislpay.  In the X Window System, Xvfb or "X Virtual FrameBuffer" is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
 
-    pip install xvfbwrapper
+Xvfb is often used for running UI-based acceptance tests on a headless server.
 
-***********************
+----
+
+---------------------
+    About xvfbwrapper
+---------------------
+
+xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely when Integrating wiith python test suites or other Python code.
+
+----
+
+-----------------------------------
+    Install `xvfbwrapper` from PyPI
+-----------------------------------
+
+  ``pip install xvfbwrapper``
+
+----
+
+-----------------------
     System Requirements
-***********************
+-----------------------
 
-* Xvfb (`sudo apt-get install xvfb`, or similar)
+* Xvfb (``sudo apt-get install xvfb``, or similar)
 * Python 2.7 or 3.2+ (tested on py27, py32, py33, py34, 3.5, pypy)
 
-**************************************
-    About Xvfb (X Virtual Framebuffer)
-**************************************
+----
 
-In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
+++++++++++++
+    Examples
+++++++++++++
 
-************************
-    Example: Basic Usage
-************************
+****************
+    Basic Usage:
+****************
 
 ::
 
@@ -46,28 +71,34 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
     vdisplay = Xvfb()
     vdisplay.start()
 
-    # launch stuff inside virtual display here.
+    # launch stuff inside
+    # virtual display here.
 
     vdisplay.stop()
 
-****************************************************************************
-    Example: Basic Usage, using a specified display geometry and color depth
-****************************************************************************
+----
+
+*************************************************************
+    Basic Usage, specifying display geometry and color depth:
+*************************************************************
 
 ::
 
     from xvfbwrapper import Xvfb
 
-    vdisplay = Xvfb(width=1024, height=768, colordepth=16)
+    vdisplay = Xvfb(width=1280, height=740, colordepth=16)
     vdisplay.start()
 
-    # launch stuff inside virtual display here.
+    # launch stuff inside
+    # virtual display here.
 
     vdisplay.stop()
 
-***************************************
-    Example: Usage as a Context Manager
-***************************************
+----
+
+*******************************
+    Usage as a Context Manager:
+*******************************
 
 ::
 
@@ -75,12 +106,13 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
 
     with Xvfb() as xvfb:
         # launch stuff inside virtual display here.
-        # It starts/stops in this code block.
+        # It starts/stops around this code block.
 
+----
 
-**********************************************
-    Example: Headless Selenium WebDriver Tests
-**********************************************
+*******************************************************
+    Testing Example: Headless Selenium WebDriver Tests:
+*******************************************************
 
 ::
 
@@ -111,8 +143,13 @@ In the X Window System, Xvfb or X Virtual FrameBuffer is an X11 server that perf
     if __name__ == '__main__':
         unittest.main(verbosity=2)
 
-This above code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.  It will:
+
+This above code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.
+
+It will:
 
 * install selenium bindings: `pip install selenium`
 * Firefox will launch inside virtual display (headless)
 * browser is not shown while tests are run
+
+*Look Ma', no browser!*
