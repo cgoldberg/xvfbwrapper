@@ -16,7 +16,7 @@
 
 - Dev Home (GitHub): https://github.com/cgoldberg/xvfbwrapper
 - Releases (PyPI): https://pypi.python.org/pypi/xvfbwrapper
-- Author: `Corey Goldberg <https://github.com/cgoldberg/xvfbwrapper>`_ - 2012, 2013, 2015
+- Author: `Corey Goldberg <https://github.com/cgoldberg/xvfbwrapper>`_ - 2012, 2013, 2015, 2016
 - License: MIT
 
 ----

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#   * Corey Goldberg, 2012, 2013, 2016
+#   * Corey Goldberg, 2012, 2013, 2015, 2016
 #
 #   * inspired by: PyVirtualDisplay
 
