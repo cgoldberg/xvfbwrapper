@@ -12,6 +12,7 @@ import os
 import fnmatch
 import random
 import subprocess
+import tempfile
 import time
 
 
@@ -85,7 +86,7 @@ class Xvfb:
         return display_num
 
     def _lock_files(self):
-        tmpdir = '/tmp'
+        tmpdir = tempfile.gettempdir()
         pattern = '.X*-lock'
         names = fnmatch.filter(os.listdir(tmpdir), pattern)
         ls = [os.path.join(tmpdir, child) for child in names]
