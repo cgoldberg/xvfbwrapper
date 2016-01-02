@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 #
-#   * Corey Goldberg, 2012, 2013, 2015
+#   * Corey Goldberg, 2012, 2013, 2016
 #
-#   * inspired by:
-#       PyVirtualDisplay: http://pypi.python.org/pypi/PyVirtualDisplay
+#   * inspired by: PyVirtualDisplay
 
 
 """wrapper for running display inside X virtual framebuffer (Xvfb)"""
@@ -23,6 +22,10 @@ class Xvfb:
         self.height = height
         self.colordepth = colordepth
 
+        if not self._xvfb_exists():
+            msg = 'Can not find Xvfb. Please install it and try again.'
+            raise EnvironmentError(msg)
+
         self.xvfb_cmd = [
             '-screen', '0', '%dx%dx%d' %
             (self.width, self.height, self.colordepth)
@@ -31,11 +34,12 @@ class Xvfb:
         for key, value in kwargs.items():
             self.xvfb_cmd = self.xvfb_cmd + ['-%s' % key, value]
 
-        self.proc = None
         if 'DISPLAY' in os.environ:
             self.old_display_num = os.environ['DISPLAY'].split(':')[1]
         else:
             self.old_display_num = 0
+
+        self.proc = None
 
     def __enter__(self):
         self.start()
@@ -47,6 +51,7 @@ class Xvfb:
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
         self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
+
         with open(os.devnull, 'w') as fnull:
             self.proc = subprocess.Popen(self.xvfb_cmd,
                                          stdout=fnull,
@@ -59,7 +64,7 @@ class Xvfb:
         else:
             self._redirect_display(self.old_display_num)
             self.proc = None
-            print('Error: Xvfb did not start')
+            raise RuntimeError('Xvfb did not start')
 
     def stop(self):
         self._redirect_display(self.old_display_num)
@@ -76,7 +81,7 @@ class Xvfb:
         else:
             display_num = min_display_num
         random.seed()
-        display_num += random.randint(0, 100)
+        display_num += random.randint(0, 1000)
         return display_num
 
     def _lock_files(self):
@@ -89,3 +94,10 @@ class Xvfb:
 
     def _redirect_display(self, display_num):
         os.environ['DISPLAY'] = ':%s' % display_num
+
+    def _xvfb_exists(self):
+        """Check that Xvfb exists in PATH and is executable."""
+        return any(
+            os.access(os.path.join(path, 'Xvfb'), os.X_OK)
+            for path in os.environ['PATH'].split(os.pathsep)
+        )
