@@ -26,13 +26,13 @@ class Xvfb:
             msg = 'Can not find Xvfb. Please install it and try again.'
             raise EnvironmentError(msg)
 
-        self.xvfb_cmd = [
+        self.xvfb_args = [
             '-screen', '0', '%dx%dx%d' %
             (self.width, self.height, self.colordepth)
         ]
 
         for key, value in kwargs.items():
-            self.xvfb_cmd = self.xvfb_cmd + ['-%s' % key, value]
+            self.xvfb_args += ['-%s' % key, value]
 
         if 'DISPLAY' in os.environ:
             self.old_display_num = os.environ['DISPLAY'].split(':')[1]
@@ -50,7 +50,7 @@ class Xvfb:
 
     def start(self):
         self.vdisplay_num = self.search_for_free_display()
-        self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_cmd
+        self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_args
 
         with open(os.devnull, 'w') as fnull:
             self.proc = subprocess.Popen(self.xvfb_cmd,
