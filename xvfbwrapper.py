@@ -50,7 +50,7 @@ class Xvfb:
         self.stop()
 
     def start(self):
-        self.vdisplay_num = self.search_for_free_display()
+        self.vdisplay_num = self._get_next_unused_display()
         self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_args
 
         with open(os.devnull, 'w') as fnull:
@@ -69,35 +69,28 @@ class Xvfb:
 
     def stop(self):
         self._redirect_display(self.old_display_num)
+        # TODO:
+        # fix leaking X displays.
+        # (killing Xvfb process doesn't clean up the underlying X11 server)
         if self.proc is not None:
             self.proc.kill()
             self.proc.wait()
             self.proc = None
 
-    def search_for_free_display(self):
-        ls = [int(x.split('X')[1].split('-')[0]) for x in self._lock_files()]
-        min_display_num = 1000
-        if len(ls):
-            display_num = max(min_display_num, max(ls) + 1)
-        else:
-            display_num = min_display_num
-        random.seed()
-        display_num += random.randint(0, 1000)
-        return display_num
-
-    def _lock_files(self):
+    def _get_next_unused_display(self):
         tmpdir = tempfile.gettempdir()
         pattern = '.X*-lock'
-        names = fnmatch.filter(os.listdir(tmpdir), pattern)
-        ls = [os.path.join(tmpdir, child) for child in names]
-        ls = [p for p in ls if os.path.isfile(p)]
-        return ls
+        lockfile_names = fnmatch.filter(os.listdir(tmpdir), pattern)
+        existing_displays = [int(name.split('X')[1].split('-')[0])
+                             for name in lockfile_names]
+        highest_display = max(existing_displays) if existing_displays else 0
+        return highest_display + 1
 
     def _redirect_display(self, display_num):
         os.environ['DISPLAY'] = ':%s' % display_num
 
     def _xvfb_exists(self):
-        """Check that Xvfb exists in PATH and is executable."""
+        """Check that Xvfb is in PATH and is executable."""
         return any(
             os.access(os.path.join(path, 'Xvfb'), os.X_OK)
             for path in os.environ['PATH'].split(os.pathsep)
