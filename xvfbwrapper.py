@@ -10,7 +10,6 @@
 
 import os
 import fnmatch
-import random
 import subprocess
 import tempfile
 import time
@@ -23,22 +22,20 @@ class Xvfb:
         self.height = height
         self.colordepth = colordepth
 
-        if not self._xvfb_exists():
+        if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
             raise EnvironmentError(msg)
 
-        self.xvfb_args = [
-            '-screen', '0', '%dx%dx%d' %
-            (self.width, self.height, self.colordepth)
-        ]
+        self.extra_xvfb_args = ['-screen', '0', '{}x{}x{}'.format(
+                                self.width, self.height, self.colordepth)]
 
         for key, value in kwargs.items():
-            self.xvfb_args += ['-%s' % key, value]
+            self.extra_xvfb_args += ['-{}'.format(key), value]
 
         if 'DISPLAY' in os.environ:
-            self.old_display_num = os.environ['DISPLAY'].split(':')[1]
+            self.orig_display = os.environ['DISPLAY'].split(':')[1]
         else:
-            self.old_display_num = 0
+            self.orig_display = None
 
         self.proc = None
 
@@ -50,25 +47,26 @@ class Xvfb:
         self.stop()
 
     def start(self):
-        self.vdisplay_num = self._get_next_unused_display()
-        self.xvfb_cmd = ['Xvfb', ':%d' % self.vdisplay_num] + self.xvfb_args
-
+        self.new_display = self._get_next_unused_display()
+        display_var = ':{}'.format(self.new_display)
+        self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
         with open(os.devnull, 'w') as fnull:
             self.proc = subprocess.Popen(self.xvfb_cmd,
                                          stdout=fnull,
                                          stderr=fnull,
                                          close_fds=True)
-        time.sleep(0.2)  # give Xvfb time to start
+        time.sleep(0.1)  # give Xvfb time to start
         ret_code = self.proc.poll()
         if ret_code is None:
-            self._redirect_display(self.vdisplay_num)
+            self._set_display_var(self.new_display)
         else:
-            self._redirect_display(self.old_display_num)
-            self.proc = None
             raise RuntimeError('Xvfb did not start')
 
     def stop(self):
-        self._redirect_display(self.old_display_num)
+        if self.orig_display is None:
+            del os.environ['DISPLAY']
+        else:
+            self._set_display_var(self.orig_display)
         # TODO:
         # fix leaking X displays.
         # (killing Xvfb process doesn't clean up the underlying X11 server)
@@ -86,10 +84,11 @@ class Xvfb:
         highest_display = max(existing_displays) if existing_displays else 0
         return highest_display + 1
 
-    def _redirect_display(self, display_num):
-        os.environ['DISPLAY'] = ':%s' % display_num
+    def xvfb_exists(self):
+        """Check that Xvfb is available on PATH and is executable."""
+        paths = os.environ['PATH'].split(os.pathsep)
+        return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
+                   for path in paths)
 
-    def _xvfb_exists(self):
-        """Check that Xvfb is in PATH and is executable."""
-        if any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
-               for path in os.environ['PATH'].split(os.pathsep))
+    def _set_display_var(self, display):
+        os.environ['DISPLAY'] = ':{}'.format(display)
