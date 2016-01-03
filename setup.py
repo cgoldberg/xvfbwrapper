@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""disutils setup/install script for xvfbwrapper"""
+"""distutils setup/install script for xvfbwrapper"""
 
 
 import os
