@@ -91,7 +91,5 @@ class Xvfb:
 
     def _xvfb_exists(self):
         """Check that Xvfb is in PATH and is executable."""
-        return any(
-            os.access(os.path.join(path, 'Xvfb'), os.X_OK)
-            for path in os.environ['PATH'].split(os.pathsep)
-        )
+        if any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
+               for path in os.environ['PATH'].split(os.pathsep))
