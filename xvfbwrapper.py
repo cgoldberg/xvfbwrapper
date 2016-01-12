@@ -69,9 +69,9 @@ class Xvfb:
             self._set_display_var(self.orig_display)
         # TODO:
         # fix leaking X displays.
-        # (killing Xvfb process doesn't clean up the underlying X11 server)
+        # killing Xvfb process doesn't up the lock files (/tmp/.X*-lock)
         if self.proc is not None:
-            self.proc.kill()
+            self.proc.terminate()
             self.proc.wait()
             self.proc = None
 
