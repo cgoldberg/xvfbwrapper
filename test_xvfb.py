@@ -28,8 +28,8 @@ class TestXvfb(unittest.TestCase):
         xvfb.start()
         self.assertNotEqual(orig_display, os.environ['DISPLAY'])
         xvfb.stop()
-        self.assertIsNone(xvfb.proc)
         self.assertEqual(orig_display, os.environ['DISPLAY'])
+        self.assertIsNone(xvfb.proc)
 
     def test_start_without_existing_display(self):
         del os.environ['DISPLAY']
@@ -47,8 +47,8 @@ class TestXvfb(unittest.TestCase):
             display_var = ':{}'.format(xvfb.new_display)
             self.assertEqual(display_var, os.environ['DISPLAY'])
             self.assertIsNotNone(xvfb.proc)
-        self.assertIsNone(xvfb.proc)
         self.assertEqual(orig_display, os.environ['DISPLAY'])
+        self.assertIsNone(xvfb.proc)
 
     def test_start_with_kwargs(self):
         w = 800
@@ -64,10 +64,15 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
 
-    def test_start_with_arbitrary_kwarg(self):
+    def test_start_with_arbitrary_kwargs(self):
         xvfb = Xvfb(nolisten='tcp')
         self.addCleanup(xvfb.stop)
         xvfb.start()
         display_var = ':{}'.format(xvfb.new_display)
         self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
+
+    def test_start_fails_with_unknown_kwargs(self):
+        xvfb = Xvfb(foo='bar')
+        with self.assertRaises(RuntimeError):
+            xvfb.start()

@@ -68,8 +68,11 @@ class Xvfb:
         else:
             self._set_display_var(self.orig_display)
         if self.proc is not None:
-            self.proc.terminate()
-            self.proc.wait()
+            try:
+                self.proc.terminate()
+                self.proc.wait()
+            except OSError:
+                pass
             self.proc = None
 
     def _get_next_unused_display(self):
@@ -81,11 +84,11 @@ class Xvfb:
         highest_display = max(existing_displays) if existing_displays else 0
         return highest_display + 1
 
+    def _set_display_var(self, display):
+        os.environ['DISPLAY'] = ':{}'.format(display)
+
     def xvfb_exists(self):
         """Check that Xvfb is available on PATH and is executable."""
         paths = os.environ['PATH'].split(os.pathsep)
         return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
                    for path in paths)
-
-    def _set_display_var(self, display):
-        os.environ['DISPLAY'] = ':{}'.format(display)
