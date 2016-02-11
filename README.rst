@@ -25,7 +25,7 @@
     About Xvfb:
 ---------------
 
-You may want to run a program that uses a graphical display, requiring X11 and a physical display attached.  However, With Xvfb you can run headless inside a virtual dislpay.  In the X Window System, Xvfb or "X Virtual FrameBuffer" is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
+To run a program with a graphical display, you normally require X11 and a physical display attached.  However, With Xvfb you can run headless inside a virtual dislpay.  In the X Window System, Xvfb or "X Virtual FrameBuffer" is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
 
 Xvfb is often used for running browser-based acceptance tests on a headless server.
 
@@ -35,7 +35,7 @@ Xvfb is often used for running browser-based acceptance tests on a headless serv
     About xvfbwrapper:
 ----------------------
 
-xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely when Integrating wiith python test suites or other Python code.
+xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely when Integrating with UI test suites in Python.
 
 ----
 
@@ -144,12 +144,15 @@ xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely whe
         unittest.main(verbosity=2)
 
 
-This above code uses `selenium` and `xvfbwrapper` to run a test with Firefox inside a headless display.
+The test class above uses `selenium` and `xvfbwrapper` to run each test case with Firefox inside a headless display.
 
-It will:
-
-* install selenium bindings: `pip install selenium`
-* Firefox will launch inside virtual display (headless)
+* virtual display is launched
+* Firefox launches inside virtual display (headless)
 * browser is not shown while tests are run
+* conditions are asserted in each test case
+* browser quits during cleanup
+* virtual display stops during cleanup
 
 *Look Ma', no browser!*
+
+(You can also take screenshots inside the virtual display for diagnosing test failures)
