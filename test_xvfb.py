@@ -65,7 +65,7 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_arbitrary_kwargs(self):
-        xvfb = Xvfb(nolisten='tcp')
+        xvfb = Xvfb(nolisten='tcp', noreset=None)
         self.addCleanup(xvfb.stop)
         xvfb.start()
         display_var = ':{}'.format(xvfb.new_display)
