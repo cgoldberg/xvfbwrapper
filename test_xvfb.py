@@ -64,8 +64,16 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
 
-    def test_start_with_arbitrary_kwargs(self):
-        xvfb = Xvfb(nolisten='tcp', noreset=None)
+    def test_start_with_arbitrary_binary_kwargs(self):
+        xvfb = Xvfb(nolisten='tcp')
+        self.addCleanup(xvfb.stop)
+        xvfb.start()
+        display_var = ':{}'.format(xvfb.new_display)
+        self.assertEqual(display_var, os.environ['DISPLAY'])
+        self.assertIsNotNone(xvfb.proc)
+
+    def test_start_with_arbitrary_unary_kwargs(self):
+        xvfb = Xvfb(noreset=None)
         self.addCleanup(xvfb.stop)
         xvfb.start()
         display_var = ':{}'.format(xvfb.new_display)
