@@ -81,10 +81,11 @@ class Xvfb:
         lockfile_names = fnmatch.filter(os.listdir(tmpdir), pattern)
         existing_displays = [int(name.split('X')[1].split('-')[0])
                              for name in lockfile_names]
-        for i in range(1, max(existing_displays)):
-            if i not in existing_displays:
-                return i
-        return max(existing_displays) + 1
+        if existing_displays:
+            for i in range(1, max(existing_displays)):
+                if i not in existing_displays:
+                    return i
+        return max(existing_displays) + 1 if existing_displays else 1
 
     def _set_display_var(self, display):
         os.environ['DISPLAY'] = ':{}'.format(display)
