@@ -82,7 +82,7 @@ class Xvfb:
         existing_displays = [int(name.split('X')[1].split('-')[0])
                              for name in lockfile_names]
         for i in range(1, max(existing_displays)):
-            if i not in existing_display:
+            if i not in existing_displays:
                 return i
         return max(existing_displays) + 1
 
