@@ -25,9 +25,9 @@
     About Xvfb:
 ---------------
 
-To run a program with a graphical display, you normally require X11 and a physical display attached.  However, With Xvfb you can run headless inside a virtual dislpay.  In the X Window System, Xvfb or "X Virtual FrameBuffer" is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
+To run a program with a graphical display, you normally require X11 and a physical display attached.  However, With Xvfb you can run headless inside a virtual dislpay.  In the X Window System, X Virtual FrameBuffer (Xvfb or ") is an X11 server that performs all graphical operations in memory, not showing any screen output. This virtual server does not require the computer it is running on to even have a screen or any input device. Only a network layer is necessary.
 
-Xvfb is often used for running browser-based acceptance tests on a headless server.
+Xvfb is often used for running acceptance tests on a headless server.
 
 ----
 
