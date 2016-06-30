@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import unittest
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from xvfbwrapper import Xvfb
 
@@ -76,3 +81,21 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(foo='bar')
         with self.assertRaises(RuntimeError):
             xvfb.start()
+
+    def test_get_next_unused_display_does_not_reuse_lock(self):
+        xvfb = Xvfb()
+        xvfb2 = Xvfb()
+        xvfb3 = Xvfb()
+        self.addCleanup(xvfb._cleanup_lock_file)
+        self.addCleanup(xvfb2._cleanup_lock_file)
+        self.addCleanup(xvfb3._cleanup_lock_file)
+        with patch('xvfbwrapper.randint',
+                   side_effect=[11, 11, 22, 11, 22, 11, 22, 22, 22, 33]):
+            self.assertEqual(xvfb._get_next_unused_display(), 11)
+            if sys.version_info >= (3, 2):
+                with self.assertWarns(ResourceWarning):
+                    self.assertEqual(xvfb2._get_next_unused_display(), 22)
+                    self.assertEqual(xvfb3._get_next_unused_display(), 33)
+            else:
+                self.assertEqual(xvfb2._get_next_unused_display(), 22)
+                self.assertEqual(xvfb3._get_next_unused_display(), 33)

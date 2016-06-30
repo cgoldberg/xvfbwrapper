@@ -9,18 +9,32 @@
 
 
 import os
-import fnmatch
 import subprocess
 import tempfile
 import time
+import fcntl
+from random import randint
+
+try:
+    BlockingIOError
+except NameError:
+    # python 2
+    BlockingIOError = IOError
 
 
-class Xvfb:
+class Xvfb(object):
 
-    def __init__(self, width=800, height=680, colordepth=24, **kwargs):
+    # Maximum value to use for a display. 32-bit maxint is the
+    # highest Xvfb currently supports
+    MAX_DISPLAY = 2147483647
+    SLEEP_TIME_BEFORE_START = 0.1
+
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
+                 **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
+        self._tempdir = tempdir or tempfile.gettempdir()
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -55,34 +69,65 @@ class Xvfb:
                                          stdout=fnull,
                                          stderr=fnull,
                                          close_fds=True)
-        time.sleep(0.1)  # give Xvfb time to start
+        # give Xvfb time to start
+        time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display_var(self.new_display)
         else:
+            self._cleanup_lock_file()
             raise RuntimeError('Xvfb did not start')
 
     def stop(self):
-        if self.orig_display is None:
-            del os.environ['DISPLAY']
-        else:
-            self._set_display_var(self.orig_display)
-        if self.proc is not None:
-            try:
-                self.proc.terminate()
-                self.proc.wait()
-            except OSError:
-                pass
-            self.proc = None
+        try:
+            if self.orig_display is None:
+                del os.environ['DISPLAY']
+            else:
+                self._set_display_var(self.orig_display)
+            if self.proc is not None:
+                try:
+                    self.proc.terminate()
+                    self.proc.wait()
+                except OSError:
+                    pass
+                self.proc = None
+        finally:
+            self._cleanup_lock_file()
+
+    def _cleanup_lock_file(self):
+        '''
+        This should always get called if the process exits safely
+        with Xvfb.stop() (whether called explicitly, or by __exit__).
+
+        If you are ending up with /tmp/X123-lock files when Xvfb is not
+        running, then Xvfb is not exiting cleanly. Always either call
+        Xvfb.stop() in a finally block, or use Xvfb as a context manager
+        to ensure lock files are purged.
+
+        '''
+        self._lock_display_file.close()
+        try:
+            os.remove(self._lock_display_file.name)
+        except OSError:
+            pass
 
     def _get_next_unused_display(self):
-        tmpdir = tempfile.gettempdir()
-        pattern = '.X*-lock'
-        lockfile_names = fnmatch.filter(os.listdir(tmpdir), pattern)
-        existing_displays = [int(name.split('X')[1].split('-')[0])
-                             for name in lockfile_names]
-        highest_display = max(existing_displays) if existing_displays else 0
-        return highest_display + 1
+        '''
+        In order to ensure multi-process safety, this method attempts
+        to acquire an exclusive lock on a temporary file whose name
+        contains the display number for Xvfb.
+        '''
+        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
+        while True:
+            rand = randint(1, self.__class__.MAX_DISPLAY)
+            self._lock_display_file = open(tempfile_path.format(rand), 'w')
+            try:
+                fcntl.flock(self._lock_display_file,
+                            fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                continue
+            else:
+                return rand
 
     def _set_display_var(self, display):
         os.environ['DISPLAY'] = ':{}'.format(display)
