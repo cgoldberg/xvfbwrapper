@@ -52,7 +52,7 @@ xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely whe
 ------------------------
 
 * Xvfb (``sudo apt-get install xvfb``, or similar)
-* Python 2.7 or 3.2+ (tested on py27, py32, py33, py34, 3.5, pypy)
+* Python 2.7 or 3.3+
 
 ----
 
