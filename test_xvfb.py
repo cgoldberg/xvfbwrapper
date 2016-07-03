@@ -89,13 +89,19 @@ class TestXvfb(unittest.TestCase):
         self.addCleanup(xvfb._cleanup_lock_file)
         self.addCleanup(xvfb2._cleanup_lock_file)
         self.addCleanup(xvfb3._cleanup_lock_file)
+        side_effect = [11, 11, 22, 11, 22, 11, 22, 22, 22, 33]
         with patch('xvfbwrapper.randint',
-                   side_effect=[11, 11, 22, 11, 22, 11, 22, 22, 22, 33]):
+                   side_effect=side_effect) as mockrandint:
             self.assertEqual(xvfb._get_next_unused_display(), 11)
+            self.assertEqual(mockrandint.call_count, 1)
             if sys.version_info >= (3, 2):
                 with self.assertWarns(ResourceWarning):
                     self.assertEqual(xvfb2._get_next_unused_display(), 22)
+                    self.assertEqual(mockrandint.call_count, 3)
                     self.assertEqual(xvfb3._get_next_unused_display(), 33)
+                    self.assertEqual(mockrandint.call_count, 10)
             else:
                 self.assertEqual(xvfb2._get_next_unused_display(), 22)
+                self.assertEqual(mockrandint.call_count, 3)
                 self.assertEqual(xvfb3._get_next_unused_display(), 33)
+                self.assertEqual(mockrandint.call_count, 10)
