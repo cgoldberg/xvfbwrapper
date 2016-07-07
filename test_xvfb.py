@@ -19,6 +19,12 @@ class TestXvfb(unittest.TestCase):
     def setUp(self):
         self.reset_display()
 
+    def test_xvfb_binary_not_exists(self):
+        with patch('xvfbwrapper.Xvfb.xvfb_exists') as xvfb_exists:
+            xvfb_exists.return_value = False
+            with self.assertRaises(EnvironmentError):
+                Xvfb()
+
     def test_start(self):
         xvfb = Xvfb()
         self.addCleanup(xvfb.stop)
