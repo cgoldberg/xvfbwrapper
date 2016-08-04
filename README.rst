@@ -3,7 +3,7 @@
 ===============
 
 
-**Python wrapper for running a display inside X virtual framebuffer (Xvfb).**
+**Manage headless displays with Xvfb (X virtual framebuffer)**
 
 .. image:: https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
     :target: https://travis-ci.org/cgoldberg/xvfbwrapper
@@ -16,7 +16,7 @@
 
 - Dev Home (GitHub): https://github.com/cgoldberg/xvfbwrapper
 - Releases (PyPI): https://pypi.python.org/pypi/xvfbwrapper
-- Author: `Corey Goldberg <https://github.com/cgoldberg/xvfbwrapper>`_ - 2012, 2013, 2015, 2016
+- Author: `Corey Goldberg <https://github.com/cgoldberg/xvfbwrapper>`_ - 2012-2016
 - License: MIT
 
 ----
@@ -78,9 +78,9 @@ xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely whe
 
 ----
 
-*************************************************************
-    Basic Usage, specifying display geometry and color depth:
-*************************************************************
+*********************************************
+    Basic Usage, specifying display geometry:
+*********************************************
 
 ::
 
@@ -141,7 +141,7 @@ xvfbwrapper is a small python wrapper for controlling Xvfb.  It works nicely whe
 
 
     if __name__ == '__main__':
-        unittest.main(verbosity=2)
+        unittest.main()
 
 
 The test class above uses `selenium` and `xvfbwrapper` to run each test case with Firefox inside a headless display.
