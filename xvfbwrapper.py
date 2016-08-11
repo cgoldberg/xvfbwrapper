@@ -81,7 +81,10 @@ class Xvfb(object):
     def stop(self):
         try:
             if self.orig_display is None:
-                del os.environ['DISPLAY']
+                try:
+                    del os.environ['DISPLAY']
+                except KeyError:
+                    pass
             else:
                 self._set_display_var(self.orig_display)
             if self.proc is not None:
