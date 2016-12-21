@@ -25,7 +25,7 @@
     About xvfbwrapper:
 ----------------------
 
-xvfbwrapper is a python wrapper for controlling Xvfb.
+xvfbwrapper is a python module for controlling Xvfb.
 
 ----
 
@@ -114,6 +114,8 @@ Xvfb is especially useful for running acceptance tests on headless servers.
     Testing Example: Headless Selenium WebDriver Tests:
 *******************************************************
 
+This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on Firefox with a headless display.
+
 ::
 
     import unittest
@@ -142,9 +144,6 @@ Xvfb is especially useful for running acceptance tests on headless servers.
 
     if __name__ == '__main__':
         unittest.main()
-
-
-The test class above uses `selenium` and `xvfbwrapper` to run each test case with Firefox inside a headless display.
 
 * virtual display is launched
 * Firefox launches inside virtual display (headless)
