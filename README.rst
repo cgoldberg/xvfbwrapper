@@ -44,7 +44,7 @@ Xvfb is especially useful for running acceptance tests on headless servers.
     Install xvfbwrapper from PyPI:
 ----------------------------------
 
-  ``pip install xvfbwrapper``
+  `pip install xvfbwrapper`
 
 ----
 
@@ -52,7 +52,8 @@ Xvfb is especially useful for running acceptance tests on headless servers.
     System Requirements:
 ------------------------
 
-* Xvfb (``sudo apt-get install xvfb``, or similar)
+* X11 Windowing System
+* Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
 * Python 2.7 or 3.3+
 
 ----
@@ -72,8 +73,7 @@ Xvfb is especially useful for running acceptance tests on headless servers.
     vdisplay = Xvfb()
     vdisplay.start()
 
-    # launch stuff inside
-    # virtual display here.
+    # launch stuff inside virtual display here.
 
     vdisplay.stop()
 
@@ -90,8 +90,7 @@ Xvfb is especially useful for running acceptance tests on headless servers.
     vdisplay = Xvfb(width=1280, height=740, colordepth=16)
     vdisplay.start()
 
-    # launch stuff inside
-    # virtual display here.
+    # launch stuff inside virtual display here.
 
     vdisplay.stop()
 
@@ -107,7 +106,7 @@ Xvfb is especially useful for running acceptance tests on headless servers.
 
     with Xvfb() as xvfb:
         # launch stuff inside virtual display here.
-        # It starts/stops around this code block.
+        # Xvfb will stop when this block completes
 
 ----
 
@@ -156,4 +155,4 @@ The test class above uses `selenium` and `xvfbwrapper` to run each test case wit
 
 *Look Ma', no browser!*
 
-(You can also take screenshots inside the virtual display for diagnosing test failures)
+(You can also take screenshots inside the virtual display to help diagnose test failures)
