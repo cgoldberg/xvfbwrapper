@@ -76,8 +76,8 @@ class Xvfb(object):
             self._set_display_var(self.new_display)
         else:
             self._cleanup_lock_file()
-            raise RuntimeError('Xvfb did not start (%r): %r',
-                               ret_code, self.xvfb_cmd)
+            raise RuntimeError('Xvfb did not start (%r): %r'
+                               % (ret_code, self.xvfb_cmd))
 
     def stop(self):
         try:
