@@ -16,7 +16,7 @@
 
 - Dev: https://github.com/cgoldberg/xvfbwrapper
 - Releases: https://pypi.python.org/pypi/xvfbwrapper
-- Author: `Corey Goldberg <https://github.com/cgoldberg>`_ - 2012-2016
+- Author: `Corey Goldberg <https://github.com/cgoldberg>`_ - 2012-2017
 - License: MIT
 
 ----
@@ -35,10 +35,9 @@ xvfbwrapper is a python module for controlling Xvfb.
 
 Xvfb (X virtual framebuffer) is a display server implementing the X11 display server protocol. It runs in memory and does not require a physical display.  Only a network layer is necessary.
 
-Xvfb is especially useful for running acceptance tests on headless servers.
+Xvfb is useful for running acceptance tests on headless servers.
 
 ----
-
 
 ----------------------------------
     Install xvfbwrapper from PyPI:
@@ -87,7 +86,7 @@ Xvfb is especially useful for running acceptance tests on headless servers.
 
     from xvfbwrapper import Xvfb
 
-    vdisplay = Xvfb(width=1280, height=740, colordepth=16)
+    vdisplay = Xvfb(width=1280, height=740)
     vdisplay.start()
 
     # launch stuff inside virtual display here.
