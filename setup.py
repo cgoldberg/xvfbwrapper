@@ -24,11 +24,11 @@ except ImportError:
 
 setup(
     name='xvfbwrapper',
-    version='0.2.9',
+    version='0.2.10dev',
     py_modules=['xvfbwrapper'],
     author='Corey Goldberg',
     author_email='cgoldberg _at_ gmail.com',
-    description='run headless display inside X virtual framebuffer (Xvfb)',
+    description='Manage headless displays with Xvfb (X virtual framebuffer)',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/cgoldberg/xvfbwrapper',
     download_url='http://pypi.python.org/pypi/xvfbwrapper',
@@ -47,6 +47,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 )
