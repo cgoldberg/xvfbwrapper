@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 #
-#   * Corey Goldberg, 2012, 2013, 2015, 2016
-#
-#   * inspired by: PyVirtualDisplay
+#   * Corey Goldberg, 2012, 2013, 2015, 2016, 2017
 
 
-"""wrapper for running display inside X virtual framebuffer (Xvfb)"""
+"""Run a headless display inside X virtual framebuffer (Xvfb)"""
 
 
+import fcntl
 import os
 import subprocess
 import tempfile
 import time
-import fcntl
+
 from random import randint
 
 try:
@@ -95,6 +94,12 @@ class Xvfb(object):
         finally:
             self._cleanup_lock_file()
 
+    def xvfb_exists(self):
+        """Check that Xvfb is available on PATH and is executable."""
+        paths = os.environ['PATH'].split(os.pathsep)
+        return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
+                   for path in paths)
+
     def _cleanup_lock_file(self):
         '''
         This should always get called if the process exits safely
@@ -132,9 +137,3 @@ class Xvfb(object):
 
     def _set_display_var(self, display):
         os.environ['DISPLAY'] = ':{}'.format(display)
-
-    def xvfb_exists(self):
-        """Check that Xvfb is available on PATH and is executable."""
-        paths = os.environ['PATH'].split(os.pathsep)
-        return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
-                   for path in paths)
