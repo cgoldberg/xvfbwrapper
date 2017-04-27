@@ -126,11 +126,11 @@ class Xvfb(object):
         tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
         while True:
             rand = randint(1, self.__class__.MAX_DISPLAY)
-            self._lock_display_file = open(tempfile_path.format(rand), 'w')
             try:
+                self._lock_display_file = open(tempfile_path.format(rand), 'w')
                 fcntl.flock(self._lock_display_file,
                             fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError:
+            except (BlockingIOError, PermissionError):
                 continue
             else:
                 return rand
