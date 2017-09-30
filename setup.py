@@ -5,24 +5,21 @@
 
 
 import os
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+import setuptools
+import sys
 
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_dir, 'README.rst')) as f:
     LONG_DESCRIPTION = '\n' + f.read()
 
-tests_require = []
-try:
-    from unittest import mock  # noqa
-except ImportError:
-    tests_require.append('mock')
+if sys.version_info.major < 3:
+    tests_require = ['mock']
+else:
+    tests_require = []
 
-setup(
+
+setuptools.setup(
     name='xvfbwrapper',
     version='0.2.10dev',
     py_modules=['xvfbwrapper'],
