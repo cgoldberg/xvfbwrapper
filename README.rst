@@ -25,7 +25,7 @@
     About xvfbwrapper:
 ----------------------
 
-xvfbwrapper is a python module for controlling Xvfb.
+xvfbwrapper is a python module for controlling virtual displays with Xvfb.
 
 ----
 

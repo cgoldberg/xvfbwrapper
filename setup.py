@@ -28,7 +28,7 @@ setuptools.setup(
     description='Manage headless displays with Xvfb (X virtual framebuffer)',
     long_description=LONG_DESCRIPTION,
     url='https://github.com/cgoldberg/xvfbwrapper',
-    download_url='http://pypi.python.org/pypi/xvfbwrapper',
+    download_url='https://pypi.python.org/pypi/xvfbwrapper',
     tests_require=tests_require,
     keywords='xvfb virtual display headless x11'.split(),
     license='MIT',
