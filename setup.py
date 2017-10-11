@@ -21,7 +21,7 @@ else:
 
 setuptools.setup(
     name='xvfbwrapper',
-    version='0.2.10dev',
+    version='0.2.10dev-b',
     py_modules=['xvfbwrapper'],
     author='Corey Goldberg',
     author_email='cgoldberg _at_ gmail.com',
