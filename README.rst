@@ -29,9 +29,9 @@ xvfbwrapper is a python module for controlling virtual displays with Xvfb.
 
 ----
 
----------------
-    About Xvfb:
----------------
+------------------
+    What is Xvfb?:
+------------------
 
 Xvfb (X virtual framebuffer) is a display server implementing the X11 display server protocol. It runs in memory and does not require a physical display.  Only a network layer is necessary.
 
