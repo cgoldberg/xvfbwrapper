@@ -67,6 +67,7 @@ class Xvfb(object):
             self.proc = subprocess.Popen(self.xvfb_cmd,
                                          stdout=fnull,
                                          stderr=fnull,
+                                         preexec_fn=os.setpgrp,
                                          close_fds=True)
         # give Xvfb time to start
         time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
