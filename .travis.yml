@@ -1,10 +1,19 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
   - "pypy"
+# Enable 3.7 without globally enabling sudo and dist: xenial for other build jobs
+# Should be able to remove this wierd stuff once
+# https://github.com/travis-ci/travis-ci/issues/9815 is resolved
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+# /end python 3.7 hack
 before_install:
   - "sudo apt-get update -qq"
   - "sudo apt-get install -y xvfb"
