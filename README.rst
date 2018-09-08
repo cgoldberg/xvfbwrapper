@@ -43,7 +43,9 @@ Xvfb is useful for running acceptance tests on headless servers.
     Install xvfbwrapper from PyPI:
 ----------------------------------
 
-  `pip install xvfbwrapper`
+.. code:: bash
+
+  pip install xvfbwrapper
 
 ----
 
@@ -53,7 +55,7 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 * X11 Windowing System
 * Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
-* Python 2.7 or 3.3+
+* Python 2.7 or 3.4+
 
 ----
 
@@ -65,16 +67,20 @@ Xvfb is useful for running acceptance tests on headless servers.
     Basic Usage:
 ****************
 
-::
+.. code:: python
 
     from xvfbwrapper import Xvfb
 
     vdisplay = Xvfb()
     vdisplay.start()
 
-    # launch stuff inside virtual display here.
-
-    vdisplay.stop()
+    try:
+        # launch stuff inside virtual display here.
+    finally:
+        # always either wrap your usage of Xvfb() with try / finally,
+        # or alternatively use Xvfb as a context manager.
+        # If you don't, you'll probably end up with a bunch of junk in /tmp
+        vdisplay.stop()
 
 ----
 
@@ -82,16 +88,17 @@ Xvfb is useful for running acceptance tests on headless servers.
     Basic Usage, specifying display geometry:
 *********************************************
 
-::
+.. code:: python
 
     from xvfbwrapper import Xvfb
 
     vdisplay = Xvfb(width=1280, height=740)
     vdisplay.start()
 
-    # launch stuff inside virtual display here.
-
-    vdisplay.stop()
+    try:
+        # launch stuff inside virtual display here.
+    finally:
+        vdisplay.stop()
 
 ----
 
@@ -99,7 +106,7 @@ Xvfb is useful for running acceptance tests on headless servers.
     Usage as a Context Manager:
 *******************************
 
-::
+.. code:: python
 
     from xvfbwrapper import Xvfb
 
@@ -115,7 +122,7 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on Firefox with a headless display.
 
-::
+.. code:: python
 
     import unittest
 
