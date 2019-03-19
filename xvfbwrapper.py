@@ -28,12 +28,13 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
+    def __init__(self, width=800, height=680, colordepth=24, display=None, tempdir=None,
                  **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
+	self.display = display
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -60,7 +61,8 @@ class Xvfb(object):
         self.stop()
 
     def start(self):
-        self.new_display = self._get_next_unused_display()
+        self.new_display = self._get_next_unused_display(self.display)
+
         display_var = ':{}'.format(self.new_display)
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
         with open(os.devnull, 'w') as fnull:
@@ -117,7 +119,7 @@ class Xvfb(object):
         except OSError:
             pass
 
-    def _get_next_unused_display(self):
+    def _get_next_unused_display(self, desired_display=None):
         '''
         In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
@@ -125,7 +127,11 @@ class Xvfb(object):
         '''
         tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
         while True:
-            rand = randint(1, self.__class__.MAX_DISPLAY)
+            if desired_display is None:
+                rand = randint(1, self.__class__.MAX_DISPLAY)
+            else:
+                rand = desired_display
+
             self._lock_display_file = open(tempfile_path.format(rand), 'w')
             try:
                 fcntl.flock(self._lock_display_file,
