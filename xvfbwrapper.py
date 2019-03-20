@@ -33,8 +33,8 @@ class Xvfb(object):
         self.width = width
         self.height = height
         self.colordepth = colordepth
+        self.display = display
         self._tempdir = tempdir or tempfile.gettempdir()
-	self.display = display
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
