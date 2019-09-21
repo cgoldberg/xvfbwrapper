@@ -117,23 +117,34 @@ class Xvfb(object):
         except OSError:
             pass
 
-    def _get_next_unused_display(self):
+    def _get_lock_for_display(self, display):
         '''
         In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
         tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
+        self._lock_display_file = open(tempfile_path.format(display), 'w')
+        try:
+            fcntl.flock(self._lock_display_file,
+                        fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return False
+        else:
+            return True
+
+    def _get_next_unused_display(self):
+        '''
+        Randomly chooses a display number and tries to acquire a lock for this number.
+        If the lock could be acquired, returns this number, otherwise choses a new one.
+        :return: free display number
+        '''
         while True:
             rand = randint(1, self.__class__.MAX_DISPLAY)
-            self._lock_display_file = open(tempfile_path.format(rand), 'w')
-            try:
-                fcntl.flock(self._lock_display_file,
-                            fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError:
-                continue
-            else:
+            if self._get_lock_for_display(rand):
                 return rand
+            else:
+                continue
 
     def _set_display_var(self, display):
         os.environ['DISPLAY'] = ':{}'.format(display)
