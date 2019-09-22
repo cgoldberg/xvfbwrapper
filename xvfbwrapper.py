@@ -123,15 +123,19 @@ class Xvfb(object):
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
-        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
-        self._lock_display_file = open(tempfile_path.format(display), 'w')
+        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
         try:
-            fcntl.flock(self._lock_display_file,
-                        fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
+            self._lock_display_file = open(tempfile_path, 'w')
+        except PermissionError:
             return False
         else:
-            return True
+            try:
+                fcntl.flock(self._lock_display_file,
+                            fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return False
+            else:
+                return True
 
     def _get_next_unused_display(self):
         '''
