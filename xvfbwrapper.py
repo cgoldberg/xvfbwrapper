@@ -13,12 +13,16 @@ import tempfile
 import time
 
 from random import randint
+from errno import EACCES
 
+PY2 = False
 try:
     BlockingIOError
 except NameError:
     # python 2
     BlockingIOError = IOError
+    PermissionError = IOError
+    PY2 = True
 
 
 class Xvfb(object):
@@ -131,7 +135,9 @@ class Xvfb(object):
         tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
         try:
             self._lock_display_file = open(tempfile_path, 'w')
-        except PermissionError:
+        except PermissionError as e:
+            if PY2 and e.errno != EACCES:
+                raise
             return False
         else:
             try:
