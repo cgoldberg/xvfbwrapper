@@ -28,12 +28,13 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,
                  **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
+        self.new_display = display
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -60,7 +61,11 @@ class Xvfb(object):
         self.stop()
 
     def start(self):
-        self.new_display = self._get_next_unused_display()
+        if self.new_display is not None:
+            if not self._get_lock_for_display(self.new_display):
+                raise ValueError("Could not lock display :{0}".format(self.new_display))
+        else:
+            self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
         with open(os.devnull, 'w') as fnull:
