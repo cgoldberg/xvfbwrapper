@@ -13,12 +13,16 @@ import tempfile
 import time
 
 from random import randint
+from errno import EACCES
 
+PY2 = False
 try:
     BlockingIOError
 except NameError:
     # python 2
     BlockingIOError = IOError
+    PermissionError = IOError
+    PY2 = True
 
 
 class Xvfb(object):
@@ -28,12 +32,13 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,
                  **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
+        self.new_display = display
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -60,7 +65,11 @@ class Xvfb(object):
         self.stop()
 
     def start(self):
-        self.new_display = self._get_next_unused_display()
+        if self.new_display is not None:
+            if not self._get_lock_for_display(self.new_display):
+                raise ValueError("Could not lock display :{0}".format(self.new_display))
+        else:
+            self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
         with open(os.devnull, 'w') as fnull:
@@ -117,23 +126,40 @@ class Xvfb(object):
         except OSError:
             pass
 
-    def _get_next_unused_display(self):
+    def _get_lock_for_display(self, display):
         '''
         In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
-        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock')
-        while True:
-            rand = randint(1, self.__class__.MAX_DISPLAY)
-            self._lock_display_file = open(tempfile_path.format(rand), 'w')
+        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
+        try:
+            self._lock_display_file = open(tempfile_path, 'w')
+        except PermissionError as e:
+            if PY2 and e.errno != EACCES:
+                raise
+            return False
+        else:
             try:
                 fcntl.flock(self._lock_display_file,
                             fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
-                continue
+                return False
             else:
+                return True
+
+    def _get_next_unused_display(self):
+        '''
+        Randomly chooses a display number and tries to acquire a lock for this number.
+        If the lock could be acquired, returns this number, otherwise choses a new one.
+        :return: free display number
+        '''
+        while True:
+            rand = randint(1, self.__class__.MAX_DISPLAY)
+            if self._get_lock_for_display(rand):
                 return rand
+            else:
+                continue
 
     def _set_display_var(self, display):
         os.environ['DISPLAY'] = ':{}'.format(display)

@@ -102,6 +102,21 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 ----
 
+*******************************************
+    Basic Usage, specifying display number:
+*******************************************
+
+.. code:: python
+
+    from xvfbwrapper import Xvfb
+
+    vdisplay = Xvfb(display=23)
+    vdisplay.start()
+    # Xvfb is started with display :23
+    # see vdisplay.new_display
+
+----
+
 *******************************
     Usage as a Context Manager:
 *******************************
