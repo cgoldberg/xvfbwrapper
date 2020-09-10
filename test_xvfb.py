@@ -42,6 +42,22 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(orig_display, os.environ['DISPLAY'])
         self.assertIsNone(xvfb.proc)
 
+    def test_stop_with_xquartz(self):
+        # check that xquartz pattern for display server is dealt with by
+        # xvfb.stop() and restored appropriately
+        xquartz_display = '/private/tmp/com.apple.launchd.CgDzCWvNb1/org.macosforge.xquartz:0'
+        with patch.dict('xvfbwrapper.os.environ',
+           {
+               'DISPLAY':xquartz_display
+           }) as mocked_env:
+
+            xvfb = Xvfb()
+            xvfb.start()
+            self.assertNotEqual(xquartz_display, os.environ['DISPLAY'])
+            xvfb.stop()
+            self.assertEqual(xquartz_display, os.environ['DISPLAY'])
+            self.assertIsNone(xvfb.proc)
+
     def test_start_without_existing_display(self):
         del os.environ['DISPLAY']
         xvfb = Xvfb()

@@ -51,9 +51,9 @@ class Xvfb(object):
             self.extra_xvfb_args += ['-{}'.format(key), value]
 
         if 'DISPLAY' in os.environ:
-            self.orig_display = os.environ['DISPLAY'].split(':')[1]
+            self.orig_display_var = os.environ['DISPLAY']
         else:
-            self.orig_display = None
+            self.orig_display_var = None
 
         self.proc = None
 
@@ -81,7 +81,7 @@ class Xvfb(object):
         time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
         ret_code = self.proc.poll()
         if ret_code is None:
-            self._set_display_var(self.new_display)
+            self._set_display(display_var)
         else:
             self._cleanup_lock_file()
             raise RuntimeError('Xvfb did not start ({0}): {1}'
@@ -89,10 +89,10 @@ class Xvfb(object):
 
     def stop(self):
         try:
-            if self.orig_display is None:
+            if self.orig_display_var is None:
                 del os.environ['DISPLAY']
             else:
-                self._set_display_var(self.orig_display)
+                self._set_display(self.orig_display_var)
             if self.proc is not None:
                 try:
                     self.proc.terminate()
@@ -161,5 +161,5 @@ class Xvfb(object):
             else:
                 continue
 
-    def _set_display_var(self, display):
-        os.environ['DISPLAY'] = ':{}'.format(display)
+    def _set_display(self, display_var):
+        os.environ['DISPLAY'] = display_var
