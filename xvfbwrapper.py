@@ -32,13 +32,18 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,environ=None,
                  **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
         self.new_display = display
+
+        if environ:
+            self.environ = environ
+        else:
+            self.environ = os.environ
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -50,8 +55,8 @@ class Xvfb(object):
         for key, value in kwargs.items():
             self.extra_xvfb_args += ['-{}'.format(key), value]
 
-        if 'DISPLAY' in os.environ:
-            self.orig_display_var = os.environ['DISPLAY']
+        if 'DISPLAY' in self.environ:
+            self.orig_display_var = self.environ['DISPLAY']
         else:
             self.orig_display_var = None
 
@@ -90,7 +95,7 @@ class Xvfb(object):
     def stop(self):
         try:
             if self.orig_display_var is None:
-                del os.environ['DISPLAY']
+                del self.environ['DISPLAY']
             else:
                 self._set_display(self.orig_display_var)
             if self.proc is not None:
@@ -105,7 +110,7 @@ class Xvfb(object):
 
     def xvfb_exists(self):
         """Check that Xvfb is available on PATH and is executable."""
-        paths = os.environ['PATH'].split(os.pathsep)
+        paths = self.environ['PATH'].split(os.pathsep)
         return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
                    for path in paths)
 
@@ -162,4 +167,4 @@ class Xvfb(object):
                 continue
 
     def _set_display(self, display_var):
-        os.environ['DISPLAY'] = display_var
+        self.environ['DISPLAY'] = display_var

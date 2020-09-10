@@ -137,3 +137,23 @@ class TestXvfb(unittest.TestCase):
                 self.assertEqual(mockrandint.call_count, 3)
                 self.assertEqual(xvfb3._get_next_unused_display(), 33)
                 self.assertEqual(mockrandint.call_count, 10)
+
+
+    def test_environ_keyword_isolates_environment_modification(self):
+        with patch.dict('afni_test_utils.xvfbwrapper.os.environ',
+           {
+               'DISPLAY':':0'
+           }) as mocked_env:
+            # Check that start and stop methods modified the environ dict if
+            # passed and does not modify os.environ
+            env_duped = os.environ.copy()
+            os.environ['DISPLAY'] = 'not a display'
+            xvfb = Xvfb(environ=env_duped)
+            xvfb.start()
+            new_display = ":{}".format(xvfb.new_display)
+            self.assertEqual('not a display', os.environ['DISPLAY'])
+            self.assertEqual(new_display, env_duped['DISPLAY'])
+            xvfb.stop()
+            self.assertEqual('not a display', os.environ['DISPLAY'])
+            self.assertIsNone(xvfb.proc)
+
