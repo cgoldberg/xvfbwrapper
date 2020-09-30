@@ -46,7 +46,7 @@ class TestXvfb(unittest.TestCase):
         # check that xquartz pattern for display server is dealt with by
         # xvfb.stop() and restored appropriately
         xquartz_display = '/private/tmp/com.apple.launchd.CgDzCWvNb1/org.macosforge.xquartz:0'
-        with patch.dict('xvfbwrapper.os.environ',
+        with patch.dict('os.environ',
            {
                'DISPLAY':xquartz_display
            }) as mocked_env:
@@ -140,20 +140,20 @@ class TestXvfb(unittest.TestCase):
 
 
     def test_environ_keyword_isolates_environment_modification(self):
-        with patch.dict('xvfbwrapper.os.environ',
+        with patch.dict('os.environ',
            {
                'DISPLAY':':0'
            }) as mocked_env:
             # Check that start and stop methods modified the environ dict if
             # passed and does not modify os.environ
             env_duped = os.environ.copy()
-            os.environ['DISPLAY'] = 'not a display'
             xvfb = Xvfb(environ=env_duped)
             xvfb.start()
             new_display = ":{}".format(xvfb.new_display)
-            self.assertEqual('not a display', os.environ['DISPLAY'])
+            self.assertEqual(':0', os.environ['DISPLAY'])
             self.assertEqual(new_display, env_duped['DISPLAY'])
             xvfb.stop()
-            self.assertEqual('not a display', os.environ['DISPLAY'])
+            self.assertEqual(':0', os.environ['DISPLAY'])
+            self.assertEqual(':0', env_duped['DISPLAY'])
             self.assertIsNone(xvfb.proc)
 
