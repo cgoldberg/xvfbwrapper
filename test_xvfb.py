@@ -140,7 +140,7 @@ class TestXvfb(unittest.TestCase):
 
 
     def test_environ_keyword_isolates_environment_modification(self):
-        with patch.dict('afni_test_utils.xvfbwrapper.os.environ',
+        with patch.dict('xvfbwrapper.os.environ',
            {
                'DISPLAY':':0'
            }) as mocked_env:
