@@ -176,3 +176,32 @@ This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on
 *Look Ma', no browser!*
 
 (You can also take screenshots inside the virtual display to help diagnose test failures)
+
+----
+
+*******************************************************
+    Example of multi-threaded execution
+*******************************************************
+
+To run several xvfb servers at the same time, you can use the environ keyword
+when starting the Xvfb instances. This provides isolation between threads. Be
+sure to use the environment dictionary you initialize Xvfb with in your
+subsequent system calls. Also, if you wish to inherit your current environment
+you must use the copy method of os.environ and not simply assign a new
+variable to os.environ:
+
+.. code:: python
+
+    from xvfbwrapper import Xvfb
+    import subprocess as sp
+    import os
+
+    isolated_environment = os.environ.copy()
+    xvfb = Xvfb(environ=isolated_environment)
+    xvfb.start()
+    sp.run(
+        "xterm & sleep 1; kill %1 ",
+        shell=True,
+        env=isolated_environment,
+    )
+    xvfb.stop()
