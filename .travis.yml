@@ -16,6 +16,12 @@ matrix:
     - python: 3.7
       dist: xenial
       sudo: true
+      arch: amd64
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      arch: ppc64le
+      
 # /end python 3.7 hack
 before_install:
   - "sudo apt-get update -qq"
