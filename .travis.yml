@@ -10,7 +10,7 @@ python:
   - "pypy"
 jobs:
  exclude:
-  - python: pypy
+  - python: "pypy"
     arch: ppc64le
     
 # Enable 3.7 without globally enabling sudo and dist: xenial for other build jobs
