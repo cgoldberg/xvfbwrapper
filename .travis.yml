@@ -8,6 +8,11 @@ python:
   - "3.5"
   - "3.6"
   - "pypy"
+jobs:
+ exclude:
+  - python: pypy
+    arch: ppc64le
+    
 # Enable 3.7 without globally enabling sudo and dist: xenial for other build jobs
 # Should be able to remove this wierd stuff once
 # https://github.com/travis-ci/travis-ci/issues/9815 is resolved
