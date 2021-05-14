@@ -78,7 +78,8 @@ class Xvfb(object):
         while not local_display_exists(self.new_display):
             time.sleep(1e-3)
             if time.time() - start > self._timeout:
-                raise TimeoutError
+                self.stop()
+                raise RuntimeError('Xvfb display did not open: {}'.format(xvfb_cmd))
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
