@@ -20,7 +20,6 @@ class Xvfb(object):
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
     MAX_DISPLAY = 2147483647
-    SLEEP_TIME_BEFORE_START = 0.1
 
     def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
                  display=None, environ=None, **kwargs):
@@ -69,21 +68,20 @@ class Xvfb(object):
         else:
             self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
-        self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
-        with open(os.devnull, 'w') as fnull:
-            self.proc = subprocess.Popen(self.xvfb_cmd,
-                                         stdout=fnull,
-                                         stderr=fnull,
-                                         close_fds=True)
-        # give Xvfb time to start
-        time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
+        xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
+        self.proc = subprocess.Popen(xvfb_cmd,
+                                     stdout=subprocess.DEVNULL,
+                                     stderr=subprocess.DEVNULL,
+                                     close_fds=True)
+        while not local_display_exists(self.new_display):
+            time.sleep(1e-3)
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
         else:
             self._cleanup_lock_file()
             raise RuntimeError('Xvfb did not start ({0}): {1}'
-                               .format(ret_code, self.xvfb_cmd))
+                               .format(ret_code, xvfb_cmd))
 
     def stop(self):
         try:
@@ -165,3 +163,7 @@ class Xvfb(object):
 
     def _set_display(self, display_var):
         self.environ['DISPLAY'] = display_var
+
+
+def local_display_exists(display):
+    return os.path.exists('/tmp/.X11-unix/X{}'.format(display))
