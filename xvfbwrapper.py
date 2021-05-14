@@ -22,11 +22,12 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
 
     def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
-                 display=None, environ=None, **kwargs):
+                 display=None, environ=None, timeout=5, **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
+        self._timeout = timeout
         self.new_display = display
 
         if environ:
@@ -73,8 +74,11 @@ class Xvfb(object):
                                      stdout=subprocess.DEVNULL,
                                      stderr=subprocess.DEVNULL,
                                      close_fds=True)
+        start = time.time()
         while not local_display_exists(self.new_display):
             time.sleep(1e-3)
+            if time.time() - start > self._timeout:
+                raise TimeoutError
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
@@ -92,7 +96,7 @@ class Xvfb(object):
             if self.proc is not None:
                 try:
                     self.proc.terminate()
-                    self.proc.wait()
+                    self.proc.wait(self._timeout)
                 except OSError:
                     pass
                 self.proc = None
