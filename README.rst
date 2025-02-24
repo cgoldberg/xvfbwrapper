@@ -5,9 +5,6 @@
 
 **Manage headless displays with Xvfb (X virtual framebuffer)**
 
-.. image:: https://travis-ci.org/cgoldberg/xvfbwrapper.svg?branch=master
-    :target: https://travis-ci.org/cgoldberg/xvfbwrapper
-
 ----
 
 ---------
@@ -16,7 +13,7 @@
 
 - Dev: https://github.com/cgoldberg/xvfbwrapper
 - Releases: https://pypi.org/project/xvfbwrapper/
-- Author: `Corey Goldberg <https://github.com/cgoldberg>`_ - 2012-2019
+- Author: `Corey Goldberg <https://github.com/cgoldberg>`_ - 2012-2025
 - License: MIT
 
 ----
@@ -55,7 +52,7 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 * X11 Windowing System
 * Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
-* Python 2.7 or 3.6+
+* Python 3.8+
 
 ----
 
