@@ -138,7 +138,7 @@ class TestXvfb(unittest.TestCase):
                 self.assertEqual(mockrandint.call_count, 3)
                 self.assertEqual(xvfb3._get_next_unused_display(), 33)
                 self.assertEqual(mockrandint.call_count, 10)
-    
+
     def test_environ_keyword_isolates_environment_modification(self):
         with patch.dict('os.environ',
            {
