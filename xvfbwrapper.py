@@ -39,6 +39,7 @@ class Xvfb(object):
             msg = 'Can not find Xvfb. Please install it and try again.'
             raise EnvironmentError(msg)
 
+        self.xvfb_cmd = []
         self.extra_xvfb_args = ['-screen', '0', '{}x{}x{}'.format(
                                 self.width, self.height, self.colordepth)]
 
@@ -69,8 +70,8 @@ class Xvfb(object):
         else:
             self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
-        xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
-        self.proc = subprocess.Popen(xvfb_cmd,
+        self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
+        self.proc = subprocess.Popen(self.xvfb_cmd,
                                      stdout=subprocess.DEVNULL,
                                      stderr=subprocess.DEVNULL,
                                      close_fds=True)
@@ -79,14 +80,14 @@ class Xvfb(object):
             time.sleep(1e-3)
             if time.time() - start > self._timeout:
                 self.stop()
-                raise RuntimeError('Xvfb display did not open: {}'.format(xvfb_cmd))
+                raise RuntimeError('Xvfb display did not open: {}'.format(self.xvfb_cmd))
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
         else:
             self._cleanup_lock_file()
             raise RuntimeError('Xvfb did not start ({0}): {1}'
-                               .format(ret_code, xvfb_cmd))
+                               .format(ret_code, self.xvfb_cmd))
 
     def stop(self):
         try:
