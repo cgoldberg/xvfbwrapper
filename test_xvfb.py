@@ -3,10 +3,8 @@
 import os
 import sys
 import unittest
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+
+from unittest.mock import patch
 
 from xvfbwrapper import Xvfb
 
@@ -126,18 +124,11 @@ class TestXvfb(unittest.TestCase):
                    side_effect=side_effect) as mockrandint:
             self.assertEqual(xvfb._get_next_unused_display(), 11)
             self.assertEqual(mockrandint.call_count, 1)
-            if sys.version_info >= (3, 2):
-                with self.assertWarns(ResourceWarning):
-                    self.assertEqual(xvfb2._get_next_unused_display(), 22)
-                    self.assertEqual(mockrandint.call_count, 3)
-                    self.assertEqual(xvfb3._get_next_unused_display(), 33)
-                    self.assertEqual(mockrandint.call_count, 10)
-            else:
+            with self.assertWarns(ResourceWarning):
                 self.assertEqual(xvfb2._get_next_unused_display(), 22)
                 self.assertEqual(mockrandint.call_count, 3)
                 self.assertEqual(xvfb3._get_next_unused_display(), 33)
                 self.assertEqual(mockrandint.call_count, 10)
-
 
     def test_environ_keyword_isolates_environment_modification(self):
         with patch.dict('os.environ',
@@ -156,4 +147,3 @@ class TestXvfb(unittest.TestCase):
             self.assertEqual(':0', os.environ['DISPLAY'])
             self.assertEqual(':0', env_duped['DISPLAY'])
             self.assertIsNone(xvfb.proc)
-
