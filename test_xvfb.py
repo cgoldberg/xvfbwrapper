@@ -3,10 +3,8 @@
 import os
 import sys
 import unittest
-try:
-    from unittest.mock import patch
-except ImportError:
-    from mock import patch
+
+from unittest.mock import patch
 
 from xvfbwrapper import Xvfb
 
@@ -158,4 +156,3 @@ class TestXvfb(unittest.TestCase):
             self.assertEqual(':0', os.environ['DISPLAY'])
             self.assertEqual(':0', env_duped['DISPLAY'])
             self.assertIsNone(xvfb.proc)
-
