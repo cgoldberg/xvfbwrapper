@@ -41,14 +41,13 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNone(xvfb.proc)
 
     def test_stop_with_xquartz(self):
-        # check that xquartz pattern for display server is dealt with by
+        # Check that xquartz pattern for display server is dealt with by
         # xvfb.stop() and restored appropriately
         xquartz_display = '/private/tmp/com.apple.launchd.CgDzCWvNb1/org.macosforge.xquartz:0'
         with patch.dict('os.environ',
            {
                'DISPLAY':xquartz_display
            }) as mocked_env:
-
             xvfb = Xvfb()
             xvfb.start()
             self.assertNotEqual(xquartz_display, os.environ['DISPLAY'])
@@ -124,12 +123,22 @@ class TestXvfb(unittest.TestCase):
                    side_effect=side_effect) as mockrandint:
             self.assertEqual(xvfb._get_next_unused_display(), 11)
             self.assertEqual(mockrandint.call_count, 1)
-            with self.assertWarns(ResourceWarning):
+            if sys.implementation.name == 'cpython':
+                # ResourceWarning is only raised on CPython because
+                # of an implementation detail in it's garbage collector.
+                # This does not occur on other Python implementations
+                # (like PyPy)
+                with self.assertWarns(ResourceWarning):
+                    self.assertEqual(xvfb2._get_next_unused_display(), 22)
+                    self.assertEqual(mockrandint.call_count, 3)
+                    self.assertEqual(xvfb3._get_next_unused_display(), 33)
+                    self.assertEqual(mockrandint.call_count, 10)
+            else:
                 self.assertEqual(xvfb2._get_next_unused_display(), 22)
                 self.assertEqual(mockrandint.call_count, 3)
                 self.assertEqual(xvfb3._get_next_unused_display(), 33)
                 self.assertEqual(mockrandint.call_count, 10)
-
+    
     def test_environ_keyword_isolates_environment_modification(self):
         with patch.dict('os.environ',
            {
