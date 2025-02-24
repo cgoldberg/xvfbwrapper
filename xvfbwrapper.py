@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
-#   * Corey Goldberg, 2012, 2013, 2015, 2016, 2017
+#   * Corey Goldberg, 2012-2025
 
 
 """Run a headless display inside X virtual framebuffer (Xvfb)"""
