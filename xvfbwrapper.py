@@ -32,13 +32,18 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,environ=None,
                  **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
         self.new_display = display
+
+        if environ:
+            self.environ = environ
+        else:
+            self.environ = os.environ
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
@@ -50,10 +55,10 @@ class Xvfb(object):
         for key, value in kwargs.items():
             self.extra_xvfb_args += ['-{}'.format(key), value]
 
-        if 'DISPLAY' in os.environ:
-            self.orig_display = os.environ['DISPLAY'].split(':')[1]
+        if 'DISPLAY' in self.environ:
+            self.orig_display_var = self.environ['DISPLAY']
         else:
-            self.orig_display = None
+            self.orig_display_var = None
 
         self.proc = None
 
@@ -82,7 +87,7 @@ class Xvfb(object):
         time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
         ret_code = self.proc.poll()
         if ret_code is None:
-            self._set_display_var(self.new_display)
+            self._set_display(display_var)
         else:
             self._cleanup_lock_file()
             raise RuntimeError('Xvfb did not start ({0}): {1}'
@@ -90,10 +95,10 @@ class Xvfb(object):
 
     def stop(self):
         try:
-            if self.orig_display is None:
-                del os.environ['DISPLAY']
+            if self.orig_display_var is None:
+                del self.environ['DISPLAY']
             else:
-                self._set_display_var(self.orig_display)
+                self._set_display(self.orig_display_var)
             if self.proc is not None:
                 try:
                     self.proc.terminate()
@@ -107,7 +112,7 @@ class Xvfb(object):
     def xvfb_exists(self):
         # type: (...) -> bool
         """Check that Xvfb is available on PATH and is executable."""
-        paths = os.environ['PATH'].split(os.pathsep)
+        paths = self.environ['PATH'].split(os.pathsep)
         return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
                    for path in paths)
 
@@ -165,5 +170,5 @@ class Xvfb(object):
             else:
                 continue
 
-    def _set_display_var(self, display):
-        os.environ['DISPLAY'] = ':{}'.format(display)
+    def _set_display(self, display_var):
+        self.environ['DISPLAY'] = display_var
