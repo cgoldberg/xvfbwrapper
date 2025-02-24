@@ -6,7 +6,6 @@
 
 import os
 import setuptools
-import sys
 
 
 VERSION = '0.2.10.dev'

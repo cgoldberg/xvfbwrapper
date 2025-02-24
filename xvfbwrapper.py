@@ -3,7 +3,7 @@
 # License: MIT
 
 
-"""Run a headless display inside X virtual framebuffer (Xvfb)"""
+'''Run a headless display inside X virtual framebuffer (Xvfb)'''
 
 
 import fcntl
@@ -22,8 +22,8 @@ class Xvfb(object):
     MAX_DISPLAY = 2147483647
     SLEEP_TIME_BEFORE_START = 0.1
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None, display=None,environ=None,
-                 **kwargs):
+    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
+                 display=None, environ=None, **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
@@ -63,7 +63,9 @@ class Xvfb(object):
     def start(self):
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
-                raise ValueError("Could not lock display :{0}".format(self.new_display))
+                raise ValueError(
+                    'Could not lock display :{0}'.format(self.new_display)
+                )
         else:
             self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
@@ -101,7 +103,7 @@ class Xvfb(object):
 
     def xvfb_exists(self):
         # type: (...) -> bool
-        """Check that Xvfb is available on PATH and is executable."""
+        '''Check that Xvfb is available on PATH and is executable.'''
         paths = self.environ['PATH'].split(os.pathsep)
         return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
                    for path in paths)
@@ -130,10 +132,12 @@ class Xvfb(object):
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
-        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
+        tempfile_path = os.path.join(
+            self._tempdir, '.X{0}-lock'.format(display)
+        )
         try:
             self._lock_display_file = open(tempfile_path, 'w')
-        except PermissionError as e:
+        except PermissionError:
             return False
         else:
             try:
@@ -147,8 +151,9 @@ class Xvfb(object):
     def _get_next_unused_display(self):
         # type: (...) -> int
         '''
-        Randomly chooses a display number and tries to acquire a lock for this number.
-        If the lock could be acquired, returns this number, otherwise choses a new one.
+        Randomly chooses a display number and tries to acquire a lock for this
+        number. If the lock could be acquired, returns this number, otherwise
+        choses a new one.
         :return: free display number
         '''
         while True:
