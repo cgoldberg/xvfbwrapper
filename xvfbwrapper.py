@@ -58,6 +58,7 @@ class Xvfb(object):
         self.proc = None
 
     def __enter__(self):
+        # type: (...) -> Xvfb
         self.start()
         return self
 
@@ -104,6 +105,7 @@ class Xvfb(object):
             self._cleanup_lock_file()
 
     def xvfb_exists(self):
+        # type: (...) -> bool
         """Check that Xvfb is available on PATH and is executable."""
         paths = os.environ['PATH'].split(os.pathsep)
         return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
@@ -127,6 +129,7 @@ class Xvfb(object):
             pass
 
     def _get_lock_for_display(self, display):
+        # type: (...) -> bool
         '''
         In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
@@ -149,6 +152,7 @@ class Xvfb(object):
                 return True
 
     def _get_next_unused_display(self):
+        # type: (...) -> int
         '''
         Randomly chooses a display number and tries to acquire a lock for this number.
         If the lock could be acquired, returns this number, otherwise choses a new one.

@@ -55,7 +55,7 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 * X11 Windowing System
 * Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
-* Python 2.7 or 3.4+
+* Python 2.7 or 3.6+
 
 ----
 
