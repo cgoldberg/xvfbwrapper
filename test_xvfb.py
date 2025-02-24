@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import unittest
 
 from unittest.mock import patch
@@ -125,7 +124,7 @@ class TestXvfb(unittest.TestCase):
                 # ResourceWarning is only raised on CPython because
                 # of an implementation detail in it's garbage collector.
                 # This does not occur on other Python implementations
-                # (like PyPy)
+                # (like PyPy).
                 with self.assertWarns(ResourceWarning):
                     self.assertEqual(xvfb2._get_next_unused_display(), 22)
                     self.assertEqual(mockrandint.call_count, 3)
