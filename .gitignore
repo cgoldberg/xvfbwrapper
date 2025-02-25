@@ -7,21 +7,20 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.eggs/
+.installed.cfg
 .Python
-env/
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
-.eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
 *.egg-info/
-.installed.cfg
 *.egg
 
 # PyInstaller
@@ -31,19 +30,23 @@ var/
 *.spec
 
 # Installer logs
-pip-log.txt
 pip-delete-this-directory.txt
+pip-log.txt
 
 # Unit test / coverage reports
-htmlcov/
-.tox/
+.cache
 .coverage
 .coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*,cover
 .hypothesis/
+.pytest_cache/
+.tox/
+coverage.xml
+htmlcov/
+nosetests.xml
+*,cover
+
+# Type checking
+.mypy_cache/
 
 # Translations
 *.mo
@@ -54,8 +57,8 @@ coverage.xml
 local_settings.py
 
 # Flask stuff:
-instance/
 .webassets-cache
+instance/
 
 # Scrapy stuff:
 .scrapy
