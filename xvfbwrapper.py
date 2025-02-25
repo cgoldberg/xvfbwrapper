@@ -21,8 +21,17 @@ class Xvfb(object):
     # highest Xvfb currently supports
     MAX_DISPLAY = 2147483647
 
-    def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
-                 display=None, environ=None, timeout=5, **kwargs):
+    def __init__(
+        self,
+        width=800,
+        height=680,
+        colordepth=24,
+        tempdir=None,
+        display=None,
+        environ=None,
+        timeout=5,
+        **kwargs
+    ):
         self.width = width
         self.height = height
         self.colordepth = colordepth
@@ -40,8 +49,11 @@ class Xvfb(object):
             raise EnvironmentError(msg)
 
         self.xvfb_cmd = []
-        self.extra_xvfb_args = ['-screen', '0', '{}x{}x{}'.format(
-                                self.width, self.height, self.colordepth)]
+        self.extra_xvfb_args = [
+            '-screen',
+            '0',
+            '{}x{}x{}'.format(self.width, self.height, self.colordepth),
+        ]
 
         for key, value in kwargs.items():
             self.extra_xvfb_args += ['-{}'.format(key), value]
@@ -64,30 +76,33 @@ class Xvfb(object):
     def start(self):
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
-                raise ValueError(
-                    'Could not lock display :{0}'.format(self.new_display)
-                )
+                raise ValueError('Could not lock display :{0}'.format(self.new_display))
         else:
             self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
-        self.proc = subprocess.Popen(self.xvfb_cmd,
-                                     stdout=subprocess.DEVNULL,
-                                     stderr=subprocess.DEVNULL,
-                                     close_fds=True)
+        self.proc = subprocess.Popen(
+            self.xvfb_cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            close_fds=True,
+        )
         start = time.time()
         while not local_display_exists(self.new_display):
             time.sleep(1e-3)
             if time.time() - start > self._timeout:
                 self.stop()
-                raise RuntimeError('Xvfb display did not open: {}'.format(self.xvfb_cmd))
+                raise RuntimeError(
+                    'Xvfb display did not open: {}'.format(self.xvfb_cmd)
+                )
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
         else:
             self._cleanup_lock_file()
-            raise RuntimeError('Xvfb did not start ({0}): {1}'
-                               .format(ret_code, self.xvfb_cmd))
+            raise RuntimeError(
+                'Xvfb did not start ({0}): {1}'.format(ret_code, self.xvfb_cmd)
+            )
 
     def stop(self):
         try:
@@ -109,8 +124,7 @@ class Xvfb(object):
         # type: (...) -> bool
         '''Check that Xvfb is available on PATH and is executable.'''
         paths = self.environ['PATH'].split(os.pathsep)
-        return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK)
-                   for path in paths)
+        return any(os.access(os.path.join(path, 'Xvfb'), os.X_OK) for path in paths)
 
     def _cleanup_lock_file(self):
         '''
@@ -136,17 +150,14 @@ class Xvfb(object):
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
-        tempfile_path = os.path.join(
-            self._tempdir, '.X{0}-lock'.format(display)
-        )
+        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
         try:
             self._lock_display_file = open(tempfile_path, 'w')
         except PermissionError:
             return False
         else:
             try:
-                fcntl.flock(self._lock_display_file,
-                            fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(self._lock_display_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 return False
             else:

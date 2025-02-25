@@ -43,8 +43,9 @@ class TestXvfb(unittest.TestCase):
     def test_stop_with_xquartz(self):
         # Check that xquartz pattern for display server is dealt with by
         # xvfb.stop() and restored appropriately
-        xquartz_display = '/private/tmp/com.apple.launchd.CgDzCWvNb1/' + \
-            'org.macosforge.xquartz:0'
+        xquartz_display = (
+            '/private/tmp/com.apple.launchd.CgDzCWvNb1/org.macosforge.xquartz:0'
+        )
         with patch.dict('os.environ', {'DISPLAY': xquartz_display}):
             xvfb = Xvfb()
             xvfb.start()
@@ -117,8 +118,7 @@ class TestXvfb(unittest.TestCase):
         self.addCleanup(xvfb2._cleanup_lock_file)
         self.addCleanup(xvfb3._cleanup_lock_file)
         side_effect = [11, 11, 22, 11, 22, 11, 22, 22, 22, 33]
-        with patch('xvfbwrapper.randint',
-                   side_effect=side_effect) as mockrandint:
+        with patch('xvfbwrapper.randint', side_effect=side_effect) as mockrandint:
             self.assertEqual(xvfb._get_next_unused_display(), 11)
             self.assertEqual(mockrandint.call_count, 1)
             if sys.implementation.name == 'cpython':
