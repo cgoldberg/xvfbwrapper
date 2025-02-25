@@ -44,7 +44,10 @@ class Xvfb(object):
                                 self.width, self.height, self.colordepth)]
 
         for key, value in kwargs.items():
-            self.extra_xvfb_args += ['-{}'.format(key), value]
+            if value:
+                self.extra_xvfb_args += ['-{}'.format(key), value]
+            else:
+                self.extra_xvfb_args.append('-{}'.format(key))
 
         if 'DISPLAY' in self.environ:
             self.orig_display_var = self.environ['DISPLAY']
