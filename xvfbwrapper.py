@@ -20,14 +20,14 @@ class Xvfb(object):
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
     MAX_DISPLAY = 2147483647
-    SLEEP_TIME_BEFORE_START = 0.1
 
     def __init__(self, width=800, height=680, colordepth=24, tempdir=None,
-                 display=None, environ=None, **kwargs):
+                 display=None, environ=None, timeout=5, **kwargs):
         self.width = width
         self.height = height
         self.colordepth = colordepth
         self._tempdir = tempdir or tempfile.gettempdir()
+        self._timeout = timeout
         self.new_display = display
 
         if environ:
@@ -39,6 +39,7 @@ class Xvfb(object):
             msg = 'Can not find Xvfb. Please install it and try again.'
             raise EnvironmentError(msg)
 
+        self.xvfb_cmd = []
         self.extra_xvfb_args = ['-screen', '0', '{}x{}x{}'.format(
                                 self.width, self.height, self.colordepth)]
 
@@ -70,13 +71,16 @@ class Xvfb(object):
             self.new_display = self._get_next_unused_display()
         display_var = ':{}'.format(self.new_display)
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
-        with open(os.devnull, 'w') as fnull:
-            self.proc = subprocess.Popen(self.xvfb_cmd,
-                                         stdout=fnull,
-                                         stderr=fnull,
-                                         close_fds=True)
-        # give Xvfb time to start
-        time.sleep(self.__class__.SLEEP_TIME_BEFORE_START)
+        self.proc = subprocess.Popen(self.xvfb_cmd,
+                                     stdout=subprocess.DEVNULL,
+                                     stderr=subprocess.DEVNULL,
+                                     close_fds=True)
+        start = time.time()
+        while not local_display_exists(self.new_display):
+            time.sleep(1e-3)
+            if time.time() - start > self._timeout:
+                self.stop()
+                raise RuntimeError('Xvfb display did not open: {}'.format(self.xvfb_cmd))
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
@@ -94,7 +98,7 @@ class Xvfb(object):
             if self.proc is not None:
                 try:
                     self.proc.terminate()
-                    self.proc.wait()
+                    self.proc.wait(self._timeout)
                 except OSError:
                     pass
                 self.proc = None
@@ -165,3 +169,7 @@ class Xvfb(object):
 
     def _set_display(self, display_var):
         self.environ['DISPLAY'] = display_var
+
+
+def local_display_exists(display):
+    return os.path.exists('/tmp/.X11-unix/X{}'.format(display))
