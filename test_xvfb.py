@@ -11,11 +11,8 @@ from xvfbwrapper import Xvfb
 
 class TestXvfb(unittest.TestCase):
 
-    def reset_display(self):
-        os.environ['DISPLAY'] = ':0'
-
     def setUp(self):
-        self.reset_display()
+        os.environ['DISPLAY'] = ':0'
 
     def test_xvfb_binary_not_exists(self):
         with patch('xvfbwrapper.Xvfb.xvfb_exists') as xvfb_exists:
@@ -52,26 +49,26 @@ class TestXvfb(unittest.TestCase):
             self.assertNotEqual(xquartz_display, os.environ['DISPLAY'])
             xvfb.stop()
             self.assertEqual(xquartz_display, os.environ['DISPLAY'])
-            self.assertIsNone(xvfb.proc)
+        self.assertIsNone(xvfb.proc)
 
     def test_start_without_existing_display(self):
-        del os.environ['DISPLAY']
-        xvfb = Xvfb()
-        self.addCleanup(xvfb.stop)
-        self.addCleanup(self.reset_display)
-        xvfb.start()
-        display_var = ':{}'.format(xvfb.new_display)
-        self.assertEqual(display_var, os.environ['DISPLAY'])
+        with patch.dict('os.environ', {}):
+            del os.environ['DISPLAY']
+            xvfb = Xvfb()
+            self.addCleanup(xvfb.stop)
+            xvfb.start()
+            display_var = ':{}'.format(xvfb.new_display)
+            self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_empty_display(self):
-        os.environ['DISPLAY'] = ''
-        xvfb = Xvfb()
-        self.addCleanup(xvfb.stop)
-        self.addCleanup(self.reset_display)
-        xvfb.start()
-        display_var = ':{}'.format(xvfb.new_display)
-        self.assertEqual(display_var, os.environ['DISPLAY'])
+        with patch.dict('os.environ', {}):
+            os.environ['DISPLAY'] = ''
+            xvfb = Xvfb()
+            self.addCleanup(xvfb.stop)
+            xvfb.start()
+            display_var = ':{}'.format(xvfb.new_display)
+            self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_specific_display(self):
