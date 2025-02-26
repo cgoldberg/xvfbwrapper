@@ -64,6 +64,16 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(display_var, os.environ['DISPLAY'])
         self.assertIsNotNone(xvfb.proc)
 
+    def test_start_with_empty_display(self):
+        os.environ['DISPLAY'] = ''
+        xvfb = Xvfb()
+        self.addCleanup(xvfb.stop)
+        self.addCleanup(self.reset_display)
+        xvfb.start()
+        display_var = ':{}'.format(xvfb.new_display)
+        self.assertEqual(display_var, os.environ['DISPLAY'])
+        self.assertIsNotNone(xvfb.proc)
+
     def test_start_with_specific_display(self):
         xvfb = Xvfb(display=42)
         xvfb2 = Xvfb(display=42)
