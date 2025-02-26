@@ -29,7 +29,7 @@ class Xvfb(object):
         tempdir=None,
         display=None,
         environ=None,
-        timeout=5,
+        timeout=10,
         **kwargs
     ):
         self.width = width
