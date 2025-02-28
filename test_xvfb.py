@@ -9,10 +9,16 @@ from unittest.mock import patch
 from xvfbwrapper import Xvfb
 
 
+# Using mock.patch as a class decorator applies it to every
+# test_* method and removes it after test completes.
+@patch.dict('os.environ', {'DISPLAY': ':0'})
 class TestXvfb(unittest.TestCase):
 
     def setUp(self):
-        os.environ['DISPLAY'] = ':0'
+        pass
+
+    def tearDown(self):
+        pass
 
     def test_xvfb_binary_not_exists(self):
         with patch('xvfbwrapper.Xvfb.xvfb_exists') as xvfb_exists:
@@ -145,16 +151,15 @@ class TestXvfb(unittest.TestCase):
                 self.assertEqual(mockrandint.call_count, 10)
 
     def test_environ_keyword_isolates_environment_modification(self):
-        with patch.dict('os.environ', {'DISPLAY': ':0'}):
-            # Check that start and stop methods modified the environ dict if
-            # passed and does not modify os.environ
-            env_duped = os.environ.copy()
-            xvfb = Xvfb(environ=env_duped)
-            xvfb.start()
-            new_display = ":{}".format(xvfb.new_display)
-            self.assertEqual(':0', os.environ['DISPLAY'])
-            self.assertEqual(new_display, env_duped['DISPLAY'])
-            xvfb.stop()
-            self.assertEqual(':0', os.environ['DISPLAY'])
-            self.assertEqual(':0', env_duped['DISPLAY'])
-            self.assertIsNone(xvfb.proc)
+        # Check that start and stop methods modified the environ dict if
+        # passed and does not modify os.environ
+        env_duped = os.environ.copy()
+        xvfb = Xvfb(environ=env_duped)
+        xvfb.start()
+        new_display = ":{}".format(xvfb.new_display)
+        self.assertEqual(':0', os.environ['DISPLAY'])
+        self.assertEqual(new_display, env_duped['DISPLAY'])
+        xvfb.stop()
+        self.assertEqual(':0', os.environ['DISPLAY'])
+        self.assertEqual(':0', env_duped['DISPLAY'])
+        self.assertIsNone(xvfb.proc)
