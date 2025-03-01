@@ -30,7 +30,7 @@ class Xvfb:
         display=None,
         environ=None,
         timeout=10,
-        **kwargs
+        **kwargs,
     ):
         self.width = width
         self.height = height
@@ -52,11 +52,11 @@ class Xvfb:
         self.extra_xvfb_args = [
             '-screen',
             '0',
-            '{}x{}x{}'.format(self.width, self.height, self.colordepth),
+            f'{self.width}x{self.height}x{self.colordepth}',
         ]
 
         for key, value in kwargs.items():
-            self.extra_xvfb_args += ['-{}'.format(key), value]
+            self.extra_xvfb_args += [f'-{key}', value]
 
         if 'DISPLAY' in self.environ:
             self.orig_display_var = self.environ['DISPLAY']
@@ -76,10 +76,10 @@ class Xvfb:
     def start(self):
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
-                raise ValueError('Could not lock display :{0}'.format(self.new_display))
+                raise ValueError(f'Could not lock display :{self.new_display}')
         else:
             self.new_display = self._get_next_unused_display()
-        display_var = ':{}'.format(self.new_display)
+        display_var = f':{self.new_display}'
         self.xvfb_cmd = ['Xvfb', display_var] + self.extra_xvfb_args
         self.proc = subprocess.Popen(
             self.xvfb_cmd,
@@ -92,17 +92,13 @@ class Xvfb:
             time.sleep(1e-3)
             if time.time() - start > self._timeout:
                 self.stop()
-                raise RuntimeError(
-                    'Xvfb display did not open: {}'.format(self.xvfb_cmd)
-                )
+                raise RuntimeError(f'Xvfb display did not open: {self.xvfb_cmd}')
         ret_code = self.proc.poll()
         if ret_code is None:
             self._set_display(display_var)
         else:
             self._cleanup_lock_file()
-            raise RuntimeError(
-                'Xvfb did not start ({0}): {1}'.format(ret_code, self.xvfb_cmd)
-            )
+            raise RuntimeError(f'Xvfb did not start ({ret_code}): {self.xvfb_cmd}')
 
     def stop(self):
         try:
@@ -150,7 +146,7 @@ class Xvfb:
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         '''
-        tempfile_path = os.path.join(self._tempdir, '.X{0}-lock'.format(display))
+        tempfile_path = os.path.join(self._tempdir, f'.X{display}-lock')
         try:
             self._lock_display_file = open(tempfile_path, 'w')
         except PermissionError:
@@ -183,4 +179,4 @@ class Xvfb:
 
 
 def local_display_exists(display):
-    return os.path.exists('/tmp/.X11-unix/X{}'.format(display))
+    return os.path.exists(f'/tmp/.X11-unix/X{display}')
