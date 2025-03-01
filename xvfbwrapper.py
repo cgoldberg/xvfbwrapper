@@ -15,7 +15,7 @@ import time
 from random import randint
 
 
-class Xvfb(object):
+class Xvfb:
 
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
