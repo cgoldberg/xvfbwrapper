@@ -88,7 +88,7 @@ class Xvfb:
             close_fds=True,
         )
         start = time.time()
-        while not local_display_exists(self.new_display):
+        while not self._local_display_exists(self.new_display):
             time.sleep(1e-3)
             if time.time() - start > self._timeout:
                 self.stop()
@@ -174,9 +174,9 @@ class Xvfb:
             else:
                 continue
 
+    def _local_display_exists(self, display):
+        temp_display_file = os.path.join(self._tempdir, '.X11-unix', f'X{display}')
+        return os.path.exists(temp_display_file)
+
     def _set_display(self, display_var):
         self.environ['DISPLAY'] = display_var
-
-
-def local_display_exists(display):
-    return os.path.exists(f'/tmp/.X11-unix/X{display}')
