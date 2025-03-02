@@ -227,8 +227,6 @@ supported/installed Python environments:
 
     (venv)$ tox
 
-----
-
 To run all tests on default Python environment:
 
 .. code::
