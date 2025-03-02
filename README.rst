@@ -214,7 +214,7 @@ variable to os.environ:
 
 To create a virtual env and install required testing libraries:
 
-.. code:: bash
+.. code::
 
     $ python -m venv venv
     $ source ./venv/bin/activate
@@ -223,7 +223,7 @@ To create a virtual env and install required testing libraries:
 To run all tests, linting, and type checking across all
 supported/installed Python environments:
 
-.. code:: bash
+.. code::
 
     (venv)$ tox
 
@@ -231,7 +231,7 @@ supported/installed Python environments:
 
 To run all tests on default Python environment:
 
-.. code:: bash
+.. code::
 
     (venv)$ pytest
 
