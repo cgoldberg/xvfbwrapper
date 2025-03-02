@@ -208,9 +208,9 @@ variable to os.environ:
 
 ----
 
-------------------------------------------------
-    xvfbwrapper Development: running unit tests:
-------------------------------------------------
+----------------------------------------------------
+    xvfbwrapper Development: running the unit tests:
+----------------------------------------------------
 
 To create a virtual env and install required testing libraries:
 
