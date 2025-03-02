@@ -50,15 +50,16 @@ Xvfb is useful for running acceptance tests on headless servers.
     System Requirements:
 ------------------------
 
-* X11 Windowing System
-* Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
 * Python 3.8+
+* X Window System
+* Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
+* File locking with `fcntl` 
 
 ----
 
-++++++++++++
-    Examples
-++++++++++++
+-------------
+    Examples:
+-------------
 
 ****************
     Basic Usage:
@@ -128,11 +129,12 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 ----
 
-*******************************************************
-    Testing Example: Headless Selenium WebDriver Tests:
-*******************************************************
+********************************************************
+    Usage in Testing: Headless Selenium WebDriver Tests:
+********************************************************
 
-This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on Firefox with a headless display.
+This test class uses *selenium webdriver* and *xvfbwrapper* to run tests
+on Chrome with a headless display.
 
 .. code:: python
 
@@ -148,15 +150,15 @@ This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on
             self.xvfb = Xvfb(width=1280, height=720)
             self.addCleanup(self.xvfb.stop)
             self.xvfb.start()
-            self.browser = webdriver.Firefox()
+            self.browser = webdriver.Chrome()
             self.addCleanup(self.browser.quit)
 
         def testUbuntuHomepage(self):
-            self.browser.get('http://www.ubuntu.com')
+            self.browser.get('https://www.ubuntu.com')
             self.assertIn('Ubuntu', self.browser.title)
 
         def testGoogleHomepage(self):
-            self.browser.get('http://www.google.com')
+            self.browser.get('https://www.google.com')
             self.assertIn('Google', self.browser.title)
 
 
@@ -164,7 +166,7 @@ This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on
         unittest.main()
 
 * virtual display is launched
-* Firefox launches inside virtual display (headless)
+* Chrome launches inside virtual display (headless)
 * browser is not shown while tests are run
 * conditions are asserted in each test case
 * browser quits during cleanup
@@ -176,9 +178,9 @@ This test class uses *selenium webdriver* and *xvfbwrapper* to run test cases on
 
 ----
 
-*******************************************************
-    Example of multi-threaded execution
-*******************************************************
+***************************************
+    Usage with multi-threaded execution
+***************************************
 
 To run several xvfb servers at the same time, you can use the environ keyword
 when starting the Xvfb instances. This provides isolation between threads. Be
@@ -202,3 +204,34 @@ variable to os.environ:
         env=isolated_environment,
     )
     xvfb.stop()
+
+----
+
+----------------------------------------------------
+    xvfbwrapper Development: running the unit tests:
+----------------------------------------------------
+
+To create a virtual env and install required testing libraries:
+
+.. code:: bash
+
+    $ python -m venv venv
+    $ source ./venv/bin/activate
+    (venv)$ pip install -r requirements_test.txt
+
+To run all tests, linting, and type checking across all
+supported/installed Python environments:
+
+.. code:: bash
+
+    (venv)$ tox
+
+----
+
+To run all tests on default Python environment:
+
+.. code:: bash
+
+    (venv)$ pytest
+
+----
