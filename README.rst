@@ -11,8 +11,8 @@
     Info:
 ---------
 
-- Dev: https://github.com/cgoldberg/xvfbwrapper
-- Releases: https://pypi.org/project/xvfbwrapper/
+- Development: https://github.com/cgoldberg/xvfbwrapper
+- Releases: https://pypi.org/project/xvfbwrapper
 - Author: `Corey Goldberg <https://github.com/cgoldberg>`_ - 2012-2025
 - License: MIT
 
@@ -22,7 +22,7 @@
     About xvfbwrapper:
 ----------------------
 
-xvfbwrapper is a python module for controlling virtual displays with Xvfb.
+`xvfbwrapper` is a python module for controlling virtual displays with Xvfb.
 
 ----
 
@@ -30,10 +30,10 @@ xvfbwrapper is a python module for controlling virtual displays with Xvfb.
     What is Xvfb?:
 ------------------
 
-Xvfb (X virtual framebuffer) is a display server implementing the X11 display server protocol.
-It runs in memory and does not require a physical display.  Only a network layer is necessary.
+`Xvfb` (X virtual framebuffer) is a display server implementing the X11 display server protocol.
+It runs in memory and does not require a physical display or input devices. Only a network layer is necessary.
 
-Xvfb is useful for running acceptance tests on headless servers.
+`Xvfb` is useful for running acceptance tests on headless servers.
 
 ----
 
@@ -43,7 +43,7 @@ Xvfb is useful for running acceptance tests on headless servers.
 
 .. code:: bash
 
-  pip install xvfbwrapper
+    pip install xvfbwrapper
 
 ----
 
@@ -214,7 +214,7 @@ variable to os.environ:
 
 To create a virtual env and install required testing libraries:
 
-.. code::
+.. code:: bash
 
     $ python -m venv venv
     $ source ./venv/bin/activate
@@ -223,13 +223,13 @@ To create a virtual env and install required testing libraries:
 To run all tests, linting, and type checking across all
 supported/installed Python environments:
 
-.. code::
+.. code:: bash
 
     (venv)$ tox
 
-To run all tests on default Python environment:
+To run all tests in the default Python environment:
 
-.. code::
+.. code:: bash
 
     (venv)$ pytest
 
