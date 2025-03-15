@@ -7,6 +7,7 @@
 
 
 import os
+import platform
 import subprocess
 import tempfile
 import time
@@ -14,7 +15,8 @@ import time
 try:
     import fcntl
 except ImportError:
-    raise EnvironmentError(f'xvfbwrapper is not supported on this platform.')
+    system = platform.system()
+    raise EnvironmentError(f'xvfbwrapper is not supported on this platform: {system}')
 
 from random import randint
 
