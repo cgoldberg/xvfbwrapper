@@ -23,7 +23,7 @@ setuptools.setup(
     author='Corey Goldberg',
     description='Manage headless displays with Xvfb (X virtual framebuffer)',
     long_description=LONG_DESCRIPTION,
-    readme='README.rst',
+    long_description_content_type='text/x-rst',
     url='https://github.com/cgoldberg/xvfbwrapper',
     download_url='https://pypi.org/project/xvfbwrapper',
     keywords='xvfb headless virtual display x11 testing'.split(),

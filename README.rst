@@ -232,5 +232,3 @@ To run all tests in the default Python environment:
 .. code:: bash
 
     (venv)$ pytest
-
-----
