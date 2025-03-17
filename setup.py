@@ -8,7 +8,7 @@ import os
 import setuptools
 
 
-VERSION = '0.2.10.dev0'
+VERSION = '0.2.10.'
 
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
