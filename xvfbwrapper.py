@@ -16,7 +16,7 @@ try:
     import fcntl
 except ImportError:
     system = platform.system()
-    raise EnvironmentError(f'xvfbwrapper is not supported on this platform: {system}')
+    raise OSError(f'xvfbwrapper is not supported on this platform: {system}')
 
 from random import randint
 
@@ -52,7 +52,7 @@ class Xvfb:
 
         if not self.xvfb_exists():
             msg = 'Can not find Xvfb. Please install it and try again.'
-            raise EnvironmentError(msg)
+            raise OSError(msg)
 
         self.xvfb_cmd = []
         self.extra_xvfb_args = [
