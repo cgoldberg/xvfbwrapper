@@ -51,8 +51,7 @@ class Xvfb:
             self.environ = os.environ
 
         if not self.xvfb_exists():
-            msg = "Can not find Xvfb. Please install it and try again."
-            raise OSError(msg)
+            raise OSError("Can't find Xvfb. Please install it and try again")
 
         self.xvfb_cmd = []
         self.extra_xvfb_args = [
