@@ -45,10 +45,7 @@ class Xvfb:
         self._timeout = timeout
         self.new_display = display
 
-        if environ:
-            self.environ = environ
-        else:
-            self.environ = os.environ
+        self.environ = environ if environ else os.environ
 
         if not self.xvfb_exists():
             raise OSError("Can't find Xvfb. Please install it and try again")
