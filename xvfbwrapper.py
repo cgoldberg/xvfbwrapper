@@ -2,7 +2,6 @@
 # Corey Goldberg, 2012-2025
 # License: MIT
 
-
 """Run a headless display inside X virtual framebuffer (Xvfb)"""
 
 
