@@ -66,15 +66,14 @@ class Xvfb:
 
         self.proc = None
 
-    def __enter__(self):
-        # type: (...) -> Xvfb
+    def __enter__(self) -> "Xvfb":
         self.start()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
 
-    def start(self):
+    def start(self) -> None:
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
                 raise ValueError(f"Could not lock display :{self.new_display}")
@@ -101,10 +100,10 @@ class Xvfb:
             self._cleanup_lock_file()
             raise RuntimeError(f"Xvfb did not start ({ret_code}): {self.xvfb_cmd}")
 
-    def stop(self):
+    def stop(self) -> None:
         try:
             if self.orig_display_var is None:
-                del self.environ["DISPLAY"]
+                self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
             if self.proc is not None:
@@ -117,8 +116,7 @@ class Xvfb:
         finally:
             self._cleanup_lock_file()
 
-    def xvfb_exists(self):
-        # type: (...) -> bool
+    def xvfb_exists(self) -> bool:
         """Check that Xvfb is available on PATH and is executable."""
         paths = self.environ["PATH"].split(os.pathsep)
         return any(os.access(os.path.join(path, "Xvfb"), os.X_OK) for path in paths)
@@ -140,8 +138,7 @@ class Xvfb:
         except OSError:
             pass
 
-    def _get_lock_for_display(self, display):
-        # type: (...) -> bool
+    def _get_lock_for_display(self, display) -> bool:
         """
         In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
@@ -160,8 +157,7 @@ class Xvfb:
             else:
                 return True
 
-    def _get_next_unused_display(self):
-        # type: (...) -> int
+    def _get_next_unused_display(self) -> int:
         """
         Randomly chooses a display number and tries to acquire a lock for this
         number. If the lock could be acquired, returns this number, otherwise
@@ -175,7 +171,7 @@ class Xvfb:
             else:
                 continue
 
-    def _local_display_exists(self, display):
+    def _local_display_exists(self, display) -> bool:
         temp_display_file = os.path.join(self._tempdir, ".X11-unix", f"X{display}")
         return os.path.exists(temp_display_file)
 
