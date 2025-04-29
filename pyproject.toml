@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xvfbwrapper"
+version = "0.2.11dev0"
+description = "Manage headless displays with Xvfb (X virtual framebuffer)"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Corey Goldberg"}]
+maintainers = [{name = "Corey Goldberg"}]
+readme = "README.md"
+requires-python = ">= 3.8"
+keywords = ["xvfb", "headless", "display", "x11", "x-windows"]
+classifiers = [
+        "Environment :: Console",
+        "Environment :: X11 Applications",
+        "Intended Audience :: Developers",
+        "Intended Audience :: End Users/Desktop",
+        "Intended Audience :: Information Technology",
+        "Operating System :: POSIX",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: Unix",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+homepage = "https://github.com/cgoldberg/xvfbwrapper"
+source = "https://github.com/cgoldberg/xvfbwrapper"
+download = "https://pypi.org/project/xvfbwrapper"
