@@ -163,3 +163,25 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(":0", os.environ["DISPLAY"])
         self.assertEqual(":0", env_duped["DISPLAY"])
         self.assertIsNone(xvfb.proc)
+
+    def test_start_failure_without_initial_display_env(self):
+        # Provide a custom env *without* DISPLAY so orig_display_var == None
+        custom_env = {"PATH": os.environ.get("PATH", "")}
+        xvfb = Xvfb(timeout=0.5, environ=custom_env)
+        # Ensure any spawned proc is cleaned up
+        self.addCleanup(lambda: xvfb.proc and xvfb.proc.terminate())
+
+        # Force the display socket to never appear
+        with patch.object(xvfb, "_local_display_exists", return_value=False):
+            # On old code this will KeyError *inside* stop()
+            # On fixed code this raises RuntimeError cleanly
+            with self.assertRaises(RuntimeError):
+                xvfb.start()
+
+        # After failure, calling stop() again must not raise
+        xvfb.stop()
+
+        # And we never injected DISPLAY into our custom env
+        self.assertNotIn("DISPLAY", custom_env)
+        # Finally, there should be no lingering proc
+        self.assertIsNone(xvfb.proc)

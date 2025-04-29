@@ -104,7 +104,7 @@ class Xvfb:
     def stop(self):
         try:
             if self.orig_display_var is None:
-                del self.environ["DISPLAY"]
+                self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
             if self.proc is not None:
