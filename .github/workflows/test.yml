@@ -9,7 +9,7 @@ jobs:
       matrix:
         # supported python versions can be found here
         # https://github.com/actions/python-versions/releases
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.11']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', 'pypy-3.11']
     steps:
       - uses: actions/checkout@master
       - name: set up Python ${{ matrix.python-version }}
@@ -24,7 +24,7 @@ jobs:
       - name: Run mypy
         run: |
             pip install -U mypy
-            mypy -p xvfbwrapper --ignore-missing-imports
+            mypy -p xvfbwrapper --install-types --non-interactive
       - name: Run tests & coverage
         run: |
           coverage erase

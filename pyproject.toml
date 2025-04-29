@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "xvfbwrapper"
 version = "0.2.11dev0"
@@ -7,8 +11,8 @@ license-files = ["LICENSE"]
 authors = [{name = "Corey Goldberg"}]
 maintainers = [{name = "Corey Goldberg"}]
 readme = "README.md"
-requires-python = ">= 3.8"
-keywords = ["xvfb", "headless", "display", "x11", "x-windows"]
+requires-python = ">= 3.9"
+keywords = ["Xvfb", "headless", "display", "X11", "X Window System"]
 classifiers = [
         "Environment :: Console",
         "Environment :: X11 Applications",
@@ -20,7 +24,6 @@ classifiers = [
         "Operating System :: Unix",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
@@ -34,29 +37,21 @@ homepage = "https://github.com/cgoldberg/xvfbwrapper"
 source = "https://github.com/cgoldberg/xvfbwrapper"
 download = "https://pypi.org/project/xvfbwrapper"
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [tool.setuptools]
 py-modules = ["xvfbwrapper"]
 
-[tool.mypy]
-install-types = true
-non-interactive = true
-
 [tool.black]
 line-length = 88
-target-version = ["py38"]
+target-version = ["py39"]
 
 [tool.isort]
 profile = "black"
-py_version = 38
+py_version = 39
 
 [tool.autoflake]
 in-place = true
 max-line-length = ["88"]
-min-python-version = ["3.8"]
+min-python-version = ["3.9"]
 recursive = true
 remove-all-unused-imports = true
 remove-duplicate-keys = true
