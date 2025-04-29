@@ -145,7 +145,6 @@ import os
 import unittest
 
 from selenium import webdriver
-
 from xvfbwrapper import Xvfb
 
 # force X11 in case we are running on a Wayland system
