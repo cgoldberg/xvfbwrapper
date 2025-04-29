@@ -1,6 +1,2 @@
-black
-flake8
-mypy
 pytest
 tox
-validate-pyproject

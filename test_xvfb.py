@@ -3,11 +3,9 @@
 import os
 import sys
 import unittest
-
 from unittest.mock import patch
 
 from xvfbwrapper import Xvfb
-
 
 # force X11 in case we are running on a Wayland system
 os.environ["XDG_SESSION_TYPE"] = "x11"
