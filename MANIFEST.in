@@ -1,0 +1,2 @@
+include test_xvfb.py
+include tox.ini
