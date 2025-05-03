@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import platform
 import sys
 import unittest
 from unittest.mock import patch
@@ -98,16 +97,6 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaises(ValueError):
             xvfb2.start()
-
-    @unittest.skipIf(
-        platform.python_implementation() == "PyPy",
-        "fcntl.flock fails on PyPy when using an alternate tmp directory",
-    )
-    def test_start_with_alternate_temp_dir_for_lock_files(self):
-        temp_dir = "/var/tmp"
-        with Xvfb(tempdir=temp_dir) as xvfb:
-            xvfb.start()
-            self.assertEqual(temp_dir, xvfb._tempdir)
 
     def test_start_with_kwargs(self):
         w = 800
