@@ -172,8 +172,7 @@ class Xvfb:
                 continue
 
     def _local_display_exists(self, display) -> bool:
-        temp_display_file = os.path.join(self._tempdir, ".X11-unix", f"X{display}")
-        return os.path.exists(temp_display_file)
+        return os.path.exists(f"/tmp/.X11-unix/X{display}")
 
     def _set_display(self, display_var):
         self.environ["DISPLAY"] = display_var
