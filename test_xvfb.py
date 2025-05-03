@@ -59,6 +59,15 @@ class TestXvfb(unittest.TestCase):
             self.assertEqual(xquartz_display, os.environ["DISPLAY"])
         self.assertIsNone(xvfb.proc)
 
+    def test_start_and_stop_as_context_manager(self):
+        orig_display = os.environ["DISPLAY"]
+        with Xvfb() as xvfb:
+            display_var = f":{xvfb.new_display}"
+            self.assertEqual(display_var, os.environ["DISPLAY"])
+            self.assertIsNotNone(xvfb.proc)
+        self.assertEqual(orig_display, os.environ["DISPLAY"])
+        self.assertIsNone(xvfb.proc)
+
     def test_start_without_existing_display(self):
         with patch.dict("os.environ", {}):
             del os.environ["DISPLAY"]
@@ -88,15 +97,6 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaises(ValueError):
             xvfb2.start()
-
-    def test_as_context_manager(self):
-        orig_display = os.environ["DISPLAY"]
-        with Xvfb() as xvfb:
-            display_var = f":{xvfb.new_display}"
-            self.assertEqual(display_var, os.environ["DISPLAY"])
-            self.assertIsNotNone(xvfb.proc)
-        self.assertEqual(orig_display, os.environ["DISPLAY"])
-        self.assertIsNone(xvfb.proc)
 
     def test_start_with_kwargs(self):
         w = 800
