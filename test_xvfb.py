@@ -98,6 +98,12 @@ class TestXvfb(unittest.TestCase):
         with self.assertRaises(ValueError):
             xvfb2.start()
 
+    def test_start_with_alternate_temp_dir_for_lock_files(self):
+        temp_dir = "/var/tmp"
+        with Xvfb(tempdir=temp_dir) as xvfb:
+            xvfb.start()
+            self.assertEqual(temp_dir, xvfb._tempdir)
+
     def test_start_with_kwargs(self):
         w = 800
         h = 600
