@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from xvfbwrapper import Xvfb
 
-# force X11 in case we are running on a Wayland system
+# Force X11 in case we are running on a Wayland system
 os.environ["XDG_SESSION_TYPE"] = "x11"
 
 
@@ -22,8 +22,8 @@ class TestXvfb(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_xvfb_binary_not_exists(self):
-        with patch("xvfbwrapper.Xvfb.xvfb_exists") as xvfb_exists:
+    def test_xvfb_binary_does_not_exist(self):
+        with patch("xvfbwrapper.Xvfb._xvfb_exists") as xvfb_exists:
             xvfb_exists.return_value = False
             with self.assertRaises(EnvironmentError):
                 Xvfb()
@@ -172,18 +172,15 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(timeout=0.5, environ=custom_env)
         # Ensure any spawned proc is cleaned up
         self.addCleanup(lambda: xvfb.proc and xvfb.proc.terminate())
-
         # Force the display socket to never appear
         with patch.object(xvfb, "_local_display_exists", return_value=False):
             # On old code this will KeyError *inside* stop()
             # On fixed code this raises RuntimeError cleanly
             with self.assertRaises(RuntimeError):
                 xvfb.start()
-
-        # After failure, calling stop() again must not raise
+        # After failure, calling stop() again must not raise an exception
         xvfb.stop()
-
-        # And we never injected DISPLAY into our custom env
+        # We never injected DISPLAY into our custom env
         self.assertNotIn("DISPLAY", custom_env)
-        # Finally, there should be no lingering proc
+        # There should be no lingering proc
         self.assertIsNone(xvfb.proc)

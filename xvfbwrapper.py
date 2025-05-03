@@ -7,6 +7,7 @@
 
 import os
 import platform
+import shutil
 import subprocess
 import tempfile
 import time
@@ -46,7 +47,7 @@ class Xvfb:
 
         self.environ = environ if environ else os.environ
 
-        if not self.xvfb_exists():
+        if not self._xvfb_exists():
             raise OSError("Can't find Xvfb. Please install it and try again")
 
         self.xvfb_cmd = []
@@ -116,10 +117,9 @@ class Xvfb:
         finally:
             self._cleanup_lock_file()
 
-    def xvfb_exists(self) -> bool:
+    def _xvfb_exists(self) -> bool:
         """Check that Xvfb is available on PATH and is executable."""
-        paths = self.environ["PATH"].split(os.pathsep)
-        return any(os.access(os.path.join(path, "Xvfb"), os.X_OK) for path in paths)
+        return True if shutil.which("Xvfb") is not None else False
 
     def _cleanup_lock_file(self):
         """
