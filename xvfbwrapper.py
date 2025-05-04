@@ -45,7 +45,7 @@ class Xvfb:
         self._timeout = timeout
         self.new_display = display
 
-        self.environ = environ if environ else os.environ
+        self.environ = environ or os.environ
 
         if not self._xvfb_exists():
             raise OSError("Can't find Xvfb. Please install it and try again")
@@ -168,8 +168,6 @@ class Xvfb:
             rand = randint(1, self.__class__.MAX_DISPLAY)
             if self._get_lock_for_display(rand):
                 return rand
-            else:
-                continue
 
     def _local_display_exists(self, display) -> bool:
         return os.path.exists(f"/tmp/.X11-unix/X{display}")
