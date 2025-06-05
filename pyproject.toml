@@ -40,6 +40,12 @@ download = "https://pypi.org/project/xvfbwrapper"
 [tool.setuptools]
 py-modules = ["xvfbwrapper"]
 
+[tool.pytest.ini_options]
+# "-vv" means extra verbose
+# "-r fEsxXp" means show extra test summary info as specified by:
+#     (f)ailed, (E)rror, (s)kipped, (x)failed, (X)passed, (p)assed
+addopts = "-vv -r fEsxXp"
+
 [tool.black]
 line-length = 88
 target-version = ["py39"]
