@@ -56,8 +56,7 @@ py_version = 39
 
 [tool.autoflake]
 in-place = true
-max-line-length = ["88"]
-min-python-version = ["3.9"]
+recursive = true
 remove-all-unused-imports = true
 remove-duplicate-keys = true
 remove-unused-variables = true
