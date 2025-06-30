@@ -37,14 +37,18 @@ homepage = "https://github.com/cgoldberg/xvfbwrapper"
 source = "https://github.com/cgoldberg/xvfbwrapper"
 download = "https://pypi.org/project/xvfbwrapper"
 
+[dependency-groups]
+dev = ["tox"]
+lint = ["autoflake", "black", "flake8", "isort"]
+test = ["pytest"]
+type = ["mypy"]
+validate = ["packaging", "validate-pyproject"]
+
 [tool.setuptools]
 py-modules = ["xvfbwrapper"]
 
 [tool.pytest.ini_options]
-# "-vv" means extra verbose
-# "-r fEsxXp" means show extra test summary info as specified by:
-#     (f)ailed, (E)rror, (s)kipped, (x)failed, (X)passed, (p)assed
-addopts = "-vv -r fEsxXp"
+addopts = "-vv" # extra verbose
 
 [tool.black]
 line-length = 88
