@@ -185,17 +185,12 @@ git clone https://github.com/cgoldberg/xvfbwrapper.git
 cd xvfbwrapper
 ```
 
-Create a virtual env and install required testing packages:
+Create a virtual env, install required testing packages, and run all unit tests in the default Python environment::
 
 ```
 python -m venv venv
 source ./venv/bin/activate
-pip install -r requirements_test.txt
-```
-
-Run all unit tests in the default Python environment:
-
-```
+pip install --editable --group dev --group test .
 pytest
 ```
 
