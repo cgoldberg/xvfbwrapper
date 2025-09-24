@@ -2,8 +2,7 @@
 # Corey Goldberg, 2012-2025
 # License: MIT
 
-"""Run a headless display inside X virtual framebuffer (Xvfb)"""
-
+"""Run a headless display inside X virtual framebuffer (Xvfb)."""
 
 import os
 import platform
@@ -22,7 +21,6 @@ from random import randint
 
 
 class Xvfb:
-
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
     MAX_DISPLAY = 2147483647
@@ -81,7 +79,7 @@ class Xvfb:
         else:
             self.new_display = self._get_next_unused_display()
         display_var = f":{self.new_display}"
-        self.xvfb_cmd = ["Xvfb", display_var] + self.extra_xvfb_args
+        self.xvfb_cmd = ["Xvfb", display_var, *self.extra_xvfb_args]
         self.proc = subprocess.Popen(
             self.xvfb_cmd,
             stdout=subprocess.DEVNULL,
@@ -122,15 +120,13 @@ class Xvfb:
         return True if shutil.which("Xvfb") is not None else False
 
     def _cleanup_lock_file(self):
-        """
-        This should always get called if the process exits safely
-        with Xvfb.stop() (whether called explicitly, or by __exit__).
+        """Gets called if the process exits safely with Xvfb.stop() (whether
+        called explicitly, or by __exit__).
 
         If you are ending up with /tmp/X123-lock files when Xvfb is not
         running, then Xvfb is not exiting cleanly. Always either call
         Xvfb.stop() in a finally block, or use Xvfb as a context manager
         to ensure lock files are purged.
-
         """
         self._lock_display_file.close()
         try:
@@ -139,8 +135,7 @@ class Xvfb:
             pass
 
     def _get_lock_for_display(self, display) -> bool:
-        """
-        In order to ensure multi-process safety, this method attempts
+        """In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         """
@@ -158,10 +153,10 @@ class Xvfb:
                 return True
 
     def _get_next_unused_display(self) -> int:
-        """
-        Randomly chooses a display number and tries to acquire a lock for this
+        """Randomly chooses a display number and tries to acquire a lock for this
         number. If the lock could be acquired, returns this number, otherwise
         choses a new one.
+
         :return: free display number
         """
         while True:

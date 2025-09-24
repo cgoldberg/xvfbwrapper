@@ -15,7 +15,6 @@ os.environ["XDG_SESSION_TYPE"] = "x11"
 # test_* method and removes it after test completes.
 @patch.dict("os.environ", {"DISPLAY": ":0"})
 class TestXvfb(unittest.TestCase):
-
     def setUp(self):
         pass
 

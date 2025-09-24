@@ -38,11 +38,23 @@ source = "https://github.com/cgoldberg/xvfbwrapper"
 download = "https://pypi.org/project/xvfbwrapper"
 
 [dependency-groups]
-dev = ["tox"]
-lint = ["autoflake", "black", "flake8", "isort"]
-test = ["pytest"]
-type = ["mypy"]
-validate = ["packaging", "validate-pyproject"]
+dev = [
+    "tox",
+]
+lint = [
+    "black",
+    "ruff",
+]
+test = [
+    "pytest",
+]
+type = [
+    "mypy",
+]
+validate = [
+    "packaging",
+    "validate-pyproject",
+]
 
 [tool.setuptools]
 py-modules = ["xvfbwrapper"]
@@ -52,15 +64,25 @@ addopts = "-vv" # extra verbose
 
 [tool.black]
 line-length = 88
-target-version = ["py39", "py310", "py311", "py312", "py313"]
+target-version = [
+    "py39", "py310", "py311", "py312", "py313"
+]
 
-[tool.isort]
-profile = "black"
-py_version = 39
+[tool.ruff]
+line-length = 88
+respect-gitignore = true
+target-version = "py39"
 
-[tool.autoflake]
-in-place = true
-recursive = true
-remove-all-unused-imports = true
-remove-duplicate-keys = true
-remove-unused-variables = true
+[tool.ruff.lint]
+select = [
+    "D", "E", "F", "I", "RUF", "TID", "W"
+]
+extend-ignore = [
+    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", "D203",
+    "D205", "D211", "D213", "D400", "D401", "RUF012"
+]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
