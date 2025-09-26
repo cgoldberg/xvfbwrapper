@@ -17,7 +17,6 @@ classifiers = [
         "Environment :: Console",
         "Environment :: X11 Applications",
         "Intended Audience :: Developers",
-        "Intended Audience :: End Users/Desktop",
         "Intended Audience :: Information Technology",
         "Operating System :: POSIX",
         "Operating System :: POSIX :: Linux",
@@ -43,6 +42,7 @@ dev = [
 ]
 lint = [
     "black",
+    "refurb",
     "ruff",
 ]
 test = [
@@ -86,3 +86,10 @@ fixable = ["ALL"]
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 88
+
+[tool.refurb]
+python_version = "3.9"
+enable_all = true
+disable = [
+    "FURB107", "FURB173", "FURB183", "FURB184"
+]

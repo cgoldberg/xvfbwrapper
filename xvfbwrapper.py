@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from pathlib import Path
 
 try:
     import fcntl
@@ -130,7 +131,7 @@ class Xvfb:
         """
         self._lock_display_file.close()
         try:
-            os.remove(self._lock_display_file.name)
+            Path(self._lock_display_file.name).unlink()
         except OSError:
             pass
 
@@ -139,9 +140,9 @@ class Xvfb:
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         """
-        tempfile_path = os.path.join(self._tempdir, f".X{display}-lock")
+        tempfile_path = Path(self._tempdir, f".X{display}-lock")
         try:
-            self._lock_display_file = open(tempfile_path, "w")
+            self._lock_display_file = tempfile_path.open("w")
         except PermissionError:
             return False
         else:
@@ -165,7 +166,7 @@ class Xvfb:
                 return rand
 
     def _local_display_exists(self, display) -> bool:
-        return os.path.exists(f"/tmp/.X11-unix/X{display}")
+        return Path("/tmp", ".X11-unix", f"X{display}").exists()
 
     def _set_display(self, display_var):
         self.environ["DISPLAY"] = display_var
