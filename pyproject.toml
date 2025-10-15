@@ -11,7 +11,7 @@ license-files = ["LICENSE"]
 authors = [{name = "Corey Goldberg"}]
 maintainers = [{name = "Corey Goldberg"}]
 readme = "README.md"
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 keywords = ["Xvfb", "headless", "display", "X11", "X Window System"]
 classifiers = [
         "Environment :: Console",
@@ -23,11 +23,11 @@ classifiers = [
         "Operating System :: Unix",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
@@ -65,13 +65,13 @@ addopts = "-vv" # extra verbose
 [tool.black]
 line-length = 88
 target-version = [
-    "py39", "py310", "py311", "py312", "py313"
+    "py310", "py311", "py312", "py313", "py314"
 ]
 
 [tool.ruff]
 line-length = 88
 respect-gitignore = true
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
@@ -88,7 +88,7 @@ docstring-code-format = true
 docstring-code-line-length = 88
 
 [tool.refurb]
-python_version = "3.9"
+python_version = "3.10"
 enable_all = true
 disable = [
     "FURB107", "FURB173", "FURB183", "FURB184"
