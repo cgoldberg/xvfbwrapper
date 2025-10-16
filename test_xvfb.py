@@ -44,6 +44,17 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(orig_display, os.environ["DISPLAY"])
         self.assertIsNone(xvfb.proc)
 
+    def test_start_multiple_times(self):
+        xvfb = Xvfb()
+        xvfb.start()
+        self.addCleanup(xvfb.stop)
+        pid1 = xvfb.proc.pid
+        xvfb.stop()
+        xvfb.start()
+        pid2 = xvfb.proc.pid
+        self.assertIsNotNone(xvfb.proc)
+        self.assertNotEqual(pid1, pid2)
+
     def test_stop_if_not_running(self):
         xvfb = Xvfb()
         xvfb.stop()
@@ -100,7 +111,7 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(xvfb.new_display, 42)
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaises(ValueError):
-            xvfb.start()
+            xvfb2.start()
 
     def test_start_with_kwargs(self):
         w = 800
@@ -125,9 +136,10 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_fails_with_unknown_kwargs(self):
-        xvfb = Xvfb(foo="bar")
+        xvfb = Xvfb(foo="bar", timeout=5)
         with self.assertRaises(RuntimeError):
             xvfb.start()
+        self.assertIsNone(xvfb.proc)
 
     def test_get_next_unused_display_does_not_reuse_lock(self):
         xvfb = Xvfb()
