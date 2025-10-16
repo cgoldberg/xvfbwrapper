@@ -44,6 +44,11 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(orig_display, os.environ["DISPLAY"])
         self.assertIsNone(xvfb.proc)
 
+    def test_stop_if_not_running(self):
+        xvfb = Xvfb()
+        xvfb.stop()
+        self.assertIsNone(xvfb.proc)
+
     def test_stop_with_xquartz(self):
         # Check that xquartz pattern for display server is dealt with by
         # xvfb.stop() and restored appropriately
@@ -95,7 +100,7 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(xvfb.new_display, 42)
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaises(ValueError):
-            xvfb2.start()
+            xvfb.start()
 
     def test_start_with_kwargs(self):
         w = 800

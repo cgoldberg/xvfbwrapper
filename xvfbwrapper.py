@@ -101,6 +101,8 @@ class Xvfb:
             raise RuntimeError(f"Xvfb did not start ({ret_code}): {self.xvfb_cmd}")
 
     def stop(self) -> None:
+        if self.proc is None:
+            return
         try:
             if self.orig_display_var is None:
                 self.environ.pop("DISPLAY", None)
