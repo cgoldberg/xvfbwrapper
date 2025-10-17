@@ -40,5 +40,5 @@ jobs:
       - name: Run tests & coverage
         run: |
           coverage erase
-          coverage run --source=. -m unittest discover
+          coverage run --source=. -m unittest --verbose
           coverage report -m
