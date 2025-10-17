@@ -71,7 +71,7 @@ from xvfbwrapper import Xvfb
 
 with Xvfb():
     # launch stuff inside virtual display here
-    # Xvfb will stop when this block completes
+    # (Xvfb will stop when this block completes)
 ```
 
 #### Specifying display geometry:
