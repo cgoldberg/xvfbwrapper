@@ -149,7 +149,7 @@ from xvfbwrapper import Xvfb
 os.environ["XDG_SESSION_TYPE"] = "x11"
 
 
-class TestPages(unittest.TestCase):
+class TestPage(unittest.TestCase):
 
     def setUp(self):
         xvfb = Xvfb()
