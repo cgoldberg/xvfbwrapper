@@ -55,7 +55,7 @@ class TestXvfb(unittest.TestCase):
         self.assertIsNotNone(xvfb.proc)
         self.assertNotEqual(pid1, pid2)
 
-    def test_stop_if_not_running(self):
+    def test_stop_if_not_running_doesnt_raise_error(self):
         xvfb = Xvfb()
         xvfb.stop()
         self.assertIsNone(xvfb.proc)
@@ -198,5 +198,4 @@ class TestXvfb(unittest.TestCase):
         xvfb.stop()
         # We never injected DISPLAY into our custom env
         self.assertNotIn("DISPLAY", custom_env)
-        # There should be no lingering proc
         self.assertIsNone(xvfb.proc)
