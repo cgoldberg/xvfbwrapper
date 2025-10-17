@@ -1,33 +1,44 @@
-name: Test Coverage
+
+name: "Testing"
 
 on: ["push", "pull_request"]
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # supported python versions can be found here
+        # supported python versions can be found here:
         # https://github.com/actions/python-versions/releases
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14', 'pypy-3.11']
+        python-version: ['3.10', '3.14', 'pypy-3.11']
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v5
       - name: set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          pip install -U wheel
           pip install -U coverage
-          pip install .
-      - name: Run mypy
+          pip install -U tox
+      - name: Run validation
         run: |
-            pip install -U mypy
-            mypy -p xvfbwrapper --install-types --non-interactive
+            tox
+        env:
+          TOXENV: validate
+      - name: Run linting
+        run: |
+            tox
+        env:
+          TOXENV: lint
+      - name: Run type checking
+        run: |
+            tox
+        env:
+          TOXENV: type
       - name: Run tests & coverage
         run: |
           coverage erase
           coverage run --source=. -m unittest discover
           coverage report -m
-
