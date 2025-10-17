@@ -2,21 +2,16 @@
 
 #### Manage headless displays with Xvfb (X virtual framebuffer)
 
-- Copyright (c) 2012-2025 [Corey Goldberg][github-home]
+- Copyright (c) 2012-2025 [Corey Goldberg][github-profile]
 - Development: [GitHub][github-repo]
-- Releases: [PyPI][pypi]
+- Releases: [PyPI][pypi-home]
 - License: [MIT][mit-license]
-
-[github-home]: https://github.com/cgoldberg
-[github-repo]: https://github.com/cgoldberg/xvfbwrapper
-[pypi]: https://pypi.org/project/xvfbwrapper
-[mit-license]: https://raw.githubusercontent.com/cgoldberg/xvfbwrapper/refs/heads/master/LICENSE
 
 ----
 
 ## About
 
-`xvfbwrapper` is a python module for controlling X11 virtual displays with Xvfb.
+`xvfbwrapper` is a Python module for controlling X11 virtual displays with Xvfb.
 
 ----
 
@@ -25,13 +20,15 @@
 
 `Xvfb` (X virtual framebuffer) is a display server implementing the X11
 display server protocol. It runs in memory and does not require a physical
-display or input devices. Only a network layer is necessary.
+display or input device. Only a network layer is necessary.
 
-`Xvfb` is useful for programs that run on a headless servers, but require X Windows.
+`Xvfb` allows GUI applications that use X Windows to run on a headless system.
 
 ----
 
 ## Installation
+
+Official releases are published on [PyPI][pypi-home]:
 
 ```
 pip install xvfbwrapper
@@ -41,16 +38,20 @@ pip install xvfbwrapper
 
 ## System Requirements
 
-- Python 3.9+
+- Python 3.10+
 - X Window System
 - Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
-- File locking with `fcntl`
+- Support for locking with `fcntl` system call (non-Windows systems)
 
 ----
 
 ## Examples
 
 #### Basic Usage:
+
+Note: Always either wrap your usage of `Xvfb()` with try/finally, or use it as
+a context manager to ensure the display is stopped. If you don't, you'll end up
+with a bunch of junk in `/tmp` if errors occur.
 
 ```python
 from xvfbwrapper import Xvfb
@@ -60,10 +61,17 @@ xvfb.start()
 try:
     # launch stuff inside virtual display here
 finally:
-    # always either wrap your usage of Xvfb() with try/finally, or
-    # alternatively use Xvfb() as a context manager. If you don't,
-    # you'll probably end up with a bunch of junk in /tmp
     xvfb.stop()
+```
+
+#### Usage as a context manager:
+
+```python
+from xvfbwrapper import Xvfb
+
+with Xvfb():
+    # launch stuff inside virtual display here
+    # Xvfb will stop when this block completes
 ```
 
 #### Specifying display geometry:
@@ -71,7 +79,7 @@ finally:
 ```python
 from xvfbwrapper import Xvfb
 
-xvfb = Xvfb(width=1280, height=740)
+xvfb = Xvfb(width=1280, height=720)
 xvfb.start()
 try:
     # launch stuff inside virtual display here
@@ -94,22 +102,12 @@ finally:
     xvfb.stop()
 ```
 
-#### Usage as a context manager:
-
-```python
-from xvfbwrapper import Xvfb
-
-with Xvfb() as xvfb:
-    # launch stuff inside virtual display here
-    # Xvfb will stop when this block completes
-```
-
 #### Multithreaded execution:
 
 To run several Xvfb displays at the same time, you can use the `environ`
 keyword when starting the `Xvfb` instances. This provides isolation between
-threads. Be sure to use the environment dictionary you initialize Xvfb with
-in your subsequent calls. Also, if you wish to inherit your current
+processes or threads. Be sure to use the environment dictionary you initialize
+`Xvfb` with in your subsequent calls. Also, if you wish to inherit your current
 environment, you must use the copy method of `os.environ` and not simply
 assign a new variable to `os.environ`:
 
@@ -155,9 +153,9 @@ class TestPages(unittest.TestCase):
 
     def setUp(self):
         xvfb = Xvfb()
-        self.addCleanup(xvfb.stop)
         xvfb.start()
         self.driver = webdriver.Chrome()
+        self.addCleanup(xvfb.stop)
         self.addCleanup(self.driver.quit)
 
     def test_selenium_homepage(self):
@@ -176,27 +174,54 @@ if __name__ == "__main__":
 
 ----
 
+## xvfbwrapper Issues
+
+To report a bug or request a new feature, please open an issue on [GitHub][github-issues].
+
+----
+
 ## xvfbwrapper Development
 
-Clone the repo:
+1. Fork the project repo on [GitHub][github-repo]
 
-```
-git clone https://github.com/cgoldberg/xvfbwrapper.git
-cd xvfbwrapper
-```
+2. Clone the repo:
 
-Create a virtual env, install required testing packages, and run all unit tests in the default Python environment::
+    ```
+    git clone https://github.com/<USERNAME>/xvfbwrapper.git
+    cd xvfbwrapper
+    ```
 
-```
-python -m venv venv
-source ./venv/bin/activate
-pip install --editable --group dev --group test .
-pytest
-```
+3. Make changes and run the tests:
 
-Run all unit tests, linting, and type checking across all supported/installed
-Python environments:
+    Create a virtual env and install required testing packages:
 
-```
-tox
-```
+    ```
+    python -m venv venv
+    source ./venv/bin/activate
+    pip install --editable --group dev --group test .
+    ```
+
+    Run all tests in the default Python environment::
+
+    ```
+    pytest
+    ```
+
+    Run all tests, linting, and type checking across all supported/installed
+    Python environments:
+
+    ```
+    tox
+    ```
+
+4. Commit and push your changes
+
+5. Submit a [Pull Request][github-prs]
+
+
+[github-profile]: https://github.com/cgoldberg
+[github-repo]: https://github.com/cgoldberg/xvfbwrapper
+[github-issues]: https://github.com/cgoldberg/xvfbwrapper/issues
+[github-prs]: https://github.com/cgoldberg/xvfbwrapper/pulls
+[pypi-home]: https://pypi.org/project/xvfbwrapper
+[mit-license]: https://raw.githubusercontent.com/cgoldberg/xvfbwrapper/refs/heads/master/LICENSE
