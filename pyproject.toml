@@ -53,6 +53,7 @@ type = [
 ]
 validate = [
     "packaging",
+    "tomli",
     "validate-pyproject",
 ]
 

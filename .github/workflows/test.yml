@@ -21,7 +21,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -U coverage
-          pip install -U tomli
           pip install -U tox
       - name: Run validation
         run: |
