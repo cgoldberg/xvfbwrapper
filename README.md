@@ -2,6 +2,8 @@
 
 ### Manage headless displays with Xvfb (X virtual framebuffer)
 
+----
+
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/xvfbwrapper)](https://pypi.org/project/xvfbwrapper)
 
 - Copyright (c) 2012-2025 [Corey Goldberg][github-profile]
