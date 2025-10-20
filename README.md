@@ -1,6 +1,8 @@
 # xvfbwrapper
 
-#### Manage headless displays with Xvfb (X virtual framebuffer)
+### Manage headless displays with Xvfb (X virtual framebuffer)
+
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/xvfbwrapper)](https://pypi.org/project/xvfbwrapper)
 
 - Copyright (c) 2012-2025 [Corey Goldberg][github-profile]
 - Development: [GitHub][github-repo]
@@ -11,7 +13,7 @@
 
 ## About
 
-`xvfbwrapper` is a Python module for controlling X11 virtual displays with Xvfb.
+`xvfbwrapper` is a Python library for controlling X11 virtual displays with Xvfb.
 
 ----
 
