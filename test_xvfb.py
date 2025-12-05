@@ -24,7 +24,9 @@ class TestXvfb(unittest.TestCase):
     def test_xvfb_binary_does_not_exist(self):
         with patch("xvfbwrapper.Xvfb._xvfb_exists") as xvfb_exists:
             xvfb_exists.return_value = False
-            with self.assertRaises(EnvironmentError):
+            with self.assertRaisesRegex(
+                EnvironmentError, "Can't find Xvfb. Please install it and try again"
+            ):
                 Xvfb()
 
     def test_default_args(self):
@@ -137,7 +139,9 @@ class TestXvfb(unittest.TestCase):
         xvfb.start()
         self.assertEqual(xvfb.new_display, display_num)
         self.assertIsNotNone(xvfb.proc)
-        with self.assertRaises(RuntimeError):
+        with self.assertRaisesRegex(
+            RuntimeError, f"Could not lock display :{display_num}"
+        ):
             xvfb2.start()
 
     def test_start_with_kwargs(self):
@@ -156,7 +160,18 @@ class TestXvfb(unittest.TestCase):
 
     def test_start_fails_with_unknown_kwargs(self):
         xvfb = Xvfb(foo="bar", timeout=5)
-        with self.assertRaises(RuntimeError):
+        expected_cmd_args = [
+            "Xvfb",
+            r":\d",
+            "-screen",
+            r"0",
+            r"\dx\dx\d",
+            "-foo",
+            "bar",
+        ]
+        with self.assertRaisesRegex(
+            RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
+        ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
 
@@ -207,11 +222,20 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(timeout=0.5, environ=custom_env)
         # Ensure any spawned proc is cleaned up
         self.addCleanup(lambda: xvfb.proc and xvfb.proc.terminate())
+        expected_cmd_args = [
+            "Xvfb",
+            r":\d",
+            "-screen",
+            r"0",
+            r"\dx\dx\d",
+            "-foo",
+            "bar",
+        ]
         # Force the display socket to never appear
         with patch.object(xvfb, "_local_display_exists", return_value=False):
-            # On old code this will KeyError *inside* stop()
-            # On fixed code this raises RuntimeError cleanly
-            with self.assertRaises(RuntimeError):
+            with self.assertRaisesRegex(
+                RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
+            ):
                 xvfb.start()
         # After failure, calling stop() again must not raise an exception
         xvfb.stop()
