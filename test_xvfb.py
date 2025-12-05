@@ -27,6 +27,26 @@ class TestXvfb(unittest.TestCase):
             with self.assertRaises(EnvironmentError):
                 Xvfb()
 
+    def test_default_args(self):
+        w = 800
+        h = 680
+        depth = 24
+        xvfb = Xvfb()
+        self.assertEqual(w, xvfb.width)
+        self.assertEqual(h, xvfb.height)
+        self.assertEqual(depth, xvfb.colordepth)
+        self.assertEqual(["-screen", "0", f"{w}x{h}x{depth}"], xvfb.extra_xvfb_args)
+
+    def test_kwargs(self):
+        w = 610
+        h = 620
+        depth = 8
+        xvfb = Xvfb(width=w, height=h, colordepth=depth)
+        self.assertEqual(w, xvfb.width)
+        self.assertEqual(h, xvfb.height)
+        self.assertEqual(depth, xvfb.colordepth)
+        self.assertEqual(["-screen", "0", f"{w}x{h}x{depth}"], xvfb.extra_xvfb_args)
+
     def test_start(self):
         xvfb = Xvfb()
         self.addCleanup(xvfb.stop)
@@ -89,8 +109,7 @@ class TestXvfb(unittest.TestCase):
             xvfb = Xvfb()
             self.addCleanup(xvfb.stop)
             xvfb.start()
-            display_var = f":{xvfb.new_display}"
-            self.assertEqual(display_var, os.environ["DISPLAY"])
+            self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_empty_display(self):
@@ -99,40 +118,40 @@ class TestXvfb(unittest.TestCase):
             xvfb = Xvfb()
             self.addCleanup(xvfb.stop)
             xvfb.start()
-            display_var = f":{xvfb.new_display}"
-            self.assertEqual(display_var, os.environ["DISPLAY"])
+            self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_specific_display(self):
-        xvfb = Xvfb(display=42)
-        xvfb2 = Xvfb(display=42)
+        display_num = 42
+        xvfb = Xvfb(display=display_num)
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        self.assertEqual(xvfb.new_display, 42)
+        self.assertEqual(xvfb.new_display, display_num)
         self.assertIsNotNone(xvfb.proc)
-        with self.assertRaises(ValueError):
+
+    def test_start_on_used_display(self):
+        display_num = 42
+        xvfb = Xvfb(display=display_num)
+        xvfb2 = Xvfb(display=display_num)
+        self.addCleanup(xvfb.stop)
+        xvfb.start()
+        self.assertEqual(xvfb.new_display, display_num)
+        self.assertIsNotNone(xvfb.proc)
+        with self.assertRaises(RuntimeError):
             xvfb2.start()
 
     def test_start_with_kwargs(self):
-        w = 800
-        h = 600
-        depth = 16
-        xvfb = Xvfb(width=w, height=h, colordepth=depth)
+        xvfb = Xvfb(width=600, height=600, colordepth=16)
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        self.assertEqual(w, xvfb.width)
-        self.assertEqual(h, xvfb.height)
-        self.assertEqual(depth, xvfb.colordepth)
-        display_var = f":{xvfb.new_display}"
-        self.assertEqual(display_var, os.environ["DISPLAY"])
+        self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_with_arbitrary_kwargs(self):
         xvfb = Xvfb(nolisten="tcp")
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        display_var = f":{xvfb.new_display}"
-        self.assertEqual(display_var, os.environ["DISPLAY"])
+        self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_fails_with_unknown_kwargs(self):

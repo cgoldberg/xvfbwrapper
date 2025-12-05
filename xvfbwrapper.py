@@ -76,7 +76,7 @@ class Xvfb:
     def start(self) -> None:
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
-                raise ValueError(f"Could not lock display :{self.new_display}")
+                raise RuntimeError(f"Could not lock display :{self.new_display}")
         else:
             self.new_display = self._get_next_unused_display()
         display_var = f":{self.new_display}"
