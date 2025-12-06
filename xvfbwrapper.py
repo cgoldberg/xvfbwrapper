@@ -75,7 +75,9 @@ class Xvfb:
 
     def start(self) -> None:
         if not os.access(self._tempdir, os.W_OK):
-            raise RuntimeError(f"Could not access temp directory: {self._tempdir}")
+            raise RuntimeError(
+                f"Could not access writable temp directory: {self._tempdir}"
+            )
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
                 raise RuntimeError(f"Could not lock display :{self.new_display}")
@@ -170,7 +172,11 @@ class Xvfb:
                 return rand
 
     def _local_display_exists(self, display) -> bool:
-        return Path("/tmp", ".X11-unix", f"X{display}").exists()
+        tempdir = "/tmp"
+        # We need read access to the real system temp directory
+        if not os.access(tempdir, os.R_OK):
+            raise RuntimeError(f"Could not access {tempdir} directory: {self._tempdir}")
+        return Path(tempdir, ".X11-unix", f"X{display}").exists()
 
     def _set_display(self, display_var):
         self.environ["DISPLAY"] = display_var

@@ -115,7 +115,7 @@ class TestXvfb(unittest.TestCase):
         unwriteable_dir = "/etc"
         xvfb = Xvfb(tempdir=unwriteable_dir)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not access temp directory: {unwriteable_dir}"
+            RuntimeError, f"Could not access writable temp directory: {unwriteable_dir}"
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
@@ -124,7 +124,7 @@ class TestXvfb(unittest.TestCase):
         unknown_dir = "/tmp/some_unknown_path"
         xvfb = Xvfb(tempdir=unknown_dir)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not access temp directory: {unknown_dir}"
+            RuntimeError, f"Could not access writable temp directory: {unknown_dir}"
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
