@@ -74,7 +74,8 @@ class Xvfb:
         self.stop()
 
     def start(self) -> None:
-        self._check_tempdir(self._tempdir)
+        if not os.access(self._tempdir, os.W_OK):
+            raise RuntimeError(f"Could not access temp directory: {self._tempdir}")
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
                 raise RuntimeError(f"Could not lock display :{self.new_display}")
@@ -118,10 +119,6 @@ class Xvfb:
                 self.proc = None
         finally:
             self._cleanup_lock_file()
-
-    def _check_tempdir(self, tempdir):
-        if not os.access(tempdir, os.W_OK):
-            raise RuntimeError(f"Could not access temp directory: {self._tempdir}")
 
     def _xvfb_exists(self) -> bool:
         """Check that Xvfb is available on PATH and is executable."""
@@ -173,9 +170,7 @@ class Xvfb:
                 return rand
 
     def _local_display_exists(self, display) -> bool:
-        required_tempdir = "/tmp"
-        self._check_tempdir(required_tempdir)
-        return Path(required_tempdir, ".X11-unix", f"X{display}").exists()
+        return Path("/tmp", ".X11-unix", f"X{display}").exists()
 
     def _set_display(self, display_var):
         self.environ["DISPLAY"] = display_var
