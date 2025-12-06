@@ -2,6 +2,7 @@
 
 import os
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -25,7 +26,7 @@ class TestXvfb(unittest.TestCase):
         with patch("xvfbwrapper.Xvfb._xvfb_exists") as xvfb_exists:
             xvfb_exists.return_value = False
             with self.assertRaisesRegex(
-                EnvironmentError, "Can't find Xvfb. Please install it and try again"
+                EnvironmentError, "Could not find Xvfb. Please install it and try again"
             ):
                 Xvfb()
 
@@ -53,8 +54,7 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb()
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        display_var = f":{xvfb.new_display}"
-        self.assertEqual(display_var, os.environ["DISPLAY"])
+        self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
     def test_stop(self):
@@ -99,10 +99,34 @@ class TestXvfb(unittest.TestCase):
     def test_start_and_stop_as_context_manager(self):
         orig_display = os.environ["DISPLAY"]
         with Xvfb() as xvfb:
-            display_var = f":{xvfb.new_display}"
-            self.assertEqual(display_var, os.environ["DISPLAY"])
+            self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
             self.assertIsNotNone(xvfb.proc)
         self.assertEqual(orig_display, os.environ["DISPLAY"])
+        self.assertIsNone(xvfb.proc)
+
+    def test_start_with_tempdir(self):
+        with tempfile.TemporaryDirectory() as tempdir:
+            xvfb = Xvfb(tempdir=tempdir)
+            self.addCleanup(xvfb.stop)
+            xvfb.start()
+            self.assertIsNotNone(xvfb.proc)
+
+    def test_start_with_unwriteable_tempdir(self):
+        unwriteable_dir = "/etc"
+        xvfb = Xvfb(tempdir=unwriteable_dir)
+        with self.assertRaisesRegex(
+            RuntimeError, f"Could not access temp directory: {unwriteable_dir}"
+        ):
+            xvfb.start()
+        self.assertIsNone(xvfb.proc)
+
+    def test_start_with_unknown_tempdir(self):
+        unknown_dir = "/tmp/some_unknown_path"
+        xvfb = Xvfb(tempdir=unknown_dir)
+        with self.assertRaisesRegex(
+            RuntimeError, f"Could not access temp directory: {unknown_dir}"
+        ):
+            xvfb.start()
         self.assertIsNone(xvfb.proc)
 
     def test_start_without_existing_display(self):

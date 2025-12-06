@@ -47,7 +47,7 @@ class Xvfb:
         self.environ = environ or os.environ
 
         if not self._xvfb_exists():
-            raise OSError("Can't find Xvfb. Please install it and try again")
+            raise OSError("Could not find Xvfb. Please install it and try again")
 
         self.xvfb_cmd = []
         self.extra_xvfb_args = [
@@ -74,6 +74,8 @@ class Xvfb:
         self.stop()
 
     def start(self) -> None:
+        if not os.access(self._tempdir, os.W_OK):
+            raise RuntimeError(f"Could not access temp directory: {self._tempdir}")
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
                 raise RuntimeError(f"Could not lock display :{self.new_display}")
