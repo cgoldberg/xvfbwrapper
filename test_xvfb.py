@@ -111,7 +111,7 @@ class TestXvfb(unittest.TestCase):
             xvfb.start()
             self.assertIsNotNone(xvfb.proc)
 
-    def test_start_with_unwriteable_tempdir(self):
+    def test_start_with_unwritable_tempdir(self):
         unwriteable_dir = "/etc"
         xvfb = Xvfb(tempdir=unwriteable_dir)
         with self.assertRaisesRegex(
