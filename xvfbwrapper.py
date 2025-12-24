@@ -127,8 +127,10 @@ class Xvfb:
         return True if shutil.which("Xvfb") is not None else False
 
     def _cleanup_lock_file(self):
-        """Gets called if the process exits safely with Xvfb.stop() (whether
-        called explicitly, or by __exit__).
+        """Delete lock files when stopping.
+
+        This gets called if the process exits safely with Xvfb.stop(),
+        whether called explicitly, or by __exit__.
 
         If you are ending up with /tmp/X123-lock files when Xvfb is not
         running, then Xvfb is not exiting cleanly. Always either call
@@ -142,7 +144,9 @@ class Xvfb:
             pass
 
     def _get_lock_for_display(self, display) -> bool:
-        """In order to ensure multi-process safety, this method attempts
+        """Attempt to acquire an exclusive lock for a display.
+
+        In order to ensure multi-process safety, this method attempts
         to acquire an exclusive lock on a temporary file whose name
         contains the display number for Xvfb.
         """
@@ -160,9 +164,10 @@ class Xvfb:
                 return True
 
     def _get_next_unused_display(self) -> int:
-        """Randomly chooses a display number and tries to acquire a lock for this
-        number. If the lock could be acquired, returns this number, otherwise
-        choses a new one.
+        """Randomly choose a display number and tries to acquire a lock for it.
+
+        If the lock could be acquired, returns this number, otherwise
+        chooses a new one.
 
         :return: free display number
         """

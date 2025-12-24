@@ -75,14 +75,15 @@ respect-gitignore = true
 target-version = "py310"
 
 [tool.ruff.lint]
+fixable = ["ALL"]
 select = [
-    "D", "E", "F", "I", "RUF", "TID", "W"
+    "D", "E", "F", "I", "N", "FURB",
+    "RUF", "TID", "UP", "W"
 ]
 extend-ignore = [
-    "D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", "D203",
-    "D205", "D211", "D213", "D400", "D401", "RUF012"
+    "D100", "D101", "D102", "D105", "D107", "D203", "D213"
+
 ]
-fixable = ["ALL"]
 
 [tool.ruff.format]
 docstring-code-format = true
