@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from contextlib import suppress
 from pathlib import Path
 
 try:
@@ -113,11 +114,9 @@ class Xvfb:
             else:
                 self._set_display(self.orig_display_var)
             if self.proc is not None:
-                try:
+                with suppress(OSError):
                     self.proc.terminate()
                     self.proc.wait(self._timeout)
-                except OSError:
-                    pass
                 self.proc = None
         finally:
             self._cleanup_lock_file()
@@ -138,10 +137,8 @@ class Xvfb:
         to ensure lock files are purged.
         """
         self._lock_display_file.close()
-        try:
+        with suppress(OSError):
             Path(self._lock_display_file.name).unlink()
-        except OSError:
-            pass
 
     def _get_lock_for_display(self, display) -> bool:
         """Attempt to acquire an exclusive lock for a display.
