@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xvfbwrapper"
-version = "0.2.17"
+version = "0.2.18dev0"
 description = "Manage headless displays with Xvfb (X virtual framebuffer)"
 license = "MIT"
 license-files = ["LICENSE"]
