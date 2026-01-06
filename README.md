@@ -205,7 +205,7 @@ To report a bug or request a new feature, please open an issue on [GitHub][githu
     pip install --editable --group dev --group test .
     ```
 
-    Run all tests in the default Python environment::
+    Run all tests in the default Python environment:
 
     ```
     pytest
