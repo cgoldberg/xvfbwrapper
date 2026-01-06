@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# Corey Goldberg, 2012-2025
+# Corey Goldberg, 2012-2026
 # License: MIT
 
 """Run a headless display inside X virtual framebuffer (Xvfb)."""
@@ -161,12 +160,10 @@ class Xvfb:
                 return True
 
     def _get_next_unused_display(self) -> int:
-        """Randomly choose a display number and tries to acquire a lock for it.
+        """Randomly choose a display number and try to acquire a lock for it.
 
-        If the lock could be acquired, returns this number, otherwise
-        chooses a new one.
-
-        :return: free display number
+        If the lock could be acquired, return the display number, otherwise
+        choose a new one.
         """
         while True:
             rand = randint(1, self.__class__.MAX_DISPLAY)

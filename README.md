@@ -6,7 +6,7 @@
 
 [![Supported Python Versions](https://img.shields.io/pypi/pyversions/xvfbwrapper)](https://pypi.org/project/xvfbwrapper)
 
-- Copyright (c) 2012-2025 [Corey Goldberg][github-profile]
+- Copyright (c) 2012-2026 [Corey Goldberg][github-profile]
 - Development: [GitHub][github-repo]
 - Releases: [PyPI][pypi-home]
 - License: [MIT][mit-license]

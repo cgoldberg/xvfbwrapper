@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+
+"""Tests for xvfbwrapper."""
+
 import os
 import sys
 import tempfile
@@ -266,3 +269,7 @@ class TestXvfb(unittest.TestCase):
         # We never injected DISPLAY into our custom env
         self.assertNotIn("DISPLAY", custom_env)
         self.assertIsNone(xvfb.proc)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
