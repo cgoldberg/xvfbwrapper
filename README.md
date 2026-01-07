@@ -85,10 +85,6 @@ from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(width=1280, height=720)
 xvfb.start()
-try:
-    # launch stuff inside virtual display here
-finally:
-    xvfb.stop()
 ```
 
 #### Specifying display number:
@@ -97,13 +93,40 @@ finally:
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(display=23)
-xvfb.start()
-# Xvfb is started with display :23
-# see vdisplay.new_display
-try:
-    # launch stuff inside virtual display here
-finally:
-    xvfb.stop()
+xvfb.start() # Xvfb will start on display :23
+```
+
+#### Specifying other Xvfb options:
+
+The `Xvfb` executable accepts several types of command line arguments.
+
+The most common is an argument with a `-` prefix and a parameter
+(i.e. `-nolisten tcp`). These can be added as keyword arguments when
+creating an `xvfbrwapper.Xvfb` instance. For example:
+
+```python
+from xvfbwrapper import Xvfb
+
+xvfb = Xvfb(nolisten="tcp")
+xvfb.start() # Xvfb will be called with the `-nolisten tcp` argument
+```
+
+However, there are other possible types of arguments:
+
+- unary argument (i.e. `ttyxx`)
+- unary argument with a `+` prefix (i.e. `+xinerama`)
+- unary argument with a `-` prefix (i.e. `-nocursor`)
+- argument with a parameter (i.e. `c 100`)
+- argument with a `+` prefix and a parameter (i.e. `+extension RANDR`)
+
+Any type of argument can be added as an `extra_args` sequence when creating
+an `xvfbrwapper.Xvfb` instance. For example:
+
+```python
+from xvfbwrapper import Xvfb
+
+xvfb = Xvfb(extra_args=("ttyxx", "-nocursor", "+extension", "RANDR"))
+xvfb.start() # Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
 ```
 
 #### Multithreaded execution:
