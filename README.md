@@ -4,16 +4,16 @@
 
 ----
 
+- Copyright (c) 2012-2026 [Corey Goldberg][github-profile]
+- Development: [GitHub][github-repo]
+- Releases: [PyPI][pypi-home]
+- License: [MIT][mit-license]
+
 | Type | Status |
 | ---- | ------ |
 | Build/Tests (CI) | [![Build/Tests (GitHub)](https://github.com/cgoldberg/xvfbwrapper/actions/workflows/test.yml/badge.svg)](https://github.com/cgoldberg/xvfbwrapper/actions/workflows/test.yml) |
 | Supported Python Versions | [![Supported Python Versions](https://img.shields.io/pypi/pyversions/xvfbwrapper)](https://pypi.org/project/xvfbwrapper) |
 | OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.uuid:java-uuid-generator)](https://tidelift.com/lifter/search/pypi/xvfbwrapper) |
-
-- Copyright (c) 2012-2026 [Corey Goldberg][github-profile]
-- Development: [GitHub][github-repo]
-- Releases: [PyPI][pypi-home]
-- License: [MIT][mit-license]
 
 ----
 
