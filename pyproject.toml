@@ -53,7 +53,6 @@ type = [
 ]
 validate = [
     "packaging",
-    "tomli",
     "validate-pyproject",
 ]
 
@@ -80,7 +79,7 @@ select = [
     "D", "E", "F", "I", "N", "FURB", "RUF", "TID", "UP", "W"
 ]
 extend-ignore = [
-    "D100", "D101", "D102", "D105", "D107", "D203", "D213"
+    "D100", "D101", "D102", "D103", "D105", "D107", "D203", "D213"
 ]
 
 [tool.ruff.format]

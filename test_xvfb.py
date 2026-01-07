@@ -12,6 +12,13 @@ from unittest.mock import patch
 from xvfbwrapper import Xvfb
 
 
+def contains_sublist(lst, sub_lst):
+    if not sub_lst:
+        return True
+    n, m = len(lst), len(sub_lst)
+    return any(lst[i : i + m] == sub_lst for i in range(n - m + 1))
+
+
 # Using mock.patch as a class decorator applies it to every
 # test_* method and removes it after test completes.
 #
@@ -52,6 +59,13 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(h, xvfb.height)
         self.assertEqual(depth, xvfb.colordepth)
         self.assertEqual(["-screen", "0", f"{w}x{h}x{depth}"], xvfb.extra_xvfb_args)
+
+    def test_extra_kwargs(self):
+        extra_args = ["-nocursor", "+extension", "RANDR"]
+        xvfb = Xvfb(extra_args=extra_args)
+        self.assertEqual(
+            ["-screen", "0", f"{800}x{680}x{24}", *extra_args], xvfb.extra_xvfb_args
+        )
 
     def test_start(self):
         xvfb = Xvfb()
@@ -155,6 +169,7 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(display=display_num)
         self.addCleanup(xvfb.stop)
         xvfb.start()
+        assert ":42" in xvfb.xvfb_cmd
         self.assertEqual(xvfb.new_display, display_num)
         self.assertIsNotNone(xvfb.proc)
 
@@ -172,9 +187,13 @@ class TestXvfb(unittest.TestCase):
             xvfb2.start()
 
     def test_start_with_kwargs(self):
-        xvfb = Xvfb(width=600, height=600, colordepth=16)
+        w = 600
+        h = 600
+        depth = 16
+        xvfb = Xvfb(width=w, height=h, colordepth=depth)
         self.addCleanup(xvfb.stop)
         xvfb.start()
+        assert f"{w}x{h}x{depth}" in xvfb.xvfb_cmd
         self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
@@ -182,6 +201,16 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(nolisten="tcp")
         self.addCleanup(xvfb.stop)
         xvfb.start()
+        assert contains_sublist(xvfb.xvfb_cmd, ["-nolisten", "tcp"])
+        self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
+        self.assertIsNotNone(xvfb.proc)
+
+    def test_start_with_extra_args(self):
+        extra_args = ["-nocursor", "+extension", "RANDR"]
+        xvfb = Xvfb(extra_args=extra_args)
+        self.addCleanup(xvfb.stop)
+        xvfb.start()
+        assert contains_sublist(xvfb.xvfb_cmd, extra_args)
         self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 

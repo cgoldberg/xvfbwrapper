@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from collections.abc import MutableMapping, Sequence
 from contextlib import suppress
 from pathlib import Path
 
@@ -28,43 +29,49 @@ class Xvfb:
 
     def __init__(
         self,
-        width=800,
-        height=680,
-        colordepth=24,
-        tempdir=None,
-        display=None,
-        environ=None,
-        timeout=10,
+        width: int = 800,
+        height: int = 680,
+        colordepth: int = 24,
+        tempdir: Path | str | None = None,
+        display: int | None = None,
+        environ: MutableMapping[str, str] | None = None,
+        extra_args: Sequence[str] | None = None,
+        timeout: int = 10,
         **kwargs,
     ):
-        self.width = width
-        self.height = height
-        self.colordepth = colordepth
-        self._tempdir = tempdir or tempfile.gettempdir()
-        self._timeout = timeout
-        self.new_display = display
-
-        self.environ = environ or os.environ
+        self.width: int = width
+        self.height: int = height
+        self.colordepth: int = colordepth
+        self._tempdir: Path | str = tempdir or tempfile.gettempdir()
+        self._timeout: int = timeout
+        self.new_display: int | None = display
+        self.environ: MutableMapping[str, str] = environ or os.environ
 
         if not self._xvfb_exists():
             raise OSError("Could not find Xvfb. Please install it and try again")
 
-        self.xvfb_cmd = []
+        self.xvfb_cmd: list[str] = []
+
+        if not extra_args:
+            extra_args = []
+
         self.extra_xvfb_args = [
             "-screen",
             "0",
             f"{self.width}x{self.height}x{self.colordepth}",
+            *extra_args,
         ]
 
         for key, value in kwargs.items():
             self.extra_xvfb_args += [f"-{key}", value]
 
+        self.orig_display_var: str | None
         if "DISPLAY" in self.environ:
             self.orig_display_var = self.environ["DISPLAY"]
         else:
             self.orig_display_var = None
 
-        self.proc = None
+        self.proc: subprocess.Popen[bytes] | None = None
 
     def __enter__(self) -> "Xvfb":
         self.start()
