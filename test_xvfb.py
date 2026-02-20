@@ -19,12 +19,8 @@ def contains_sublist(lst, sub_lst):
     return any(lst[i : i + m] == sub_lst for i in range(n - m + 1))
 
 
-# Using mock.patch as a class decorator applies it to every
-# test_* method and removes it after test completes.
-#
 # Force X11 in case we are running on a Wayland system
-@patch.dict("os.environ", {"XDG_SESSION_TYPE": "x11"})
-@patch.dict("os.environ", {"DISPLAY": ":0"})
+@patch.dict("os.environ", {"XDG_SESSION_TYPE": "x11", "DISPLAY": ":0"})
 class TestXvfb(unittest.TestCase):
     def setUp(self):
         pass
@@ -49,6 +45,15 @@ class TestXvfb(unittest.TestCase):
         self.assertEqual(h, xvfb.height)
         self.assertEqual(depth, xvfb.colordepth)
         self.assertEqual(["-screen", "0", f"{w}x{h}x{depth}"], xvfb.extra_xvfb_args)
+
+    def test_test_set_xdg_with_existing_x11(self):
+        Xvfb(set_xdg_session_type=True)
+        assert os.environ["XDG_SESSION_TYPE"] == "x11"
+
+    def test_set_xdg_when_unset(self):
+        os.environ.pop("XDG_SESSION_TYPE", None)
+        Xvfb(set_xdg_session_type=True)
+        self.assertEqual(os.environ["XDG_SESSION_TYPE"], "x11")
 
     def test_kwargs(self):
         w = 610
@@ -298,6 +303,13 @@ class TestXvfb(unittest.TestCase):
         # We never injected DISPLAY into our custom env
         self.assertNotIn("DISPLAY", custom_env)
         self.assertIsNone(xvfb.proc)
+
+
+@patch.dict("os.environ", {"XDG_SESSION_TYPE": "wayland", "DISPLAY": ":0"})
+class TestXvfbWayland(unittest.TestCase):
+    def test_set_xdg_overrides_wayland(self):
+        Xvfb(set_xdg_session_type=True)
+        self.assertEqual(os.environ["XDG_SESSION_TYPE"], "x11")
 
 
 if __name__ == "__main__":

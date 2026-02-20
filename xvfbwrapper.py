@@ -34,6 +34,7 @@ class Xvfb:
         colordepth: int = 24,
         tempdir: Path | str | None = None,
         display: int | None = None,
+        set_xdg_session_type: bool = False,
         environ: MutableMapping[str, str] | None = None,
         extra_args: Sequence[str] | None = None,
         timeout: int = 10,
@@ -46,6 +47,9 @@ class Xvfb:
         self._timeout: int = timeout
         self.new_display: int | None = display
         self.environ: MutableMapping[str, str] = environ or os.environ
+
+        if set_xdg_session_type:
+            os.environ["XDG_SESSION_TYPE"] = "x11"
 
         if not self._xvfb_exists():
             raise OSError("Could not find Xvfb. Please install it and try again")

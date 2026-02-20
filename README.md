@@ -49,7 +49,7 @@ pip install xvfbwrapper
 ## System Requirements
 
 - Python 3.10+
-- X Window System (or Xwayland)
+- X Window System
 - Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
 - Support for locking with `fcntl` system call (non-Windows systems)
 
@@ -100,6 +100,21 @@ from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(display=23)
 xvfb.start() # Xvfb will start on display :23
+```
+
+#### Setting XDG_SESSION_TYPE:
+
+When running `Xvfb` in a Wayland session, GUI toolkits may try to use the
+Wayland backend instead of connecting to `Xvfb`. Setting
+`set_xdg_session_type=True` forces `XDG_SESSION_TYPE=x11` in the Python process
+and all child processes, ensuring that GUI apps use the X11 backend and can
+render on the virtual display.
+
+```python
+from xvfbwrapper import Xvfb
+
+xvfb = Xvfb(set_xdg_session_type=True)
+xvfb.start()
 ```
 
 #### Specifying other Xvfb options:
