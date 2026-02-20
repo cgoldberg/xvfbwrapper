@@ -123,7 +123,7 @@ The `Xvfb` executable accepts several types of command line arguments.
 
 The most common is an argument with a `-` prefix and a parameter
 (i.e. `-nolisten tcp`). These can be added as keyword arguments when
-creating an `xvfbrwapper.Xvfb` instance. For example:
+creating an `xvfbwrapper.Xvfb` instance. For example:
 
 ```python
 from xvfbwrapper import Xvfb
@@ -141,7 +141,7 @@ However, there are other possible types of arguments:
 - argument with a `+` prefix and a parameter (i.e. `+extension RANDR`)
 
 Any type of argument can be added as an `extra_args` sequence when creating
-an `xvfbrwapper.Xvfb` instance. For example:
+an `xvfbwrapper.Xvfb` instance. For example:
 
 ```python
 from xvfbwrapper import Xvfb
