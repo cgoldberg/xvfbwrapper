@@ -46,6 +46,7 @@ lint = [
     "ruff",
 ]
 test = [
+    "psutil",
     "pytest",
     "pytest-cov",
 ]

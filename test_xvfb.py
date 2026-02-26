@@ -9,24 +9,100 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import psutil
+
 from xvfbwrapper import Xvfb
 
 
-def contains_sublist(lst, sub_lst):
-    if not sub_lst:
-        return True
-    n, m = len(lst), len(sub_lst)
-    return any(lst[i : i + m] == sub_lst for i in range(n - m + 1))
+class XvfbCleanTestCase(unittest.TestCase):
+    """Base TestCase class.
+
+    - Records existing Xvfb processes at class start.
+    - Kills newly spawned Xvfb processes at class end.
+
+    - Records existing Xvfb processes at test start.
+    - Kills newly spawned Xvfb processes at test end.
+    """
+
+    # ---------- Utility ----------
+
+    @staticmethod
+    def get_xvfb_pids():
+        pids = set()
+        for proc in psutil.process_iter(["pid", "name", "cmdline"]):
+            try:
+                if proc.info["name"] == "Xvfb" or (
+                    proc.info["cmdline"]
+                    and any("Xvfb" in part for part in proc.info["cmdline"])
+                ):
+                    pids.add(proc.info["pid"])
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        return pids
+
+    @staticmethod
+    def kill_pids(pids):
+        procs = []
+        for pid in pids:
+            try:
+                proc = psutil.Process(pid)
+                proc.terminate()
+                procs.append(proc)
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        _, alive = psutil.wait_procs(procs, timeout=3)
+        for proc in alive:
+            try:
+                proc.kill()
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                pass
+
+    # ---------- Class-level ----------
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.class_baseline_xvfb_pids = cls.get_xvfb_pids()
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            current_xvfb_pids = cls.get_xvfb_pids()
+            new_xvfb_pids = current_xvfb_pids - cls.class_baseline_xvfb_pids
+            cls.kill_pids(new_xvfb_pids)
+        finally:
+            super().tearDownClass()
+
+    # ---------- Per-test ----------
+
+    def setUp(self):
+        super().setUp()
+        self.test_baseline_xvfb_pids = self.get_xvfb_pids()
+
+    def tearDown(self):
+        try:
+            current_xvfb_pids = self.get_xvfb_pids()
+            new_xvfb_pids = current_xvfb_pids - self.test_baseline_xvfb_pids
+            self.kill_pids(new_xvfb_pids)
+        finally:
+            super().tearDown()
 
 
 # Force X11 in case we are running on a Wayland system
 @patch.dict("os.environ", {"XDG_SESSION_TYPE": "x11", "DISPLAY": ":0"})
-class TestXvfb(unittest.TestCase):
+class TestXvfb(XvfbCleanTestCase):
     def setUp(self):
-        pass
+        super().setUp()
 
     def tearDown(self):
-        pass
+        super().tearDown()
+
+    @staticmethod
+    def contains_sublist(lst, sub_lst):
+        if not sub_lst:
+            return True
+        n, m = len(lst), len(sub_lst)
+        return any(lst[i : i + m] == sub_lst for i in range(n - m + 1))
 
     def test_xvfb_binary_does_not_exist(self):
         with patch("xvfbwrapper.Xvfb._xvfb_exists") as xvfb_exists:
@@ -206,7 +282,7 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(nolisten="tcp")
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        assert contains_sublist(xvfb.xvfb_cmd, ["-nolisten", "tcp"])
+        assert self.contains_sublist(xvfb.xvfb_cmd, ["-nolisten", "tcp"])
         self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
@@ -215,7 +291,7 @@ class TestXvfb(unittest.TestCase):
         xvfb = Xvfb(extra_args=extra_args)
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        assert contains_sublist(xvfb.xvfb_cmd, extra_args)
+        assert self.contains_sublist(xvfb.xvfb_cmd, extra_args)
         self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
         self.assertIsNotNone(xvfb.proc)
 
