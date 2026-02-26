@@ -18,9 +18,10 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+          check-latest: true
       - name: Install dependencies
         run: |
-          pip install -U tox
+          pip install -U coverage psutil tox
       - name: Run validation
         run: |
             tox
@@ -38,6 +39,6 @@ jobs:
           TOXENV: type
       - name: Run tests & coverage
         run: |
-          tox
-        env:
-          TOXENV: testenv
+          coverage erase
+          coverage run --source=. -m unittest --verbose
+          coverage report -m
