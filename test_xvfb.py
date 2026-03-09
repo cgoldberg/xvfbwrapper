@@ -88,7 +88,7 @@ class XvfbCleanTestCase(unittest.TestCase):
             super().tearDown()
 
 
-# Force X11 in case we are running on a Wayland system
+# Simulate X11 in case we are running on a Wayland system
 @patch.dict("os.environ", {"XDG_SESSION_TYPE": "x11", "DISPLAY": ":0"})
 class TestXvfb(XvfbCleanTestCase):
     def setUp(self):
@@ -108,7 +108,8 @@ class TestXvfb(XvfbCleanTestCase):
         with patch("xvfbwrapper.Xvfb._xvfb_exists") as xvfb_exists:
             xvfb_exists.return_value = False
             with self.assertRaisesRegex(
-                EnvironmentError, "Could not find Xvfb. Please install it and try again"
+                FileNotFoundError,
+                "Could not find Xvfb. Please install it and try again",
             ):
                 Xvfb()
 
@@ -128,6 +129,11 @@ class TestXvfb(XvfbCleanTestCase):
 
     def test_set_xdg_when_unset(self):
         os.environ.pop("XDG_SESSION_TYPE", None)
+        Xvfb(set_xdg_session_type=True)
+        self.assertEqual(os.environ["XDG_SESSION_TYPE"], "x11")
+
+    @patch.dict("os.environ", {"XDG_SESSION_TYPE": "wayland", "DISPLAY": ":0"})
+    def test_set_xdg_overrides_wayland(self):
         Xvfb(set_xdg_session_type=True)
         self.assertEqual(os.environ["XDG_SESSION_TYPE"], "x11")
 
@@ -379,13 +385,6 @@ class TestXvfb(XvfbCleanTestCase):
         # We never injected DISPLAY into our custom env
         self.assertNotIn("DISPLAY", custom_env)
         self.assertIsNone(xvfb.proc)
-
-
-@patch.dict("os.environ", {"XDG_SESSION_TYPE": "wayland", "DISPLAY": ":0"})
-class TestXvfbWayland(unittest.TestCase):
-    def test_set_xdg_overrides_wayland(self):
-        Xvfb(set_xdg_session_type=True)
-        self.assertEqual(os.environ["XDG_SESSION_TYPE"], "x11")
 
 
 if __name__ == "__main__":

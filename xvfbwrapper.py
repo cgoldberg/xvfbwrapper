@@ -12,14 +12,13 @@ import time
 from collections.abc import MutableMapping, Sequence
 from contextlib import suppress
 from pathlib import Path
+from random import randint
 
 try:
     import fcntl
 except ImportError:
     system = platform.system()
     raise OSError(f"xvfbwrapper is not supported on this platform: {system}")
-
-from random import randint
 
 
 class Xvfb:
@@ -52,7 +51,9 @@ class Xvfb:
             os.environ["XDG_SESSION_TYPE"] = "x11"
 
         if not self._xvfb_exists():
-            raise OSError("Could not find Xvfb. Please install it and try again")
+            raise FileNotFoundError(
+                "Could not find Xvfb. Please install it and try again"
+            )
 
         self.xvfb_cmd: list[str] = []
 
