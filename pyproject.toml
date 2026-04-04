@@ -52,6 +52,7 @@ test = [
 ]
 type = [
     "mypy",
+    "types-psutil",
 ]
 validate = [
     "packaging",
