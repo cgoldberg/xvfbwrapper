@@ -1,5 +1,6 @@
-# Corey Goldberg, 2012-2026
-# License: MIT
+# Copyright (c) 2012-2026 Corey Goldberg
+# SPDX-License-Identifier: MIT
+
 
 """Run a headless display inside X virtual framebuffer (Xvfb)."""
 

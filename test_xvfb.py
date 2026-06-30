@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+# Copyright (c) 2012-2026 Corey Goldberg
+# SPDX-License-Identifier: MIT
 
 """Tests for xvfbwrapper."""
 
