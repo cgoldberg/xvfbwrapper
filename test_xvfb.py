@@ -376,11 +376,13 @@ class TestXvfb(XvfbCleanTestCase):
             "bar",
         ]
         # Force the display socket to never appear
-        with patch.object(xvfb, "_local_display_exists", return_value=False):
-            with self.assertRaisesRegex(
+        with (
+            patch.object(xvfb, "_local_display_exists", return_value=False),
+            self.assertRaisesRegex(
                 RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
-            ):
-                xvfb.start()
+            ),
+        ):
+            xvfb.start()
         # After failure, calling stop() again must not raise an exception
         xvfb.stop()
         # We never injected DISPLAY into our custom env
