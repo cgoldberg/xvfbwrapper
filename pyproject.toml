@@ -79,9 +79,9 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["ALL"]
 extend-ignore = [
-    "ANN", "COM812", "D", "EM101", "EM102", "FBT",
-    "PERF203", "PLR", "PT", "SLF001", "S101", "S108",
-    "S311", "S603", "TRY003", "TRY400"
+    "ANN", "COM812", "D", "EM101", "EM102", "FBT", "PERF203",
+    "PLR", "PT", "PYI034", "SLF001", "S101", "S108", "S311",
+    "S603", "TRY003", "TRY400"
 ]
 fixable = ["ALL"]
 

@@ -16,9 +16,9 @@ from random import randint
 
 try:
     import fcntl
-except ImportError:
+except ImportError as e:
     system = platform.system()
-    raise OSError(f"xvfbwrapper is not supported on this platform: {system}")
+    raise OSError(f"xvfbwrapper is not supported on this platform: {system}") from e
 
 
 class Xvfb:
