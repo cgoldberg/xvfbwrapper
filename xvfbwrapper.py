@@ -60,7 +60,7 @@ class Xvfb:
         if not extra_args:
             extra_args = []
 
-        self.extra_xvfb_args = [
+        self.extra_xvfb_args: list[str] = [
             "-screen",
             "0",
             f"{self.width}x{self.height}x{self.colordepth}",
