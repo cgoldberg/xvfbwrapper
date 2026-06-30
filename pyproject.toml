@@ -41,8 +41,6 @@ dev = [
     "tox",
 ]
 lint = [
-    "black",
-    "refurb",
     "ruff",
 ]
 test = [
@@ -65,12 +63,6 @@ py-modules = ["xvfbwrapper"]
 [tool.pytest]
 addopts = ["-v"]
 
-[tool.black]
-line-length = 88
-target-version = [
-    "py310", "py311", "py312", "py313", "py314"
-]
-
 [tool.ruff]
 line-length = 88
 respect-gitignore = true
@@ -88,7 +80,3 @@ fixable = ["ALL"]
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 88
-
-[tool.refurb]
-python_version = "3.10"
-enable_all = true
