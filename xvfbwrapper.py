@@ -134,7 +134,7 @@ class Xvfb:
 
     def _xvfb_exists(self) -> bool:
         """Check that Xvfb is available on PATH and is executable."""
-        return True if shutil.which("Xvfb") is not None else False
+        return shutil.which("Xvfb") is not None
 
     def _cleanup_lock_file(self):
         """Delete lock files when stopping.
