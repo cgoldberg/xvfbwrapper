@@ -8,6 +8,7 @@ import os
 import sys
 import tempfile
 import unittest
+from contextlib import suppress
 from unittest.mock import patch
 
 import psutil
@@ -53,10 +54,8 @@ class XvfbCleanTestCase(unittest.TestCase):
                 continue
         _, alive = psutil.wait_procs(procs, timeout=3)
         for proc in alive:
-            try:
+            with suppress(psutil.NoSuchProcess, psutil.AccessDenied):
                 proc.kill()
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                pass
 
     # ---------- Class-level ----------
 
