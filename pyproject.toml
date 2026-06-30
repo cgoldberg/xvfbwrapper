@@ -48,7 +48,6 @@ lint = [
 test = [
     "psutil",
     "pytest",
-    "pytest-cov",
 ]
 type = [
     "mypy",
@@ -63,8 +62,8 @@ validate = [
 [tool.setuptools]
 py-modules = ["xvfbwrapper"]
 
-[tool.pytest.ini_options]
-addopts = "-vv" # extra verbose
+[tool.pytest]
+addopts = ["-v"]
 
 [tool.black]
 line-length = 88
