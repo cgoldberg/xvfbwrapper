@@ -251,26 +251,11 @@ if __name__ == "__main__":
 
 ----
 
-## xvfbwrapper Issues
+## Development
 
-To report a bug or request a new feature, please open an issue on [GitHub][github-issues].
+- Git: [github.com/cgoldberg/xvfbwrapper.git][github-repo]
 
-----
-
-## xvfbwrapper Development
-
-1. Fork the project repo on [GitHub][github-repo]
-
-2. Clone the repo:
-
-    ```
-    git clone https://github.com/<USERNAME>/xvfbwrapper.git
-    cd xvfbwrapper
-    ```
-
-3. Make changes and run the tests:
-
-    Create a virtual env and install required testing packages:
+- Create a virtual env and install required testing packages:
 
     ```
     python -m venv venv
@@ -278,27 +263,20 @@ To report a bug or request a new feature, please open an issue on [GitHub][githu
     pip install --editable --group dev --group test .
     ```
 
-    Run all tests in the default Python environment:
+- Run all tests in the default Python environment:
 
     ```
     pytest
     ```
 
-    Run all tests, linting, and type checking across all supported/installed
-    Python environments:
+- Run all tests, linting, and type checking across all supported/installed
+  Python environments:
 
     ```
     tox
     ```
 
-4. Commit and push your changes
-
-5. Submit a [Pull Request][github-prs]
-
-
 [github-profile]: https://github.com/cgoldberg
 [github-repo]: https://github.com/cgoldberg/xvfbwrapper
-[github-issues]: https://github.com/cgoldberg/xvfbwrapper/issues
-[github-prs]: https://github.com/cgoldberg/xvfbwrapper/pulls
 [pypi-home]: https://pypi.org/project/xvfbwrapper
 [mit-license]: https://raw.githubusercontent.com/cgoldberg/xvfbwrapper/refs/heads/master/LICENSE
