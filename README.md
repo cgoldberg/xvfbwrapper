@@ -13,6 +13,11 @@
 - Releases: [PyPI][pypi-home]
 - License: [MIT][mit-license]
 
+The package provides the `xvfvwrapper.Xvfb` class that is used to interact with
+an Xvfb server.
+
+See the [module API documentation][api-docs] for more information.
+
 ----
 
 ## Status
@@ -277,3 +282,4 @@ if __name__ == "__main__":
 [github-repo]: https://github.com/cgoldberg/xvfbwrapper
 [pypi-home]: https://pypi.org/project/xvfbwrapper
 [mit-license]: https://raw.githubusercontent.com/cgoldberg/xvfbwrapper/refs/heads/master/LICENSE
+[api-docs]: https://coreygoldberg.com/xvfbwrapper
