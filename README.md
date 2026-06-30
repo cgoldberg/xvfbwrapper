@@ -229,7 +229,7 @@ os.environ["XDG_SESSION_TYPE"] = "x11"
 class TestPage(unittest.TestCase):
 
     def setUp(self):
-        xvfb = Xvfb()
+        xvfb = Xvfb(set_xdg_session_type=True)
         xvfb.start()
         self.driver = webdriver.Chrome()
         self.addCleanup(xvfb.stop)
