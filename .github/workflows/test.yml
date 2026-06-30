@@ -1,35 +1,34 @@
+name: Testing
 
-name: "Testing"
-
-on: ["push", "pull_request"]
+on:
+  push:
+  pull_request:
 
 jobs:
   test:
-    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # supported python versions can be found here:
-        # https://github.com/actions/python-versions/releases
-        python-version: ['3.10', '3.14']
-    steps:
-      - uses: actions/checkout@v6
-      - name: set up Python ${{ matrix.python-version }}
+        include:
+          - python-version: "3.10"
+            toxenv: py310
+          - python-version: "3.14"
+            toxenv: py314
+  steps:
+      - uses: actions/checkout@v7
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           check-latest: true
       - name: Install dependencies
-        run: |
-          pip install -U coverage psutil tox
-      - name: Run validation
-        run: |
-            tox
+        run: pip install tox
+      - name: Validate project configuration
+        run: tox
         env:
           TOXENV: validate
-      - name: Run linting
-        run: |
-            tox
+      - name: Run linting and formatting
+        run: tox
         env:
           TOXENV: lint
       - name: Run type checking
@@ -37,8 +36,7 @@ jobs:
             tox
         env:
           TOXENV: type
-      - name: Run tests & coverage
-        run: |
-          coverage erase
-          coverage run --source=. -m unittest --verbose
-          coverage report -m
+      - name: Run tests
+        run: tox
+        env:
+          TOXENV: ${{ matrix.toxenv }}
