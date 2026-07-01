@@ -14,6 +14,11 @@ from collections.abc import MutableMapping, Sequence
 from contextlib import suppress
 from pathlib import Path
 from random import randint
+from types import TracebackType
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from io import TextIOWrapper
 
 try:
     import fcntl
@@ -25,7 +30,7 @@ except ImportError as e:
 class Xvfb:
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
-    MAX_DISPLAY = 2147483647
+    MAX_DISPLAY: int = 2147483647
 
     def __init__(
         self,
@@ -37,14 +42,14 @@ class Xvfb:
         set_xdg_session_type: bool = False,
         environ: MutableMapping[str, str] | None = None,
         extra_args: Sequence[str] | None = None,
-        timeout: int = 10,
-        **kwargs,
-    ):
+        timeout: float = 10,
+        **kwargs: str,
+    ) -> None:
         self.width: int = width
         self.height: int = height
         self.colordepth: int = colordepth
         self._tempdir: Path | str = tempdir or tempfile.gettempdir()
-        self._timeout: int = timeout
+        self._timeout: float = timeout
         self.new_display: int | None = display
         self.environ: MutableMapping[str, str] = environ or os.environ
 
@@ -78,12 +83,18 @@ class Xvfb:
             self.orig_display_var = None
 
         self.proc: subprocess.Popen[bytes] | None = None
+        self._lock_display_file: TextIOWrapper | None = None
 
     def __enter__(self) -> "Xvfb":
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         self.stop()
 
     def start(self) -> None:
@@ -122,14 +133,15 @@ class Xvfb:
             return
         try:
             if self.orig_display_var is None:
-                self.environ.pop("DISPLAY", None)
+                _ = self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
-            if self.proc is not None:
-                with suppress(OSError):
-                    self.proc.terminate()
-                    self.proc.wait(self._timeout)
-                self.proc = None
+
+            with suppress(OSError):
+                self.proc.terminate()
+                _ = self.proc.wait(self._timeout)
+
+            self.proc = None
         finally:
             self._cleanup_lock_file()
 
@@ -137,7 +149,7 @@ class Xvfb:
         """Check that Xvfb is available on PATH and is executable."""
         return shutil.which("Xvfb") is not None
 
-    def _cleanup_lock_file(self):
+    def _cleanup_lock_file(self) -> None:
         """Delete lock files when stopping.
 
         This gets called if the process exits safely with Xvfb.stop(),
@@ -148,11 +160,14 @@ class Xvfb:
         Xvfb.stop() in a finally block, or use Xvfb as a context manager
         to ensure lock files are purged.
         """
+        if self._lock_display_file is None:
+            return
+
         self._lock_display_file.close()
         with suppress(OSError):
             Path(self._lock_display_file.name).unlink()
 
-    def _get_lock_for_display(self, display) -> bool:
+    def _get_lock_for_display(self, display: int) -> bool:
         """Attempt to acquire an exclusive lock for a display.
 
         In order to ensure multi-process safety, this method attempts
@@ -183,12 +198,12 @@ class Xvfb:
             if self._get_lock_for_display(rand):
                 return rand
 
-    def _local_display_exists(self, display) -> bool:
+    def _local_display_exists(self, display: int) -> bool:
         tempdir = "/tmp"
         # We need read access to the real system temp directory
         if not os.access(tempdir, os.R_OK):
             raise RuntimeError(f"Could not access {tempdir} directory: {self._tempdir}")
         return Path(tempdir, ".X11-unix", f"X{display}").exists()
 
-    def _set_display(self, display_var):
+    def _set_display(self, display_var: str) -> None:
         self.environ["DISPLAY"] = display_var
