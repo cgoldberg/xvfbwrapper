@@ -15,10 +15,7 @@ from contextlib import suppress
 from pathlib import Path
 from random import randint
 from types import TracebackType
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from io import TextIOWrapper
+from typing import TextIO
 
 try:
     import fcntl
@@ -83,7 +80,7 @@ class Xvfb:
             self.orig_display_var = None
 
         self.proc: subprocess.Popen[bytes] | None = None
-        self._lock_display_file: TextIOWrapper | None = None
+        self._lock_display_file: TextIO | None = None
 
     def __enter__(self) -> "Xvfb":
         self.start()
@@ -133,13 +130,13 @@ class Xvfb:
             return
         try:
             if self.orig_display_var is None:
-                _ = self.environ.pop("DISPLAY", None)
+                self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
 
             with suppress(OSError):
                 self.proc.terminate()
-                _ = self.proc.wait(self._timeout)
+                self.proc.wait(self._timeout)
 
             self.proc = None
         finally:
