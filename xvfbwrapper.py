@@ -111,6 +111,7 @@ class Xvfb:
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             close_fds=True,
+            env=dict(self.environ),
         )
         start = time.time()
         while not self._local_display_exists(self.new_display):
