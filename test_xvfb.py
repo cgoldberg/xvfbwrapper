@@ -360,20 +360,14 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertIsNone(xvfb.proc)
 
     def test_environ_is_passed_to_xvfb_subprocess(self):
-        # Verify that the custom environment is used by the Xvfb process itself,
-        # not just for managing DISPLAY.
         marker_value = "xvfbwrapper_test_marker_12345"
         custom_env = os.environ.copy()
         custom_env["XVFBWRAPPER_TEST_MARKER"] = marker_value
-
         xvfb = Xvfb(environ=custom_env)
         self.addCleanup(xvfb.stop)
         xvfb.start()
-
         proc = psutil.Process(xvfb.proc.pid)
-        self.assertEqual(
-            proc.environ().get("XVFBWRAPPER_TEST_MARKER"), marker_value
-        )
+        self.assertEqual(proc.environ().get("XVFBWRAPPER_TEST_MARKER"), marker_value)
 
     def test_start_failure_without_initial_display_env(self):
         # Provide a custom env *without* DISPLAY so orig_display_var == None
