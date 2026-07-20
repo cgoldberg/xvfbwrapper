@@ -21,9 +21,6 @@ class XvfbCleanTestCase(unittest.TestCase):
 
     - Records existing Xvfb processes at class start.
     - Kills newly spawned Xvfb processes at class end.
-
-    - Records existing Xvfb processes at test start.
-    - Kills newly spawned Xvfb processes at test end.
     """
 
     # ---------- Utility ----------
@@ -269,7 +266,8 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertEqual(xvfb.new_display, display_num)
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not lock display :{display_num}"
+            RuntimeError,
+            f"Could not lock display :{display_num}",
         ):
             xvfb2.start()
 
@@ -348,15 +346,15 @@ class TestXvfb(XvfbCleanTestCase):
     def test_environ_keyword_isolates_environment_modification(self):
         # Check that start and stop methods modified the environ dict if
         # passed and does not modify os.environ
-        env_duped = os.environ.copy()
-        xvfb = Xvfb(environ=env_duped)
+        custom_env = os.environ.copy()
+        xvfb = Xvfb(environ=custom_env)
         xvfb.start()
         new_display = f":{xvfb.new_display}"
         self.assertEqual(":0", os.environ["DISPLAY"])
-        self.assertEqual(new_display, env_duped["DISPLAY"])
+        self.assertEqual(new_display, custom_env["DISPLAY"])
         xvfb.stop()
         self.assertEqual(":0", os.environ["DISPLAY"])
-        self.assertEqual(":0", env_duped["DISPLAY"])
+        self.assertEqual(":0", custom_env["DISPLAY"])
         self.assertIsNone(xvfb.proc)
 
     def test_environ_is_passed_to_xvfb_subprocess(self):
@@ -367,7 +365,10 @@ class TestXvfb(XvfbCleanTestCase):
         self.addCleanup(xvfb.stop)
         xvfb.start()
         proc = psutil.Process(xvfb.proc.pid)
-        self.assertEqual(proc.environ().get("XVFBWRAPPER_TEST_MARKER"), marker_value)
+        self.assertEqual(
+            proc.environ().get("XVFBWRAPPER_TEST_MARKER"),
+            marker_value,
+        )
 
     def test_start_failure_without_initial_display_env(self):
         # Provide a custom env *without* DISPLAY so orig_display_var == None
@@ -388,7 +389,8 @@ class TestXvfb(XvfbCleanTestCase):
         with (
             patch.object(xvfb, "_local_display_exists", return_value=False),
             self.assertRaisesRegex(
-                RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
+                RuntimeError,
+                f"Xvfb display did not open: {expected_cmd_args}",
             ),
         ):
             xvfb.start()
