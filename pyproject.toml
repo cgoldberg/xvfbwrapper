@@ -52,9 +52,7 @@ type = [
     "types-psutil",
 ]
 validate = [
-    "packaging",
-    "tomli",
-    "validate-pyproject",
+    "validate-pyproject[all]",
 ]
 
 [tool.setuptools]

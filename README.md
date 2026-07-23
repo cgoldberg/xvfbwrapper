@@ -133,7 +133,7 @@ xvfb.start()
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(display=23)
-xvfb.start() # Xvfb will start on display :23
+xvfb.start()  # Xvfb will start on display :23
 ```
 
 #### Setting XDG_SESSION_TYPE:
@@ -163,7 +163,7 @@ creating an `xvfbwrapper.Xvfb` instance. For example:
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(nolisten="tcp")
-xvfb.start() # Xvfb will be called with the `-nolisten tcp` argument
+xvfb.start()  # Xvfb will be called with the `-nolisten tcp` argument
 ```
 
 However, there are other possible types of arguments:
@@ -181,7 +181,7 @@ an `xvfbwrapper.Xvfb` instance. For example:
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(extra_args=("ttyxx", "-nocursor", "+extension", "RANDR"))
-xvfb.start() # Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
+xvfb.start()  # Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
 ```
 
 #### Multithreaded execution:
@@ -229,7 +229,6 @@ from xvfbwrapper import Xvfb
 
 
 class TestPage(unittest.TestCase):
-
     def setUp(self):
         xvfb = Xvfb(set_xdg_session_type=True)
         xvfb.start()
