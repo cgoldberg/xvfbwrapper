@@ -300,7 +300,7 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertIsNotNone(xvfb.proc)
 
     def test_start_fails_with_unknown_kwargs(self):
-        xvfb = Xvfb(foo="bar", timeout=5)
+        xvfb = Xvfb(foo="bar", timeout=2)
         expected_cmd_args = [
             "Xvfb",
             r":\d",
