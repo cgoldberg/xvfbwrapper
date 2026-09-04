@@ -49,36 +49,28 @@ class Xvfb:
         self._timeout: float = timeout
         self.new_display: int | None = display
         self.environ: MutableMapping[str, str] = environ or os.environ
-
         if set_xdg_session_type:
             os.environ["XDG_SESSION_TYPE"] = "x11"
-
         if not self._xvfb_exists():
             raise FileNotFoundError(
                 "Could not find Xvfb. Please install it and try again"
             )
-
         self.xvfb_cmd: list[str] = []
-
         if not extra_args:
             extra_args = []
-
         self.extra_xvfb_args: list[str] = [
             "-screen",
             "0",
             f"{self.width}x{self.height}x{self.colordepth}",
             *extra_args,
         ]
-
         for key, value in kwargs.items():
             self.extra_xvfb_args += [f"-{key}", value]
-
         self.orig_display_var: str | None
         if "DISPLAY" in self.environ:
             self.orig_display_var = self.environ["DISPLAY"]
         else:
             self.orig_display_var = None
-
         self.proc: subprocess.Popen[bytes] | None = None
         self._lock_display_file: TextIO | None = None
 
@@ -134,11 +126,9 @@ class Xvfb:
                 self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
-
             with suppress(OSError):
                 self.proc.terminate()
                 self.proc.wait(self._timeout)
-
             self.proc = None
         finally:
             self._cleanup_lock_file()
@@ -160,7 +150,6 @@ class Xvfb:
         """
         if self._lock_display_file is None:
             return
-
         self._lock_display_file.close()
         with suppress(OSError):
             Path(self._lock_display_file.name).unlink()
