@@ -51,6 +51,7 @@ class Xvfb:
         self.environ: MutableMapping[str, str] = environ or os.environ
         if set_xdg_session_type:
             os.environ["XDG_SESSION_TYPE"] = "x11"
+            self.environ["XDG_SESSION_TYPE"] = "x11"
         if not self._xvfb_exists():
             raise FileNotFoundError(
                 "Could not find Xvfb. Please install it and try again"
