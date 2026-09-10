@@ -106,10 +106,10 @@ class Xvfb:
             close_fds=True,
             env=dict(self.environ),
         )
-        start = time.time()
+        start = time.monotonic()
         while not self._local_display_exists(self.new_display):
             time.sleep(1e-3)
-            elapsed = time.time() - start
+            elapsed = time.monotonic() - start
             if self._timeout is not None and elapsed > self._timeout:
                 self.stop()
                 raise RuntimeError(f"Xvfb display did not open: {self.xvfb_cmd}")
