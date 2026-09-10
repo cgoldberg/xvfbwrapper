@@ -39,14 +39,14 @@ class Xvfb:
         set_xdg_session_type: bool = False,
         environ: MutableMapping[str, str] | None = None,
         extra_args: Sequence[str] | None = None,
-        timeout: float = 10,
+        timeout: float | None = 10,
         **kwargs: str,
     ) -> None:
         self.width: int = width
         self.height: int = height
         self.colordepth: int = colordepth
         self._tempdir: Path | str = tempdir or tempfile.gettempdir()
-        self._timeout: float = timeout
+        self._timeout: float | None = timeout
         self.new_display: int | None = display
         self.environ: MutableMapping[str, str] = environ or os.environ
         if set_xdg_session_type:
@@ -109,7 +109,8 @@ class Xvfb:
         start = time.time()
         while not self._local_display_exists(self.new_display):
             time.sleep(1e-3)
-            if time.time() - start > self._timeout:
+            elapsed = time.time() - start
+            if self._timeout is not None and elapsed > self._timeout:
                 self.stop()
                 raise RuntimeError(f"Xvfb display did not open: {self.xvfb_cmd}")
         ret_code = self.proc.poll()
@@ -120,6 +121,14 @@ class Xvfb:
             raise RuntimeError(f"Xvfb did not start ({ret_code}): {self.xvfb_cmd}")
 
     def stop(self) -> None:
+        """Stop Xvfb and clean up its resources.
+
+        Terminate the process, escalating to kill if it does not exit in time.
+
+        If `self._timeout` is set, wait up to that duration for both termination
+        and, if necessary, killing the process. If `self._timeout` is `None`, wait
+        indefinitely for the process to exit and be reaped.
+        """
         if self.proc is None:
             return
         try:
@@ -127,11 +136,14 @@ class Xvfb:
                 self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
-            with suppress(OSError):
-                self.proc.terminate()
+            self.proc.terminate()
+            try:
                 self.proc.wait(self._timeout)
-            self.proc = None
+            except subprocess.TimeoutExpired:
+                self.proc.kill()
+                self.proc.wait(self._timeout)
         finally:
+            self.proc = None
             self._cleanup_lock_file()
 
     def _xvfb_exists(self) -> bool:
