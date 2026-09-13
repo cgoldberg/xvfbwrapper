@@ -145,7 +145,6 @@ class Xvfb:
                 self._set_display(self.orig_display_var)
             with suppress(ProcessLookupError):
                 self.proc.terminate()
-            self.proc.terminate()
             try:
                 self.proc.wait(self._timeout)
             except subprocess.TimeoutExpired:
