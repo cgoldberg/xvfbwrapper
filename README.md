@@ -214,10 +214,10 @@ finally:
     xvfb2.stop()
 ```
 
-#### Usage in testing - headless Selenium WebDriver tests:
+#### Example: headless browser tests:
 
-This is a test using `selenium` and `xvfbwrapper` to run tests
-on Chrome with a headless display. (see: [selenium docs][selenium-docs])
+This uses [`selenium`][selenium-docs] and `xvfbwrapper` to run a test
+on Chrome with a headless display.
 
 [selenium-docs]: https://www.selenium.dev/selenium/docs/api/py
 
