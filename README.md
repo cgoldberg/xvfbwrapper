@@ -214,10 +214,10 @@ finally:
     xvfb2.stop()
 ```
 
-#### Example: headless browser tests:
+#### Headless browser tests:
 
 This uses [`selenium`][selenium-docs] and `xvfbwrapper` to run a test
-on Chrome with a headless display.
+on Chrome inside a headless display.
 
 [selenium-docs]: https://www.selenium.dev/selenium/docs/api/py
 
