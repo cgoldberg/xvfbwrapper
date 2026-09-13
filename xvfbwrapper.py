@@ -88,6 +88,8 @@ class Xvfb:
         self.stop()
 
     def start(self) -> None:
+        """Start Xvfb."""
+
         if not os.access(self._tempdir, os.W_OK):
             raise RuntimeError(
                 f"Could not access writable temp directory: {self._tempdir}"
@@ -123,11 +125,16 @@ class Xvfb:
     def stop(self) -> None:
         """Stop Xvfb and clean up its resources.
 
-        Terminate the process, escalating to kill if it does not exit in time.
+        Terminate the process, escalating to kill if it does not exit within the
+        timeout. If the process has already exited, termination is treated as
+        successful. If `self._timeout` is set, wait up to that duration for termination
+        and, if necessary, an additional duration of the same length after killing the
+        process. If `self._timeout` is `None`, wait indefinitely for the process to
+        exit and be reaped.
 
-        If `self._timeout` is set, wait up to that duration for both termination
-        and, if necessary, killing the process. If `self._timeout` is `None`, wait
-        indefinitely for the process to exit and be reaped.
+        This is a one-way lifecycle transition: once called, this object is considered
+        stopped and cannot be reused, regardless of whether the process exits
+        successfully.
         """
         if self.proc is None:
             return
@@ -136,6 +143,8 @@ class Xvfb:
                 self.environ.pop("DISPLAY", None)
             else:
                 self._set_display(self.orig_display_var)
+            with suppress(ProcessLookupError):
+                self.proc.terminate()
             self.proc.terminate()
             try:
                 self.proc.wait(self._timeout)
