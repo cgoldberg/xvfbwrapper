@@ -143,10 +143,6 @@ class Xvfb:
         and, if necessary, an additional duration of the same length after killing the
         process. If `self._timeout` is `None`, wait indefinitely for the process to
         exit and be reaped.
-
-        This is a one-way lifecycle transition: once called, this object is considered
-        stopped and cannot be reused, regardless of whether the process exits
-        successfully.
         """
         if self.proc is None:
             return
