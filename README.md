@@ -6,17 +6,18 @@
 
 ## About
 
-`xvfbwrapper` is a Python library for controlling X11 virtual displays with Xvfb.
+`xvfbwrapper` is a Python library for managing X11 virtual displays with
+[Xvfb (X virtual framebuffer)](https://x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml),
+a virtual X server that runs without a physical display. It provides the
+`Xvfb` class, a Python interface for configuring and controlling the Xvfb
+program.
+
+See the [module API documentation][api-docs] for more information.
 
 - Copyright (c) 2012-2026 [Corey Goldberg][github-profile]
 - Development: [GitHub][github-repo]
 - Releases: [PyPI][pypi-home]
 - License: [MIT][mit-license]
-
-The package provides the `xvfvwrapper.Xvfb` class that is used to interact with
-an Xvfb server.
-
-See the [module API documentation][api-docs] for more information.
 
 ----
 
@@ -85,7 +86,7 @@ pip install xvfbwrapper
 - Python 3.10+
 - X Window System
 - Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
-- Support for locking with `fcntl` system call (non-Windows systems)
+- Support for file locking using `fcntl` (POSIX systems)
 
 ----
 

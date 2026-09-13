@@ -2,7 +2,14 @@
 # SPDX-License-Identifier: MIT
 
 
-"""Run a headless display inside X virtual framebuffer (Xvfb)."""
+"""Manage headless displays with Xvfb (X virtual framebuffer)
+
+This module provides a wrapper around Xvfb (X Virtual Framebuffer) for managing
+virtual X displays.
+
+- Releases: https://pypi.org/project/xvfbwrapper
+- Development: https://github.com/cgoldberg/xvfbwrapper
+"""
 
 import os
 import platform
@@ -25,6 +32,11 @@ except ImportError as e:
 
 
 class Xvfb:
+    """Manage an Xvfb (X Virtual Framebuffer) process.
+
+    Provides an interface for configuring and controlling a virtual X display.
+    """
+
     # Maximum value to use for a display. 32-bit maxint is the
     # highest Xvfb currently supports
     MAX_DISPLAY: int = 2147483647
