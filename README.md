@@ -8,9 +8,8 @@
 
 `xvfbwrapper` is a Python library for managing X11 virtual displays with
 [Xvfb (X virtual framebuffer)](https://x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml),
-a virtual X server that runs without a physical display. It provides the
-[`Xvfb`][api-docs] class, a Python interface for configuring and controlling the Xvfb
-program.
+a virtual X server that runs without a physical display. It provides the `Xvfb` class,
+a Python interface for configuring and controlling the Xvfb program.
 
 See the [module API documentation][api-docs] for more information.
 

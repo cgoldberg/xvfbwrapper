@@ -1,4 +1,4 @@
-name: Testing
+name: Testing, Linting, Type Checking
 
 on:
   push:
@@ -32,8 +32,7 @@ jobs:
         env:
           TOXENV: lint
       - name: Run type checking
-        run: |
-            tox
+        run: tox
         env:
           TOXENV: type
       - name: Run tests

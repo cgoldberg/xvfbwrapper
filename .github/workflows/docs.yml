@@ -14,28 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.14"
       - name: Install dependencies
-        run: pip install pdoc
-      - name: Install package
-        run: pip install -e .
+        run: python -m pip install tox
       - name: Build API docs
-        run: |
-          echo "Building docs..."
-          rm -rf site
-          pdoc xvfbwrapper \
-            -o site \
-            --no-search \
-            --docformat markdown \
-            --footer-text "github.com/cgoldberg/xvfbwrapper (${GITHUB_SHA:0:7})"
-          echo "Docs successfully built"
+        run: tox
+        env:
+          TOXENV: docs
       - name: Publish API docs to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: build/docs
       - name: Show published URL
         run: |
           echo "Published API docs URL: https://coreygoldberg.com/xvfbwrapper"
