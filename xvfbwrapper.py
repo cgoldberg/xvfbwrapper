@@ -1,7 +1,6 @@
 # Copyright (c) 2012-2026 Corey Goldberg
 # SPDX-License-Identifier: MIT
 
-
 """Manage headless displays with Xvfb (X virtual framebuffer)
 
 This module provides a wrapper around Xvfb (X Virtual Framebuffer) for managing
