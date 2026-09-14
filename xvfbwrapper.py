@@ -102,13 +102,17 @@ class Xvfb:
     def start(self) -> None:
         """Start Xvfb."""
 
+        if self.proc is not None:
+            raise RuntimeError(
+                f"Xvfb is already running (PID: {self.proc.pid})",
+            )
         if not os.access(self._tempdir, os.W_OK):
             raise RuntimeError(
                 f"Could not access writable temp directory: {self._tempdir}"
             )
         if self.new_display is not None:
             if not self._get_lock_for_display(self.new_display):
-                raise RuntimeError(f"Could not lock display :{self.new_display}")
+                raise RuntimeError(f"Could not lock display: {self.new_display}")
         else:
             self.new_display = self._get_next_unused_display()
         display_var = f":{self.new_display}"
