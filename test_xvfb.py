@@ -5,6 +5,7 @@
 """Tests for xvfbwrapper."""
 
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -167,17 +168,6 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertEqual(orig_display, os.environ["DISPLAY"])
         self.assertIsNone(xvfb.proc)
 
-    def test_start_multiple_times(self):
-        xvfb = Xvfb()
-        xvfb.start()
-        self.addCleanup(xvfb.stop)
-        pid1 = xvfb.proc.pid
-        xvfb.stop()
-        xvfb.start()
-        pid2 = xvfb.proc.pid
-        self.assertIsNotNone(xvfb.proc)
-        self.assertNotEqual(pid1, pid2)
-
     def test_stop_if_not_running_doesnt_raise_error(self):
         xvfb = Xvfb()
         xvfb.stop()
@@ -269,7 +259,7 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaisesRegex(
             RuntimeError,
-            f"Could not lock display :{display_num}",
+            f"Could not lock display: {display_num}",
         ):
             xvfb2.start()
 
@@ -318,6 +308,28 @@ class TestXvfb(XvfbCleanTestCase):
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
+
+    def test_start_already_running(self):
+        xvfb = Xvfb()
+        self.addCleanup(xvfb.stop)
+        xvfb.start()
+        with self.assertRaisesRegex(
+            RuntimeError,
+            re.escape(f"Xvfb is already running (PID: {xvfb.proc.pid})"),
+        ):
+            xvfb.start()
+        self.assertIsNotNone(xvfb.proc)
+
+    def test_multiple_lifecycles(self):
+        xvfb = Xvfb()
+        self.addCleanup(xvfb.stop)
+        xvfb.start()
+        pid1 = xvfb.proc.pid
+        xvfb.stop()
+        xvfb.start()
+        pid2 = xvfb.proc.pid
+        self.assertIsNotNone(xvfb.proc)
+        self.assertNotEqual(pid1, pid2)
 
     def test_get_next_unused_display_does_not_reuse_lock(self):
         xvfb = Xvfb()
