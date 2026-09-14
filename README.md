@@ -32,10 +32,18 @@ See the [module API documentation][api-docs] for more information.
     </td>
   </tr>
   <tr>
-    <td>Build/Tests (CI)</td>
+    <td>Tests (CI)</td>
     <td>
       <a href="https://github.com/cgoldberg/xvfbwrapper/actions/workflows/test.yml">
         <img src="https://github.com/cgoldberg/xvfbwrapper/actions/workflows/test.yml/badge.svg">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>API Docs (CI)</td>
+    <td>
+      <a href="https://github.com/cgoldberg/xvfbwrapper/actions/workflows/docs.yml">
+        <img src="https://github.com/cgoldberg/xvfbwrapper/actions/workflows/docs.yml/badge.svg">
       </a>
     </td>
   </tr>
