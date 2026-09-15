@@ -6,7 +6,6 @@
 
 import os
 import re
-import sys
 import tempfile
 import unittest
 from contextlib import suppress
@@ -337,21 +336,10 @@ class TestXvfb(XvfbCleanTestCase):
         with patch("xvfbwrapper.randint", side_effect=side_effect) as mockrandint:
             self.assertEqual(xvfb._get_next_unused_display(), 11)
             self.assertEqual(mockrandint.call_count, 1)
-            if sys.implementation.name == "cpython":
-                # ResourceWarning is only raised on CPython because
-                # of an implementation detail in it's garbage collector.
-                # This does not occur on other Python implementations
-                # (like PyPy).
-                with self.assertWarns(ResourceWarning):
-                    self.assertEqual(xvfb2._get_next_unused_display(), 22)
-                    self.assertEqual(mockrandint.call_count, 3)
-                    self.assertEqual(xvfb3._get_next_unused_display(), 33)
-                    self.assertEqual(mockrandint.call_count, 10)
-            else:
-                self.assertEqual(xvfb2._get_next_unused_display(), 22)
-                self.assertEqual(mockrandint.call_count, 3)
-                self.assertEqual(xvfb3._get_next_unused_display(), 33)
-                self.assertEqual(mockrandint.call_count, 10)
+            self.assertEqual(xvfb2._get_next_unused_display(), 22)
+            self.assertEqual(mockrandint.call_count, 3)
+            self.assertEqual(xvfb3._get_next_unused_display(), 33)
+            self.assertEqual(mockrandint.call_count, 10)
 
     def test_environ_keyword_isolates_environment_modification(self):
         # Check that start and stop methods modified the environ dict if

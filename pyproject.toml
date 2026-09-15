@@ -63,6 +63,7 @@ py-modules = ["xvfbwrapper"]
 
 [tool.pytest]
 addopts = ["-v"]
+filterwarnings = ["default"]
 
 [tool.ruff]
 line-length = 88
