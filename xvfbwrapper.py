@@ -195,16 +195,17 @@ class Xvfb:
         """
         tempfile_path = Path(self._tempdir, f".X{display}-lock")
         try:
-            self._lock_display_file = tempfile_path.open("w")
+            lock_file = tempfile_path.open("w")
         except PermissionError:
             return False
+        try:
+            fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            lock_file.close()
+            return False
         else:
-            try:
-                fcntl.flock(self._lock_display_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            except BlockingIOError:
-                return False
-            else:
-                return True
+            self._lock_display_file = lock_file
+            return True
 
     def _get_next_unused_display(self) -> int:
         """Randomly choose a display number and try to acquire a lock for it.
