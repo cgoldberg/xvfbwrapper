@@ -194,12 +194,10 @@ xvfb.start()  # Xvfb will be called with the `ttyxx -nocursor +extension RANDR` 
 
 #### Multithreaded execution:
 
-To run several Xvfb displays at the same time, you can use the `environ`
-keyword when starting the `Xvfb` instances. This provides isolation between
-processes or threads. Be sure to use the environment dictionary you initialize
-`Xvfb` with in your subsequent calls. Also, if you wish to inherit your current
-environment, you must use the copy method of `os.environ` and not simply
-assign a new variable to `os.environ`:
+To run several Xvfb displays at the same time, you can use the `environ` keyword
+when starting the `Xvfb` instances. This provides isolation between processes or
+threads. If you wish to inherit your current environment, you must use the copy
+method of `os.environ` and not simply assign a new variable to `os.environ`:
 
 ```python
 import os
