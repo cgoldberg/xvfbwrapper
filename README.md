@@ -260,8 +260,6 @@ if __name__ == "__main__":
 
 ## Development
 
-- Git: [github.com/cgoldberg/xvfbwrapper.git][github-repo]
-
 - Create a virtual env and install required testing packages:
 
     ```
