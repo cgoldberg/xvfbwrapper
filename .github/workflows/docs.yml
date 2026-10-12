@@ -1,4 +1,4 @@
-name: api docs
+name: API Docs
 
 on:
   push:
