@@ -23,7 +23,7 @@ jobs:
           allow-prereleases: true
           check-latest: true
       - name: Install dependencies
-        run: python -m pip install tox
+        run: pip install tox
       - name: Validate project configuration
         run: tox
         env:
