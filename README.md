@@ -90,7 +90,7 @@ pip install xvfbwrapper
 
 ## System Requirements
 
-- Python 3.10+
+- Python 3.11+
 - X Window System
 - Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
 - Support for file locking using `fcntl` (POSIX systems)

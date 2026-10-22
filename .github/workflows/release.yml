@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "[0-9]*.[0-9]*.[0-9]*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+  publish:
+    name: Validate and publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.15"
+          check-latest: true
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip tox
+      - name: Download all built distributions
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*"
+          path: dist
+          merge-multiple: true
+      - name: Validate built distributions
+        run: tox
+        env:
+          TOXENV: check-dist
+      - name: Verify tag matches package version
+        if: github.event_name == 'push'
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          with open("pyproject.toml", "rb") as f:
+              project = tomllib.load(f)
+          package_version = project["project"]["version"]
+          tag_version = os.environ["RELEASE_TAG"]
+          print(f"Git tag version: {tag_version}")
+          print(f"Package version: {package_version}")
+          if tag_version != package_version:
+              raise SystemExit("Git tag does not match package version")
+          # Require a stable MAJOR.MINOR.PATCH release.
+          parts = package_version.split(".")
+          if (
+              len(parts) != 3
+              or not all(part.isdigit() for part in parts)
+          ):
+              raise SystemExit(
+                  f"Refusing non-stable release version: {package_version}"
+              )
+          print("Stable version check passed.")
+          PY
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

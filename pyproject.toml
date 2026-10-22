@@ -6,12 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "xvfbwrapper"
 version = "0.2.36.dev0"
 description = "Manage headless displays with Xvfb (X virtual framebuffer)"
+requires-python = ">= 3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{name = "Corey Goldberg"}]
 maintainers = [{name = "Corey Goldberg"}]
 readme = "README.md"
-requires-python = ">= 3.10"
 keywords = ["Xvfb", "headless", "display", "X11", "X Window System"]
 classifiers = [
         "Environment :: Console",
@@ -23,7 +23,6 @@ classifiers = [
         "Operating System :: Unix",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
@@ -34,29 +33,29 @@ classifiers = [
 
 [project.urls]
 homepage = "https://github.com/cgoldberg/xvfbwrapper"
-source = "https://github.com/cgoldberg/xvfbwrapper"
-download = "https://pypi.org/project/xvfbwrapper"
+repository = "https://github.com/cgoldberg/xvfbwrapper"
+documentation = "https://coreygoldberg.com/xvfbwrapper"
 
 [dependency-groups]
 dev = [
     "tox",
 ]
 docs = [
-    "pdoc",
+    "pdoc==16.0.0",
 ]
 lint = [
-    "ruff",
+    "ruff==0.17.1",
 ]
 test = [
-    "psutil",
-    "pytest",
+    "psutil==7.2.2",
+    "pytest==9.1.1",
 ]
 type = [
-    "mypy",
-    "types-psutil",
+    "mypy==2.4.0",
+    "types-psutil==7.2.2.20260906",
 ]
 validate = [
-    "validate-pyproject[all]",
+    "validate-pyproject[all]==0.26",
 ]
 
 [tool.setuptools]
@@ -65,6 +64,7 @@ py-modules = ["xvfbwrapper"]
 [tool.pytest]
 addopts = ["-v"]
 filterwarnings = ["default"]
+tmp_path_retention_policy = "none"
 
 [tool.ruff]
 line-length = 88
@@ -74,9 +74,10 @@ target-version = "py310"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN", "COM812", "D", "EM101", "EM102", "FBT", "PERF203",
-    "PLR", "PT", "PYI034", "SLF001", "S101", "S108", "S311",
-    "S603", "TRY003", "TRY400"
+    "ANN", "COM812", "D", "EM101", "EM102", "FBT",
+    "PERF203", "PLR", "PT", "PYI034", "SLF001",
+    "S101", "S108", "S311", "S603", "TRY003",
+    "TRY400"
 ]
 fixable = ["ALL"]
 
