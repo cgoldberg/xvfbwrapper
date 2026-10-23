@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "xvfbwrapper"
 version = "0.2.37.dev0"
 description = "Manage headless displays with Xvfb (X virtual framebuffer)"
-requires-python = ">= 3.10"
+requires-python = ">= 3.11"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{name = "Corey Goldberg"}]
