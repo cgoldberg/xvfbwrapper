@@ -44,7 +44,7 @@ docs = [
     "pdoc==16.0.0",
 ]
 lint = [
-    "ruff==0.17.1",
+    "ruff==0.17.2",
 ]
 test = [
     "psutil==7.2.2",
@@ -55,7 +55,7 @@ type = [
     "types-psutil==7.2.2.20260906",
 ]
 validate = [
-    "validate-pyproject[all]==0.26",
+    "validate-pyproject[all]==0.27",
 ]
 
 [tool.setuptools]
