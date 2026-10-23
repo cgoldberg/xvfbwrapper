@@ -37,9 +37,6 @@ repository = "https://github.com/cgoldberg/xvfbwrapper"
 documentation = "https://coreygoldberg.com/xvfbwrapper"
 
 [dependency-groups]
-dev = [
-    "tox",
-]
 docs = [
     "pdoc==16.0.0",
 ]

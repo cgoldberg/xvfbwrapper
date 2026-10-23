@@ -258,29 +258,6 @@ if __name__ == "__main__":
 
 ----
 
-## Development
-
-- Create a virtual env and install required testing packages:
-
-    ```
-    python -m venv venv
-    source ./venv/bin/activate
-    pip install --editable --group dev --group test .
-    ```
-
-- Run all tests in the default Python environment:
-
-    ```
-    pytest
-    ```
-
-- Run all tests, linting, and type checking across all supported/installed
-  Python environments:
-
-    ```
-    tox
-    ```
-
 [github-profile]: https://github.com/cgoldberg
 [github-repo]: https://github.com/cgoldberg/xvfbwrapper
 [pypi-home]: https://pypi.org/project/xvfbwrapper
