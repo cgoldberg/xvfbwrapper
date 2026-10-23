@@ -705,7 +705,7 @@ wheels = [
 
 [[package]]
 name = "xvfbwrapper"
-version = "0.2.37.dev0"
+version = "0.2.37"
 source = { editable = "." }
 
 [package.dev-dependencies]
