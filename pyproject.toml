@@ -66,7 +66,7 @@ tmp_path_retention_policy = "none"
 [tool.ruff]
 line-length = 88
 respect-gitignore = true
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["ALL"]
