@@ -267,8 +267,6 @@ def test_selenium_homepage(driver):
     assert "Selenium" in driver.title
 ```
 
-----
-
 [api-docs]: https://coreygoldberg.com/xvfbwrapper
 [github-profile]: https://github.com/cgoldberg
 [github-repo]: https://github.com/cgoldberg/xvfbwrapper
