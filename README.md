@@ -6,10 +6,10 @@
 
 ## About
 
-`xvfbwrapper` is a Python library for managing X11 virtual displays with
-[Xvfb (X virtual framebuffer)](https://x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml),
-a virtual X server that runs without a physical display. It provides the `Xvfb` class,
-a Python interface for configuring and controlling the Xvfb program.
+`xvfbwrapper` is a Python library for managing [X11][xorg-home] virtual displays
+with [Xvfb (X virtual framebuffer)][xvfb-home], a virtual X server that runs
+without a physical display. It provides the `Xvfb` class, a Python interface for
+configuring and controlling the Xvfb program.
 
 See the [module API documentation][api-docs] for more information.
 
@@ -69,10 +69,9 @@ See the [module API documentation][api-docs] for more information.
 
 ## What is Xvfb?
 
-
-`Xvfb` (X virtual framebuffer) is a display server implementing the X11
-display server protocol. It runs in memory and does not require a physical
-display or input device. Only a network layer is necessary.
+`Xvfb` (X virtual framebuffer) is a display server implementing the X11 display
+server protocol. It runs in memory and does not require a physical display or
+input device. Only a network layer is necessary.
 
 `Xvfb` allows GUI applications that use X Windows to run on a headless system.
 
@@ -97,13 +96,26 @@ pip install xvfbwrapper
 
 ----
 
-## Examples
+## Usage
 
-#### Basic Usage:
+Always ensure that the virtual display is stopped, even if an exception occurs.
+`Xvfb` can be used as a context manager or managed explicitly with
+`try`/`finally`.
 
-Note: Always either wrap your usage of `Xvfb()` with try/finally, or use it as
-a context manager to ensure the display is stopped. If you don't, you'll end up
-with a bunch of junk in `/tmp` if errors occur.
+### Context Manager
+
+```python
+from xvfbwrapper import Xvfb
+
+with Xvfb():
+    # Runs inside the virtual display:
+    main()
+```
+
+The virtual display is automatically stopped when the context exits, including
+if an exception occurs.
+
+### Explicit Lifecycle Management
 
 ```python
 from xvfbwrapper import Xvfb
@@ -111,22 +123,13 @@ from xvfbwrapper import Xvfb
 xvfb = Xvfb()
 xvfb.start()
 try:
-    # launch stuff inside virtual display here
+    # Runs inside the virtual display:
+    main()
 finally:
     xvfb.stop()
 ```
 
-#### Usage as a context manager:
-
-```python
-from xvfbwrapper import Xvfb
-
-with Xvfb():
-    # launch stuff inside virtual display here
-    # (Xvfb will stop when this block completes)
-```
-
-#### Specifying display geometry:
+### Specifying Display Geometry
 
 ```python
 from xvfbwrapper import Xvfb
@@ -135,16 +138,7 @@ xvfb = Xvfb(width=1280, height=720)
 xvfb.start()
 ```
 
-#### Specifying display number:
-
-```python
-from xvfbwrapper import Xvfb
-
-xvfb = Xvfb(display=23)
-xvfb.start()  # Xvfb will start on display :23
-```
-
-#### Setting XDG_SESSION_TYPE:
+### Setting `XDG_SESSION_TYPE`
 
 When running `Xvfb` in a Wayland session, GUI toolkits may try to use the
 Wayland backend instead of connecting to `Xvfb`. Setting
@@ -159,22 +153,23 @@ xvfb = Xvfb(set_xdg_session_type=True)
 xvfb.start()
 ```
 
-#### Specifying other Xvfb options:
+### Specifying Other Xvfb Options
 
 The `Xvfb` executable accepts several types of command line arguments.
 
-The most common is an argument with a `-` prefix and a parameter
-(i.e. `-nolisten tcp`). These can be added as keyword arguments when
-creating an `xvfbwrapper.Xvfb` instance. For example:
+The most common is an argument with a `-` prefix and a parameter (i.e.
+`-nolisten tcp`). These can be added as keyword arguments when creating an
+`xvfbwrapper.Xvfb` instance. For example:
 
 ```python
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(nolisten="tcp")
-xvfb.start()  # Xvfb will be called with the `-nolisten tcp` argument
+# Xvfb will be called with the `-nolisten tcp` argument
+xvfb.start()
 ```
 
-However, there are other possible types of arguments:
+There are other possible types of arguments:
 
 - unary argument (i.e. `ttyxx`)
 - unary argument with a `+` prefix (i.e. `+xinerama`)
@@ -182,17 +177,18 @@ However, there are other possible types of arguments:
 - argument with a parameter (i.e. `c 100`)
 - argument with a `+` prefix and a parameter (i.e. `+extension RANDR`)
 
-Any type of argument can be added as an `extra_args` sequence when creating
-an `xvfbwrapper.Xvfb` instance. For example:
+Any type of argument can be added as an `extra_args` sequence when creating an
+`xvfbwrapper.Xvfb` instance. For example:
 
 ```python
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(extra_args=("ttyxx", "-nocursor", "+extension", "RANDR"))
-xvfb.start()  # Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
+# Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
+xvfb.start()
 ```
 
-#### Multithreaded execution:
+### Multithreaded Execution
 
 To run several Xvfb displays at the same time, you can use the `environ` keyword
 when starting the `Xvfb` instances. This provides isolation between processes or
@@ -219,15 +215,14 @@ finally:
     xvfb2.stop()
 ```
 
-#### Headless browser tests:
+## Examples
 
-This uses [`selenium`][selenium-docs] and `xvfbwrapper` to run a test
-on Chrome inside a headless display.
+### Headless Browser Testing With `unittest`
 
-[selenium-docs]: https://www.selenium.dev/selenium/docs/api/py
+The following example uses [`selenium`][selenium-home] and `xvfbwrapper` to run
+Chrome tests inside a virtual display.
 
 ```python
-import os
 import unittest
 
 from selenium import webdriver
@@ -238,28 +233,47 @@ class TestPage(unittest.TestCase):
     def setUp(self):
         xvfb = Xvfb(set_xdg_session_type=True)
         xvfb.start()
-        self.driver = webdriver.Chrome()
         self.addCleanup(xvfb.stop)
+        self.driver = webdriver.Chrome()
         self.addCleanup(self.driver.quit)
 
     def test_selenium_homepage(self):
         self.driver.get("https://www.selenium.dev")
         self.assertIn("Selenium", self.driver.title)
-
-
-if __name__ == "__main__":
-    unittest.main()
 ```
 
-- virtual display is launched
-- browser launches inside virtual display (headless)
-- browser quits during cleanup
-- virtual display stops during cleanup
+### Headless Browser Testing With `pytest`
+
+The same setup can be used with `pytest` by managing the virtual display and
+browser through a fixture.
+
+```python
+import pytest
+
+from selenium import webdriver
+from xvfbwrapper import Xvfb
+
+
+@pytest.fixture
+def driver():
+    with Xvfb(set_xdg_session_type=True):
+        driver = webdriver.Chrome()
+        yield driver
+        driver.quit()
+
+
+def test_selenium_homepage(driver):
+    driver.get("https://www.selenium.dev")
+    assert "Selenium" in driver.title
+```
 
 ----
 
+[api-docs]: https://coreygoldberg.com/xvfbwrapper
 [github-profile]: https://github.com/cgoldberg
 [github-repo]: https://github.com/cgoldberg/xvfbwrapper
-[pypi-home]: https://pypi.org/project/xvfbwrapper
 [mit-license]: https://raw.githubusercontent.com/cgoldberg/xvfbwrapper/refs/heads/master/LICENSE
-[api-docs]: https://coreygoldberg.com/xvfbwrapper
+[pypi-home]: https://pypi.org/project/xvfbwrapper
+[selenium-home]: https://selenium.dev
+[xorg-home]: https://www.x.org
+[xvfb-home]: https://x.org/releases/X11R7.7/doc/man/man1/Xvfb.1.xhtml
