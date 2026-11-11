@@ -55,14 +55,6 @@ See the [module API documentation][api-docs] for more information.
       </a>
     </td>
   </tr>
-  <tr>
-    <td>OSS Sponsorship</td>
-    <td>
-      <a href="https://tidelift.com/lifter/search/pypi/xvfbwrapper">
-        <img src="https://tidelift.com/badges/package/pypi/xvfbwrapper">
-      </a>
-    </td>
-  </tr>
 </table>
 
 ----
@@ -91,7 +83,7 @@ pip install xvfbwrapper
 
 - Python 3.11+
 - X Window System
-- Xvfb (`sudo apt-get install xvfb`, `yum install xorg-x11-server-Xvfb`, etc)
+- Xvfb (`sudo apt install xvfb`, `sudo dnf install xorg-x11-server-Xvfb`, etc)
 - Support for file locking using `fcntl` (POSIX systems)
 
 ----
@@ -108,7 +100,7 @@ Always ensure that the virtual display is stopped, even if an exception occurs.
 from xvfbwrapper import Xvfb
 
 with Xvfb():
-    # Runs inside the virtual display:
+    # Runs inside the virtual display
     main()
 ```
 
@@ -123,7 +115,7 @@ from xvfbwrapper import Xvfb
 xvfb = Xvfb()
 xvfb.start()
 try:
-    # Runs inside the virtual display:
+    # Runs inside the virtual display
     main()
 finally:
     xvfb.stop()
@@ -188,28 +180,29 @@ xvfb = Xvfb(extra_args=("ttyxx", "-nocursor", "+extension", "RANDR"))
 xvfb.start()
 ```
 
-### Multithreaded Execution
+### Running Multiple Displays
 
-To run several Xvfb displays at the same time, you can use the `environ` keyword
-when starting the `Xvfb` instances. This provides isolation between processes or
-threads. If you wish to inherit your current environment, you must use the copy
-method of `os.environ` and not simply assign a new variable to `os.environ`:
+When running multiple Xvfb instances concurrently, each instance should have its
+own environment dictionary to avoid conflicts. Pass a separate copy of
+`os.environ` to each instance using the `environ` argument.
+
+Use `os.environ.copy()` rather than passing `os.environ` directly. This ensures
+each instance has its own environment dictionary.
 
 ```python
 import os
 
 from xvfbwrapper import Xvfb
 
-isolated_environment1 = os.environ.copy()
-xvfb1 = Xvfb(environ=isolated_environment1)
-xvfb1.start()
+xvfb1 = Xvfb(environ=os.environ.copy())
+xvfb2 = Xvfb(environ=os.environ.copy())
 
-isolated_environment2 = os.environ.copy()
-xvfb2 = Xvfb(environ=isolated_environment2)
+xvfb1.start()
 xvfb2.start()
 
 try:
-    # launch stuff inside virtual displays here
+    # Use each Xvfb instance independently
+    ...
 finally:
     xvfb1.stop()
     xvfb2.stop()
