@@ -74,15 +74,14 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN", "COM812", "EM101", "EM102", "FBT",
-    "PERF203", "PLR", "PYI034", "SLF001",
-    "S101", "S108", "S311", "S603", "TRY003",
-    "TRY400"
+    "ANN", "COM812", "EM101", "EM102",
+    "FBT", "PLR", "S108", "S311", "S603",
+    "TRY003", "TRY400"
 ]
 fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-"**/test_*.py" = ["PT", "D"]
+"**/test_*.py" = ["D", "PT", "S", "SLF"]
 
 [tool.ruff.format]
 docstring-code-format = true

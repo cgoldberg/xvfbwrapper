@@ -21,7 +21,7 @@ from contextlib import suppress
 from pathlib import Path
 from random import randint
 from types import TracebackType
-from typing import TextIO
+from typing import Self, TextIO
 
 try:
     import fcntl
@@ -87,7 +87,7 @@ class Xvfb:
         self.proc: subprocess.Popen[bytes] | None = None
         self._lock_display_file: TextIO | None = None
 
-    def __enter__(self) -> "Xvfb":
+    def __enter__(self) -> Self:
         """Start Xvfb when entering a context."""
         self.start()
         return self
