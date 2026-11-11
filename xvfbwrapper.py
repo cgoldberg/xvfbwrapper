@@ -1,7 +1,7 @@
 # Copyright (c) 2012-2026 Corey Goldberg
 # SPDX-License-Identifier: MIT
 
-"""Manage headless displays with Xvfb (X virtual framebuffer)
+"""Manage headless displays with Xvfb (X virtual framebuffer).
 
 This module provides a wrapper around Xvfb (X Virtual Framebuffer) for managing
 virtual X displays.
@@ -53,6 +53,7 @@ class Xvfb:
         timeout: float | None = 10,
         **kwargs: str,
     ) -> None:
+        """Initialize the Xvfb configuration and process state."""
         self.width: int = width
         self.height: int = height
         self.colordepth: int = colordepth
@@ -87,6 +88,7 @@ class Xvfb:
         self._lock_display_file: TextIO | None = None
 
     def __enter__(self) -> "Xvfb":
+        """Start Xvfb when entering a context."""
         self.start()
         return self
 
@@ -96,11 +98,11 @@ class Xvfb:
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        """Stop Xvfb when exiting a context."""
         self.stop()
 
     def start(self) -> None:
         """Start Xvfb."""
-
         if self.proc is not None:
             raise RuntimeError(
                 f"Xvfb is already running (PID: {self.proc.pid})",
@@ -219,6 +221,7 @@ class Xvfb:
                 return rand
 
     def _local_display_exists(self, display: int) -> bool:
+        """Check whether the local X11 socket exists for a display."""
         tempdir = "/tmp"
         # We need read access to the real system temp directory
         if not os.access(tempdir, os.R_OK):
@@ -226,4 +229,5 @@ class Xvfb:
         return Path(tempdir, ".X11-unix", f"X{display}").exists()
 
     def _set_display(self, display_var: str) -> None:
+        """Set the `DISPLAY` environment variable."""
         self.environ["DISPLAY"] = display_var
