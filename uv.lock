@@ -1165,7 +1165,7 @@ all = [
 
 [[package]]
 name = "xvfbwrapper"
-version = "0.2.38.dev0"
+version = "0.2.38"
 source = { editable = "." }
 
 [package.dev-dependencies]
