@@ -231,7 +231,7 @@ class TestPage(unittest.TestCase):
         self.addCleanup(self.driver.quit)
 
     def test_selenium_homepage(self):
-        self.driver.get("https://www.selenium.dev")
+        self.driver.get("https://selenium.dev")
         self.assertIn("Selenium", self.driver.title)
 ```
 
@@ -256,7 +256,7 @@ def driver():
 
 
 def test_selenium_homepage(driver):
-    driver.get("https://www.selenium.dev")
+    driver.get("https://selenium.dev")
     assert "Selenium" in driver.title
 ```
 
