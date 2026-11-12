@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 # Copyright (c) 2012-2026 Corey Goldberg
 # SPDX-License-Identifier: MIT
 
@@ -142,20 +143,27 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertEqual(w, xvfb.width)
         self.assertEqual(h, xvfb.height)
         self.assertEqual(depth, xvfb.colordepth)
-        self.assertEqual(["-screen", "0", f"{w}x{h}x{depth}"], xvfb.extra_xvfb_args)
+        self.assertEqual(
+            ["-screen", "0", f"{w}x{h}x{depth}"],
+            xvfb.extra_xvfb_args,
+        )
 
     def test_extra_kwargs(self):
         extra_args = ["-nocursor", "+extension", "RANDR"]
         xvfb = Xvfb(extra_args=extra_args)
         self.assertEqual(
-            ["-screen", "0", f"{800}x{680}x{24}", *extra_args], xvfb.extra_xvfb_args
+            ["-screen", "0", f"{800}x{680}x{24}", *extra_args],
+            xvfb.extra_xvfb_args,
         )
 
     def test_start(self):
         xvfb = Xvfb()
         self.addCleanup(xvfb.stop)
         xvfb.start()
-        self.assertEqual(f":{xvfb.new_display}", os.environ["DISPLAY"])
+        self.assertEqual(
+            f":{xvfb.new_display}",
+            os.environ["DISPLAY"],
+        )
         self.assertIsNotNone(xvfb.proc)
 
     def test_stop(self):
@@ -205,7 +213,8 @@ class TestXvfb(XvfbCleanTestCase):
         unwriteable_dir = "/etc"
         xvfb = Xvfb(tempdir=unwriteable_dir)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not access writable temp directory: {unwriteable_dir}"
+            RuntimeError,
+            f"Could not access writable temp directory: {unwriteable_dir}",
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
@@ -214,7 +223,8 @@ class TestXvfb(XvfbCleanTestCase):
         unknown_dir = "/tmp/some_unknown_path"
         xvfb = Xvfb(tempdir=unknown_dir)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not access writable temp directory: {unknown_dir}"
+            RuntimeError,
+            f"Could not access writable temp directory: {unknown_dir}",
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
@@ -255,7 +265,8 @@ class TestXvfb(XvfbCleanTestCase):
         self.assertEqual(xvfb.new_display, display_num)
         self.assertIsNotNone(xvfb.proc)
         with self.assertRaisesRegex(
-            RuntimeError, f"Could not lock display: {display_num}"
+            RuntimeError,
+            f"Could not lock display: {display_num}",
         ):
             xvfb2.start()
 
@@ -299,7 +310,8 @@ class TestXvfb(XvfbCleanTestCase):
             "bar",
         ]
         with self.assertRaisesRegex(
-            RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
+            RuntimeError,
+            f"Xvfb display did not open: {expected_cmd_args}",
         ):
             xvfb.start()
         self.assertIsNone(xvfb.proc)
@@ -309,7 +321,8 @@ class TestXvfb(XvfbCleanTestCase):
         self.addCleanup(xvfb.stop)
         xvfb.start()
         with self.assertRaisesRegex(
-            RuntimeError, re.escape(f"Xvfb is already running (PID: {xvfb.proc.pid})")
+            RuntimeError,
+            re.escape(f"Xvfb is already running (PID: {xvfb.proc.pid})"),
         ):
             xvfb.start()
         self.assertIsNotNone(xvfb.proc)
@@ -384,7 +397,8 @@ class TestXvfb(XvfbCleanTestCase):
         with (
             patch.object(xvfb, "_local_display_exists", return_value=False),
             self.assertRaisesRegex(
-                RuntimeError, f"Xvfb display did not open: {expected_cmd_args}"
+                RuntimeError,
+                f"Xvfb display did not open: {expected_cmd_args}",
             ),
         ):
             xvfb.start()

@@ -174,7 +174,7 @@ Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments.
 
 ### Running Multiple Displays
 
-When running multiple `Xvfb` instances, pass each a separate
+When running multiple `Xvfb` instances, provide each a separate
 `os.environ.copy()` via the `environ` argument to prevent them from modifying
 each other's environment variables.
 
