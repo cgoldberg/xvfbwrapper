@@ -124,10 +124,7 @@ finally:
 ### Specifying Display Geometry
 
 ```python
-from xvfbwrapper import Xvfb
-
-xvfb = Xvfb(width=1280, height=720)
-xvfb.start()
+Xvfb(width=1280, height=720)
 ```
 
 ### Setting `XDG_SESSION_TYPE`
@@ -139,10 +136,7 @@ and all child processes, ensuring that GUI apps use the X11 backend and can
 render on the virtual display.
 
 ```python
-from xvfbwrapper import Xvfb
-
-xvfb = Xvfb(set_xdg_session_type=True)
-xvfb.start()
+Xvfb(set_xdg_session_type=True)
 ```
 
 ### Specifying Other Xvfb Options
@@ -154,12 +148,10 @@ The most common is an argument with a `-` prefix and a parameter (i.e.
 `xvfbwrapper.Xvfb` instance. For example:
 
 ```python
-from xvfbwrapper import Xvfb
-
-xvfb = Xvfb(nolisten="tcp")
-# Xvfb will be called with the `-nolisten tcp` argument
-xvfb.start()
+Xvfb(nolisten="tcp")
 ```
+
+Xvfb will be called with the `-nolisten tcp` argument.
 
 There are other possible types of arguments:
 
@@ -176,18 +168,15 @@ Any type of argument can be added as an `extra_args` sequence when creating an
 from xvfbwrapper import Xvfb
 
 xvfb = Xvfb(extra_args=("ttyxx", "-nocursor", "+extension", "RANDR"))
-# Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments
-xvfb.start()
 ```
+
+Xvfb will be called with the `ttyxx -nocursor +extension RANDR` arguments.
 
 ### Running Multiple Displays
 
-When running multiple Xvfb instances concurrently, each instance should have its
-own environment dictionary to avoid conflicts. Pass a separate copy of
-`os.environ` to each instance using the `environ` argument.
-
-Use `os.environ.copy()` rather than passing `os.environ` directly. This ensures
-each instance has its own environment dictionary.
+When running multiple `Xvfb` instances, pass each a separate
+`os.environ.copy()` via the `environ` argument to prevent them from modifying
+each other's environment variables.
 
 ```python
 import os
