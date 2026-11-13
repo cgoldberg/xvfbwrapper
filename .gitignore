@@ -48,6 +48,9 @@ nosetests.xml
 # Type checking
 .mypy_cache/
 
+# Linting
+.ruff_cache/
+
 # Translations
 *.mo
 *.pot
